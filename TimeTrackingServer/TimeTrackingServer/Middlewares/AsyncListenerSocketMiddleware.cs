@@ -131,9 +131,9 @@ namespace TimeTrackingServer.Middlewares
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
 
-            IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
-            Console.WriteLine();
-            Console.WriteLine(remoteIpEndPoint.Address + ":" + remoteIpEndPoint.Port);
+            //IPEndPoint remoteIpEndPoint = handler.RemoteEndPoint as IPEndPoint;
+            //Console.WriteLine();
+            //Console.WriteLine(remoteIpEndPoint.Address + ":" + remoteIpEndPoint.Port);
 
             try
             {

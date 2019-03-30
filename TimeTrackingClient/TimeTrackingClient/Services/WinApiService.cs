@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace TimeTrackingClient.Services
 {
@@ -43,6 +44,19 @@ namespace TimeTrackingClient.Services
             return null;
         }
 
+        public string DecodeFromUtf8(string utf8String)
+        {
+            // copy the string as UTF-8 bytes.
+            byte[] utf8Bytes = new byte[utf8String.Length];
+            for (int i = 0; i < utf8String.Length; ++i)
+            {
+                //Debug.Assert( 0 <= utf8String[i] && utf8String[i] <= 255, "the char must be in byte's range");
+                utf8Bytes[i] = (byte)utf8String[i];
+            }
+
+            return Encoding.UTF8.GetString(utf8Bytes, 0, utf8Bytes.Length);
+        }
+
         public ApplicationStreamingData GetActiveWindow()
         {
             StringBuilder Buff = new StringBuilder(_bufferSize);
@@ -57,17 +71,17 @@ namespace TimeTrackingClient.Services
                 //var proc = Process.GetProcessById((int)procId); // Работает только для 32bit win
                 //Console.WriteLine(proc.MainModule);
                 string base64image = new PrintScreenService().base64String;
-                string process = GetMainModuleFilepath((int)procId);
+                string processFilePath = GetMainModuleFilepath((int)procId);
+
+                FileVersionInfo processFileVersionInfo = FileVersionInfo.GetVersionInfo(processFilePath);
 
                 return new ApplicationStreamingData()
                 {
-                    ApplicationAlias = Regex.Replace(process, @".*\\", ""),
+                    // Regex.Replace(processPath, @".*\\", ""),
+                    ApplicationAlias = processFileVersionInfo.ProductName,
                     ApplicationTitle = Buff.ToString(),
                     ApplicationImage = base64image
                 };
-
-                //return String.Format("program: {0}, title: {1}\n\t:path: {2}, image: {3}",
-                //    Regex.Replace(process, @".*\\", ""), Buff.ToString(), process, base64image);
             }
 
             return null;

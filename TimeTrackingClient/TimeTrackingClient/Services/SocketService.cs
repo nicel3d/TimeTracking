@@ -8,34 +8,112 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Collections.Concurrent;
 
 namespace TimeTrackingClient.Services
 {
     class SocketService
     {
-        private static string _address = "127.0.0.1";
-        private static int _port = 8005;
+        private const string _address = "127.0.0.1";
+        private const int _port = 8005;
         private static IPEndPoint _ipPoint = new IPEndPoint(IPAddress.Parse(_address), _port);
         private static IdleTimeFinderService _idleTimeFinder = new IdleTimeFinderService();
+        private static DataBaseService _dataBaseService = new DataBaseService();
         private static WinApiService _window = new WinApiService();
-
-        private static ApplicationStreamingData _applicationStreamingData;
         private static StreamingData _streamingData;
-        private static byte[] _streamingDataBytes;
+        private static BlockingCollection<StreamingData> bc;
+        private static Socket _socket;
+
+        private static TimeSpan _waitingBeforeShipping = TimeSpan.FromSeconds(5);
+        private static TimeSpan _waitingBeforeReconnect = TimeSpan.FromSeconds(10);
+        private static TimeSpan _waitingBeforeGetTemporaryStorage = TimeSpan.FromSeconds(10);
+        private static TimeSpan _waitingBeforeDeleteTemporaryStorage = TimeSpan.FromMilliseconds(100);
 
         public SocketService()
         {
+            (new Thread(delegate ()
+            {
+                Task.Run(StartListeningTemporaryStorageForWrite);
+            })).Start();
+
+
+            (new Thread(delegate ()
+            {
+                Task.Run(StartListeningGetTemporaryStorage);
+            })).Start();
         }
 
-        public Socket LoopConnectServer()
+
+        private Task StartListeningGetTemporaryStorage()
+        {
+            while (true)
+            {
+                List<StreamingData> list = _dataBaseService.GetTemporaryStorageList();
+
+                if (list.Count > 0)
+                {
+                    bc = new BlockingCollection<StreamingData>();
+
+                    foreach (StreamingData item in list)
+                    {
+                        bc.Add(item);
+                    }
+
+                    while (bc.Count > 1)
+                    {
+                        try
+                        {
+                            if (_socket != null && _socket.Connected)
+                            {
+                                var activityStaffToStreamingData = bc.Take();
+                                _socket.Send(Encoding.Unicode.GetBytes(new JavaScriptSerializer().Serialize(activityStaffToStreamingData)));
+                                _dataBaseService.DeleteTemporaryStorageByActivityTime(activityStaffToStreamingData.ActivityTime);
+                                Thread.Sleep(_waitingBeforeDeleteTemporaryStorage);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                }
+
+                Thread.Sleep(_waitingBeforeGetTemporaryStorage);
+            }
+        }
+
+        private Task StartListeningTemporaryStorageForWrite()
+        {
+            int expect = 0;
+
+            while (true)
+            {
+                if (_socket == null || !_socket.Connected)
+                {
+                    expect++;
+                    Thread.Sleep(1);
+
+                    if (expect >= _waitingBeforeShipping.TotalMilliseconds)
+                    {
+                        _dataBaseService.AddStreamingDataToTemporaryStorage(GetActivityStaffToStreamingData());
+                        expect = 0;
+                    }
+                }
+                else
+                {
+                    expect = 0;
+                }
+            }
+        }
+
+        public void LoopConnectServer()
         {
             int attempts = 0;
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IdleTimeFinderService idleTimeFinder = new IdleTimeFinderService();
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            while (!socket.Connected)
+            while (!_socket.Connected)
             {
-                if (!idleTimeFinder.GetActiveUser())
+                if (!_idleTimeFinder.GetActiveUser())
                 {
                     continue;
                 }
@@ -43,65 +121,55 @@ namespace TimeTrackingClient.Services
                 try
                 {
                     attempts++;
-                    socket.Connect(_ipPoint);
-                    Thread.Sleep(1500);
+                    _socket.Connect(_ipPoint);
                 }
                 catch (SocketException)
                 {
-                    //Console.Clear();
+                    Console.Clear();
                     Console.WriteLine("Connection attempts: {0}", attempts.ToString());
+                    Thread.Sleep(_waitingBeforeReconnect);
                 }
             }
             Console.WriteLine("Connected!");
+        }
 
-            return socket;
+        private static StreamingData GetActivityStaffToStreamingData()
+        {
+            ApplicationStreamingData applicationStreamingData;
+
+            applicationStreamingData = _window.GetActiveWindow();
+            return _streamingData = new StreamingData()
+            {
+                ApplicationAlias = applicationStreamingData.ApplicationAlias,
+                ApplicationTitle = applicationStreamingData.ApplicationTitle,
+                ApplicationImage = applicationStreamingData.ApplicationImage,
+                StaffAlias = Environment.UserName,
+                ActivityTime = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds
+            };
         }
 
         public void LoopConnectServerAndSendMessage()
         {
-            Socket _socket = LoopConnectServer();
-            int expect = 0;
+            LoopConnectServer();
 
             try
             {
                 do
                 {
-                    expect++;
-                    Console.WriteLine(expect);
-                    Thread.Sleep(1);
-
-                    if (expect == 2000)
-                    {
-                        expect = 0;
-                    }
-
                     if (!_idleTimeFinder.GetActiveUser())
                     {
                         continue;
                     }
 
-                    _applicationStreamingData = _window.GetActiveWindow();
-                    _streamingData = new StreamingData()
-                    {
-                        ApplicationAlias = _applicationStreamingData.ApplicationAlias,
-                        ApplicationTitle = _applicationStreamingData.ApplicationTitle,
-                        ApplicationImage = _applicationStreamingData.ApplicationImage,
-                        StaffAlias = Environment.UserName,
-                        ActivityTime = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds
-                    };
-                    _streamingDataBytes = Encoding.Unicode.GetBytes(new JavaScriptSerializer().Serialize(_streamingData));
-
-                    _socket.Send(_streamingDataBytes);
-                    Thread.Sleep(2000);
-                    expect = 0;
+                    _socket.Send(Encoding.Unicode.GetBytes(new JavaScriptSerializer().Serialize(GetActivityStaffToStreamingData())));
+                    Thread.Sleep(_waitingBeforeShipping);
                 } while (true);
-
-                //socket.Shutdown(SocketShutdown.Both);
-                //socket.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                _socket.Shutdown(SocketShutdown.Both);
+                _socket.Close();
                 LoopConnectServerAndSendMessage();
             }
         }

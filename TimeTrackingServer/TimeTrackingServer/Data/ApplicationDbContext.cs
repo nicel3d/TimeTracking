@@ -150,8 +150,7 @@ namespace TimeTrackingServer.Data
                 entity.Property(e => e.ApplicationId).HasColumnName("application_id");
 
                 entity.Property(e => e.Title)
-                    .HasColumnName("title")
-                    .HasMaxLength(100);
+                    .HasColumnName("title");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
