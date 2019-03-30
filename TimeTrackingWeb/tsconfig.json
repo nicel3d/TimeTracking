@@ -14,10 +14,11 @@
     "types": [
       "webpack-env",
       "mocha",
+      "vuetify",
       "chai"
     ],
     "paths": {
-      "@/*": [
+      "%/*": [
         "src/*"
       ]
     },
