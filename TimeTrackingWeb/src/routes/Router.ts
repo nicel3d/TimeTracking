@@ -9,9 +9,9 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
+      path: '',
       name: RouterNameEnum.Authorization,
-      component: () => import('../layout/UnregisteredLayout.vue'),
+      component: () => import('../layout/UnregisteredLayout.vue')
     },
     {
       path: '/main',
@@ -19,10 +19,10 @@ export default new Router({
       children: [
         {
           path: 'home',
-          name: RouterNameEnum.Home,
+          name: RouterNameEnum.Dashboard,
           component: () => import('../views/Home.vue'),
           meta: {
-            breadcrumb: 'Home'
+            breadcrumb: 'Dashboard'
           }
         }
       ]

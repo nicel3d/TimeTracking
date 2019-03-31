@@ -113,6 +113,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import VBreadcrumbsRouter from '../components/VBreadcrumbsRouter.vue'
 import VLogoutConfirmDialog from '../components/VLogoutConfirmDialog.vue'
+import { RouterNameEnum } from '%/constants/RouterConstant'
 
 @Component({
   components: {
@@ -126,21 +127,15 @@ export default class WrapperLayout extends Vue {
   fixed = false
   dialog = false
   items = [
-    // {
-    //   icon: 'fas fa-home',
-    //   title: 'Home',
-    //   name: 'Home',
-    // },
     {
-      icon: 'fas fa-address-card',
-      title: '',
-      name: 'MortgageOrder'
+      icon: 'fas fa-dashboard',
+      title: 'Dashboard',
+      name: RouterNameEnum.Dashboard
     }
   ]
   miniVariant = false
   right = true
   rightDrawer = false
-  title = 'Vuetify.js'
 }
 </script>
 

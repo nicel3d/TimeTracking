@@ -20,17 +20,6 @@
                 color="primary">
                 <v-toolbar-title>Форма авторизации</v-toolbar-title>
                 <v-spacer/>
-                <v-tooltip right>
-                  <v-btn
-                    slot="activator"
-                    icon
-                    large
-                    href="https://codepen.io/johnjleider/pen/wyYVVj"
-                    target="_blank">
-                    <v-icon large>mdi-codepen</v-icon>
-                  </v-btn>
-                  <span>Codepen</span>
-                </v-tooltip>
               </v-toolbar>
               <v-card-text>
                 <v-form>
@@ -40,6 +29,7 @@
                     v-model="login"
                     :error-messages="errors.collect('email')"
                     data-vv-name="email"
+                    prepend-icon="person"
                     name="login"
                     label="Email"
                     type="text"
@@ -71,20 +61,6 @@
         </v-layout>
       </v-container>
     </v-content>
-
-    <v-footer
-      :fixed="fixed"
-      app>
-      <v-flex
-        grey
-        darken-3
-        py-3
-        text-xs-center
-        white--text
-        xs12>
-        &copy; {{ $moment().format('YYYY') }} - {{ $appName }}
-      </v-flex>
-    </v-footer>
   </v-app>
 </template>
 
@@ -95,23 +71,25 @@ import { Validator } from 'vee-validate'
 
 @Component
 export default class UnregisteredLayout extends Vue {
-  @Inject('$validator') public $validator!: Validator;
-  @Inject('$refs') public $refs!: HTMLFormElement;
+  @Inject('$validator') public $validator!: Validator
 
   login: string = ''
   password: string = ''
   errorMessages: string = ''
   formHasErrors: boolean = false
 
-  beforeMount () {
-    this.$refs.login.focus()
+  mounted () {
+    const vm = this
+    this.$nextTick(function () {
+      (vm.$refs.login as HTMLFormElement).focus()
+    })
   }
 
   submit () {
     this.$validator.validateAll()
       .then((res) => {
         if (res) {
-          this.$router.push({ name: RouterNameEnum.Home })
+          this.$router.push({ name: RouterNameEnum.Dashboard })
         }
       })
   }
