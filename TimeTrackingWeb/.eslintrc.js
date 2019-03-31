@@ -5,6 +5,9 @@ module.exports = {
   },
   extends: ['plugin:vue/essential', '@vue/standard', '@vue/typescript'],
   rules: {
+    'vue/no-use-v-if-with-v-for': ['error', {
+      'allowUsingIterationVar': true
+    }],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
