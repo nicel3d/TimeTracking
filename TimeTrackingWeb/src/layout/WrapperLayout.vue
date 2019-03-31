@@ -128,7 +128,7 @@ export default class WrapperLayout extends Vue {
   dialog = false
   items = [
     {
-      icon: 'fas fa-dashboard',
+      icon: 'fas fa-tachometer-alt',
       title: 'Dashboard',
       name: RouterNameEnum.Dashboard
     }
