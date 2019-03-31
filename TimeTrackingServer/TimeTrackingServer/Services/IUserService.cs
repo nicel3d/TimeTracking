@@ -8,7 +8,7 @@ namespace TimeTrackingServer.Services
 {
     public interface IUserService
     {
-        UserModel Authenticate(string username, string password);
+        Task<UserModel> Authenticate(string username, string password);
         List<UserModel> GetAll();
     }
 }

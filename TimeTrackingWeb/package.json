@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@vue/eslint-config-standard": "^4.0.0",
+    "fetch-intercept": "^2.3.1",
     "moment-timezone": "^0.5.23",
     "register-service-worker": "^1.6.2",
     "vee-validate": "^2.2.0",
@@ -22,7 +23,8 @@
     "vue-router": "^3.0.1",
     "vuetify": "^1.5.5",
     "vuex": "^3.0.1",
-    "vuex-module-decorators": "^0.9.8"
+    "vuex-module-decorators": "^0.9.8",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",

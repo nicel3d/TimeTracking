@@ -18,6 +18,7 @@ using NJsonSchema;
 using NSwag.AspNetCore;
 using System;
 using TimeTrackingServer.Middlewares;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace TimeTrackingServer
 {
@@ -34,7 +35,23 @@ namespace TimeTrackingServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(o =>
+            {
+                //o.AddPolicy("cors", builder => builder
+                //    .WithOrigins("http://localhost:8080", "http://localhost:5001")
+                //    .AllowAnyMethod()
+                //    .AllowCredentials()
+                //    .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+
+                var policy = new CorsPolicy();
+
+                policy.Headers.Add("*");
+                policy.Methods.Add("*");
+                policy.Origins.Add("*");
+                policy.SupportsCredentials = true;
+
+                o.AddPolicy("cors", policy);
+            });
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -102,6 +119,8 @@ namespace TimeTrackingServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("cors");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

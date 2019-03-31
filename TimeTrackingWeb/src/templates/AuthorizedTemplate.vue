@@ -121,7 +121,7 @@ import { RouterNameEnum } from '%/constants/RouterConstant'
     VLogoutConfirmDialog
   }
 })
-export default class WrapperLayout extends Vue {
+export default class AuthorizedTemplate extends Vue {
   clipped = false
   drawer = true
   fixed = false
@@ -139,7 +139,7 @@ export default class WrapperLayout extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
 .container.wrapper {
   max-width: 900px;
 }

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import './plugins/vuetify'
 import './plugins/vee-validate'
 import router from './routes/Router'
-import store from './store'
+import store from './stores/store'
 import App from './App.vue'
 import './registerServiceWorker'
 
@@ -14,6 +14,7 @@ Vue.use(VueMoment, {
 })
 
 moment.locale('ru')
+
 Vue.prototype.$appName = 'Time tracking web'
 Vue.config.productionTip = false
 

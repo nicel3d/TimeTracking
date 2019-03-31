@@ -9,18 +9,25 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '',
-      name: RouterNameEnum.Authorization,
-      component: () => import('../layout/UnregisteredLayout.vue')
+      path: '/',
+      component: () => import('../templates/UnregisteredTemplate.vue'),
+      redirect: '/authorization',
+      children: [
+        {
+          path: 'authorization',
+          name: RouterNameEnum.Authorization,
+          component: () => import('../views/AuthView.vue')
+        }
+      ]
     },
     {
       path: '/main',
-      component: () => import('../layout/WrapperLayout.vue'),
+      component: () => import('../templates/AuthorizedTemplate.vue'),
       children: [
         {
           path: 'home',
           name: RouterNameEnum.Dashboard,
-          component: () => import('../views/Home.vue'),
+          component: () => import('../views/DashboardView.vue'),
           meta: {
             breadcrumb: 'Dashboard'
           }

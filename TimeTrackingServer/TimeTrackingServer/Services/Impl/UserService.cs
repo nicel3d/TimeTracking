@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace TimeTrackingServer.Services.Impl
             }
         }
 
-        public UserModel Authenticate(string email, string password)
+        public async Task<UserModel> Authenticate(string email, string password)
         {
             //_dbContext.User.Add(new UserModel
             //{
@@ -59,7 +60,7 @@ namespace TimeTrackingServer.Services.Impl
             //);
             //_dbContext.SaveChanges();
 
-            UserModel user = _dbContext.User.SingleOrDefault(x => x.Email == email && x.Password == SHA512(password));
+            UserModel user = await _dbContext.User.FirstOrDefaultAsync(x => x.Email == email && x.Password == SHA512(password));
 
             // return null if user not found
             if (user == null)

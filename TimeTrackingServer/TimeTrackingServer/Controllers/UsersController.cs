@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Services;
 
 namespace TimeTrackingServer.Controllers
 {
     [Authorize]
+    [EnableCors("cors")]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : Controller
@@ -17,16 +20,26 @@ namespace TimeTrackingServer.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]UserModel userParam)
+        public class AuthenticateRequest
         {
-            var user = _userService.Authenticate(userParam.Email, userParam.Password);
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
+
+        [AllowAnonymous]
+        [EnableCors("cors")]
+        [HttpPost(nameof(Authenticate))]
+        [Produces("application/json")]
+        public async Task<UserModel> Authenticate([FromBody]AuthenticateRequest authenticateRequest)
+        {
+            var user = await _userService.Authenticate(authenticateRequest.Email, authenticateRequest.Password);
 
             if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+            {
+                throw new System.ArgumentException("Username or password is incorrect");
+            }
 
-            return Ok(user);
+            return user;
         }
 
         [HttpGet]
