@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TimeTrackingServer.Models;
+using TimeTrackingServer.Exceptions;
 using TimeTrackingServer.Services;
 
 namespace TimeTrackingServer.Controllers
@@ -24,6 +24,17 @@ namespace TimeTrackingServer.Controllers
         {
             public string Email { get; set; }
             public string Password { get; set; }
+        }
+
+        public class ErrorBaseUser : ErrorBase
+        {
+        }
+
+
+        [EnableCors("cors")]
+        [HttpPost(nameof(ErrorBaseRegistred))]
+        public void ErrorBaseRegistred([FromBody]ErrorBase errorBase)
+        {
         }
 
         [AllowAnonymous]

@@ -54,7 +54,7 @@
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
-import { AuthenticateRequest } from '%/stores/api/SwaggerDocumentationTypescript'
+import { AuthenticateRequest, ErrorBase } from '%/stores/api/SwaggerDocumentationTypescript'
 
 @Component
 export default class VAuthComponent extends Vue {
@@ -78,6 +78,10 @@ export default class VAuthComponent extends Vue {
     this.$store.state.api.users_Authenticate(authenticateRequest)
       .then(res => {
         this.$store.dispatch('setToken', res.token).then()
+      })
+      .catch(res => {
+        const errorBase = JSON.parse(res.response) as ErrorBase
+        console.error(errorBase)
       })
   }
 

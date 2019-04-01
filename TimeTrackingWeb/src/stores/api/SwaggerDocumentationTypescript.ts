@@ -17,6 +17,40 @@ export class WSApi {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
+    users_ErrorBaseRegistred(errorBase: ErrorBase | null): Promise<void> {
+        let url_ = this.baseUrl + "/api/Users/ErrorBaseRegistred";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(errorBase);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUsers_ErrorBaseRegistred(_response);
+        });
+    }
+
+    protected processUsers_ErrorBaseRegistred(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+                return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
     users_Authenticate(authenticateRequest: AuthenticateRequest | null): Promise<SecurityTokenUser | null> {
         let url_ = this.baseUrl + "/api/Users/Authenticate";
         url_ = url_.replace(/[?&]$/, "");
@@ -448,6 +482,50 @@ export class WSApi {
         }
         return Promise.resolve<void>(<any>null);
     }
+}
+
+export class ErrorBase implements IErrorBase {
+    errorCode!: number;
+    failReason?: string | undefined;
+    exceptionType?: string | undefined;
+
+    constructor(data?: IErrorBase) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.errorCode = data["ErrorCode"];
+            this.failReason = data["FailReason"];
+            this.exceptionType = data["ExceptionType"];
+        }
+    }
+
+    static fromJS(data: any): ErrorBase {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorBase();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ErrorCode"] = this.errorCode;
+        data["FailReason"] = this.failReason;
+        data["ExceptionType"] = this.exceptionType;
+        return data;
+    }
+}
+
+export interface IErrorBase {
+    errorCode: number;
+    failReason?: string | undefined;
+    exceptionType?: string | undefined;
 }
 
 export class SecurityTokenUser implements ISecurityTokenUser {

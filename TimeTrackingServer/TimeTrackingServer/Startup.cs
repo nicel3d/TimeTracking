@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using TimeTrackingServer.Services;
 using TimeTrackingServer.Services.Impl;
-using NJsonSchema;
 using NSwag.AspNetCore;
 using System;
 using TimeTrackingServer.Middlewares;
@@ -143,6 +142,7 @@ namespace TimeTrackingServer
             app.UseSwagger();
             app.UseSwaggerUi3();
 
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMiddleware<AsyncListenerSocketMiddleware>();
 
             app.UseMvc(routes =>
