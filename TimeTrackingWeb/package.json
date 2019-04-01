@@ -10,10 +10,10 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "@vue/eslint-config-standard": "^4.0.0",
     "fetch-intercept": "^2.3.1",
     "moment-timezone": "^0.5.23",
     "register-service-worker": "^1.6.2",
+    "tslint": "^5.14.0",
     "vee-validate": "^2.2.0",
     "vue": "^2.6.6",
     "vue-class-component": "^6.0.0",
@@ -23,7 +23,6 @@
     "vue-router": "^3.0.1",
     "vuetify": "^1.5.5",
     "vuex": "^3.0.1",
-    "vuex-module-decorators": "^0.9.8",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
@@ -38,6 +37,7 @@
     "@vue/cli-plugin-unit-mocha": "^3.0.4",
     "@vue/cli-service": "^3.0.4",
     "@vue/eslint-config-prettier": "^4.0.1",
+    "@vue/eslint-config-standard": "^4.0.0",
     "@vue/eslint-config-typescript": "^4.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.0.1",

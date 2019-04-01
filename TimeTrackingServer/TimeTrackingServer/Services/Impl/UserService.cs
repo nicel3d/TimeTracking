@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using TimeTrackingServer.Data;
 using TimeTrackingServer.Helpers;
 using TimeTrackingServer.Models;
+using static TimeTrackingServer.Exceptions.TimeTrackingServerException;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -48,7 +49,7 @@ namespace TimeTrackingServer.Services.Impl
             }
         }
 
-        public async Task<UserModel> Authenticate(string email, string password)
+        public async Task<SecurityTokenUser> Authenticate(string email, string password)
         {
             //_dbContext.User.Add(new UserModel
             //{
@@ -62,9 +63,10 @@ namespace TimeTrackingServer.Services.Impl
 
             UserModel user = await _dbContext.User.FirstOrDefaultAsync(x => x.Email == email && x.Password == SHA512(password));
 
-            // return null if user not found
             if (user == null)
-                return null;
+            {
+                throw new LoginAttemptFailedException();
+            }
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -82,12 +84,11 @@ namespace TimeTrackingServer.Services.Impl
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
 
-            // remove password before returning
-            user.Password = null;
-
-            return user;
+            return new SecurityTokenUser() {
+                token = tokenHandler.WriteToken(token),
+                userFullName = user.UserName
+            };
         }
 
         public List<UserModel> GetAll()

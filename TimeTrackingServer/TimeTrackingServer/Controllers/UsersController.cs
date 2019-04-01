@@ -30,16 +30,9 @@ namespace TimeTrackingServer.Controllers
         [EnableCors("cors")]
         [HttpPost(nameof(Authenticate))]
         [Produces("application/json")]
-        public async Task<UserModel> Authenticate([FromBody]AuthenticateRequest authenticateRequest)
+        public async Task<SecurityTokenUser> Authenticate([FromBody]AuthenticateRequest authenticateRequest)
         {
-            var user = await _userService.Authenticate(authenticateRequest.Email, authenticateRequest.Password);
-
-            if (user == null)
-            {
-                throw new System.ArgumentException("Username or password is incorrect");
-            }
-
-            return user;
+            return await _userService.Authenticate(authenticateRequest.Email, authenticateRequest.Password);
         }
 
         [HttpGet]

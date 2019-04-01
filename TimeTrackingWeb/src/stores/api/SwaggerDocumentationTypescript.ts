@@ -17,8 +17,8 @@ export class WSApi {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    users_Authenticate(authenticateRequest: AuthenticateRequest | null): Promise<UserModel | null> {
-        let url_ = this.baseUrl + "/api/Users/authenticate";
+    users_Authenticate(authenticateRequest: AuthenticateRequest | null): Promise<SecurityTokenUser | null> {
+        let url_ = this.baseUrl + "/api/Users/Authenticate";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(authenticateRequest);
@@ -37,14 +37,14 @@ export class WSApi {
         });
     }
 
-    protected processUsers_Authenticate(response: Response): Promise<UserModel | null> {
+    protected processUsers_Authenticate(response: Response): Promise<SecurityTokenUser | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
                 let result200: any = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? UserModel.fromJS(resultData200) : <any>null;
+                result200 = resultData200 ? SecurityTokenUser.fromJS(resultData200) : <any>null;
                 return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -52,7 +52,7 @@ export class WSApi {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<UserModel | null>(<any>null);
+        return Promise.resolve<SecurityTokenUser | null>(<any>null);
     }
 
     users_GetAll(): Promise<FileResponse | null> {
@@ -450,14 +450,11 @@ export class WSApi {
     }
 }
 
-export class UserModel implements IUserModel {
-    id!: string;
-    userName?: string | undefined;
-    email?: string | undefined;
-    password?: string | undefined;
+export class SecurityTokenUser implements ISecurityTokenUser {
     token?: string | undefined;
+    userFullName?: string | undefined;
 
-    constructor(data?: IUserModel) {
+    constructor(data?: ISecurityTokenUser) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -468,38 +465,29 @@ export class UserModel implements IUserModel {
 
     init(data?: any) {
         if (data) {
-            this.id = data["Id"];
-            this.userName = data["UserName"];
-            this.email = data["Email"];
-            this.password = data["Password"];
-            this.token = data["Token"];
+            this.token = data["token"];
+            this.userFullName = data["userFullName"];
         }
     }
 
-    static fromJS(data: any): UserModel {
+    static fromJS(data: any): SecurityTokenUser {
         data = typeof data === 'object' ? data : {};
-        let result = new UserModel();
+        let result = new SecurityTokenUser();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["UserName"] = this.userName;
-        data["Email"] = this.email;
-        data["Password"] = this.password;
-        data["Token"] = this.token;
+        data["token"] = this.token;
+        data["userFullName"] = this.userFullName;
         return data;
     }
 }
 
-export interface IUserModel {
-    id: string;
-    userName?: string | undefined;
-    email?: string | undefined;
-    password?: string | undefined;
+export interface ISecurityTokenUser {
     token?: string | undefined;
+    userFullName?: string | undefined;
 }
 
 export class AuthenticateRequest implements IAuthenticateRequest {

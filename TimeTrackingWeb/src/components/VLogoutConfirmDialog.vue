@@ -35,7 +35,7 @@ export default class VLogoutConfirmDialog extends Vue {
 
   success () {
     this.$emit('update:dialog', false)
-    this.$router.push({ name: 'LayoutUnregistered' })
+    this.$store.dispatch('logout').then()
   }
 }
 </script>

@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { RouterNameEnum } from '%/constants/RouterConstant'
+import store from '%/stores/store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -32,7 +33,22 @@ export default new Router({
             breadcrumb: 'Dashboard'
           }
         }
-      ]
+      ],
+      beforeEnter: (to, from, next) => {
+        const token = store.state.token
+        if (!token) {
+          const query = { next: to.path.toString() }
+          if (to.query.next) {
+            query.next = to.query.next.toString()
+          }
+
+          next({ name: RouterNameEnum.Authorization, query: query })
+        } else {
+          next()
+        }
+      }
     }
   ]
 })
+
+export default Vue.router = router

@@ -20,7 +20,7 @@
             v-model="login"
             :error-messages="errors.collect('email')"
             data-vv-name="email"
-            prepend-icon="person"
+            prepend-icon="user"
             name="login"
             label="Email"
             type="text"
@@ -30,7 +30,7 @@
             v-validate="'required|min:4'"
             :error-messages="errors.collect('password')"
             v-model="password"
-            prepend-icon="lock"
+            prepend-icon="unlock-alt"
             name="password"
             data-vv-as="пароль"
             data-vv-name="password"
@@ -53,9 +53,8 @@
 
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import { RouterNameEnum } from '%/constants/RouterConstant'
 import { Validator } from 'vee-validate'
-import { AuthenticateRequest, UserModel } from '%/stores/api/SwaggerDocumentationTypescript'
+import { AuthenticateRequest } from '%/stores/api/SwaggerDocumentationTypescript'
 
 @Component
 export default class VAuthComponent extends Vue {
@@ -77,10 +76,9 @@ export default class VAuthComponent extends Vue {
       password: this.password
     })
     this.$store.state.api.users_Authenticate(authenticateRequest)
-      .then(() => {
-        this.$router.push({ name: RouterNameEnum.Dashboard })
+      .then(res => {
+        this.$store.dispatch('setToken', res.token).then()
       })
-      .catch()
   }
 
   submit () {
