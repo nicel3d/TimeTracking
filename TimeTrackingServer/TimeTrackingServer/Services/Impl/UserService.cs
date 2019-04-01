@@ -86,8 +86,8 @@ namespace TimeTrackingServer.Services.Impl
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return new SecurityTokenUser() {
-                token = tokenHandler.WriteToken(token),
-                userFullName = user.UserName
+                Token = tokenHandler.WriteToken(token),
+                UserFullName = user.UserName
             };
         }
 

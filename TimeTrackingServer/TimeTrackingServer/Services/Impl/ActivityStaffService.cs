@@ -11,7 +11,7 @@ using TimeTrackingServer.Models;
 
 namespace TimeTrackingServer.Services.Impl
 {
-    public class ActivityStaffService : IActiviryStaffService
+    public class ActivityStaffService : IActivityStaffService
     {
         ApplicationDbContext _dbContext;
 

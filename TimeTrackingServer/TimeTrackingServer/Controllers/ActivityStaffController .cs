@@ -12,11 +12,11 @@ namespace TimeTrackingServer.Controllers
     [ApiController]
     //[EnableCors("cors")]
     [Route("api/[controller]")]
-    public class ActiviryStaffController : Controller
+    public class ActivityStaffController : Controller
     {
-        private IActiviryStaffService _activiryStaffService;
+        private IActivityStaffService _activiryStaffService;
 
-        public ActiviryStaffController(IActiviryStaffService activiryStaffService)
+        public ActivityStaffController(IActivityStaffService activiryStaffService)
         {
             _activiryStaffService = activiryStaffService;
         }

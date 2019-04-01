@@ -6,7 +6,7 @@ using TimeTrackingServer.Models;
 
 namespace TimeTrackingServer.Services
 {
-    public interface IActiviryStaffService
+    public interface IActivityStaffService
     {
         Task<ActivityStaff> Get(int id);
         Task<ActivityStaff> Post(ActivityStaff activityStaff);

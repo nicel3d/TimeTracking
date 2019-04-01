@@ -121,8 +121,8 @@ export class WSApi {
         return Promise.resolve<FileResponse | null>(<any>null);
     }
 
-    activiryStaff_GetAll(): Promise<ActivityStaff[] | null> {
-        let url_ = this.baseUrl + "/api/ActiviryStaff";
+    activityStaff_GetAll(): Promise<ActivityStaff[] | null> {
+        let url_ = this.baseUrl + "/api/ActivityStaff";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -133,11 +133,11 @@ export class WSApi {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActiviryStaff_GetAll(_response);
+            return this.processActivityStaff_GetAll(_response);
         });
     }
 
-    protected processActiviryStaff_GetAll(response: Response): Promise<ActivityStaff[] | null> {
+    protected processActivityStaff_GetAll(response: Response): Promise<ActivityStaff[] | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -159,8 +159,8 @@ export class WSApi {
         return Promise.resolve<ActivityStaff[] | null>(<any>null);
     }
 
-    activiryStaff_Post(activityStaff: ActivityStaff | null): Promise<ActivityStaff | null> {
-        let url_ = this.baseUrl + "/api/ActiviryStaff";
+    activityStaff_Post(activityStaff: ActivityStaff | null): Promise<ActivityStaff | null> {
+        let url_ = this.baseUrl + "/api/ActivityStaff";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(activityStaff);
@@ -175,11 +175,11 @@ export class WSApi {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActiviryStaff_Post(_response);
+            return this.processActivityStaff_Post(_response);
         });
     }
 
-    protected processActiviryStaff_Post(response: Response): Promise<ActivityStaff | null> {
+    protected processActivityStaff_Post(response: Response): Promise<ActivityStaff | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -197,8 +197,8 @@ export class WSApi {
         return Promise.resolve<ActivityStaff | null>(<any>null);
     }
 
-    activiryStaff_Get(id: number): Promise<ActivityStaff | null> {
-        let url_ = this.baseUrl + "/api/ActiviryStaff/{id}";
+    activityStaff_Get(id: number): Promise<ActivityStaff | null> {
+        let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -212,11 +212,11 @@ export class WSApi {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActiviryStaff_Get(_response);
+            return this.processActivityStaff_Get(_response);
         });
     }
 
-    protected processActiviryStaff_Get(response: Response): Promise<ActivityStaff | null> {
+    protected processActivityStaff_Get(response: Response): Promise<ActivityStaff | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -234,8 +234,8 @@ export class WSApi {
         return Promise.resolve<ActivityStaff | null>(<any>null);
     }
 
-    activiryStaff_Put(id: number, activityStaff: ActivityStaff | null): Promise<void> {
-        let url_ = this.baseUrl + "/api/ActiviryStaff/{id}";
+    activityStaff_Put(id: number, activityStaff: ActivityStaff | null): Promise<void> {
+        let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -252,11 +252,11 @@ export class WSApi {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActiviryStaff_Put(_response);
+            return this.processActivityStaff_Put(_response);
         });
     }
 
-    protected processActiviryStaff_Put(response: Response): Promise<void> {
+    protected processActivityStaff_Put(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
@@ -271,8 +271,8 @@ export class WSApi {
         return Promise.resolve<void>(<any>null);
     }
 
-    activiryStaff_Delete(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/ActiviryStaff/{id}";
+    activityStaff_Delete(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -285,11 +285,11 @@ export class WSApi {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActiviryStaff_Delete(_response);
+            return this.processActivityStaff_Delete(_response);
         });
     }
 
-    protected processActiviryStaff_Delete(response: Response): Promise<void> {
+    protected processActivityStaff_Delete(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 204) {
@@ -543,8 +543,8 @@ export class SecurityTokenUser implements ISecurityTokenUser {
 
     init(data?: any) {
         if (data) {
-            this.token = data["token"];
-            this.userFullName = data["userFullName"];
+            this.token = data["Token"];
+            this.userFullName = data["UserFullName"];
         }
     }
 
@@ -557,8 +557,8 @@ export class SecurityTokenUser implements ISecurityTokenUser {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["token"] = this.token;
-        data["userFullName"] = this.userFullName;
+        data["Token"] = this.token;
+        data["UserFullName"] = this.userFullName;
         return data;
     }
 }

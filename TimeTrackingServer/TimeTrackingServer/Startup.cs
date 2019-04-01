@@ -18,6 +18,7 @@ using NSwag.AspNetCore;
 using System;
 using TimeTrackingServer.Middlewares;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Newtonsoft.Json.Serialization;
 
 namespace TimeTrackingServer
 {
@@ -70,7 +71,10 @@ namespace TimeTrackingServer
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2); ;
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -107,6 +111,7 @@ namespace TimeTrackingServer
             services.AddSingleton<ApplicationDbContext>();
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IActivityStaffService, ActivityStaffService>();
             services.AddScoped<IStreamingDataService, StreamingDataService>();
             services.AddTransient<StreamingDataService>();
             // Register the Swagger services

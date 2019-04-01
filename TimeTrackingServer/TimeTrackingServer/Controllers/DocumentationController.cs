@@ -13,7 +13,7 @@ namespace TimeTrackingServer.Controllers
     {
         private List<Type> _documentationControllerList = new List<Type> {
             typeof(UsersController),
-            typeof(ActiviryStaffController),
+            typeof(ActivityStaffController),
             typeof(ValuesController)
         };
 

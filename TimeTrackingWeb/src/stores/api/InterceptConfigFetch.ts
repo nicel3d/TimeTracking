@@ -7,7 +7,7 @@ fetchIntercept.register({
     config.headers['Access-Control-Allow-Origin'] = '*'
 
     const token = store.state.token
-    if (token !== null) {
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
     }
 
