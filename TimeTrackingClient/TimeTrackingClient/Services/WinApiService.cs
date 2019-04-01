@@ -27,6 +27,10 @@ namespace TimeTrackingClient.Services
         [DllImport("user32.dll")]
         static extern int GetWindowText(int hWnd, StringBuilder text, int count);
 
+        public WinApiService()
+        {
+        }
+
         private static string GetMainModuleFilepath(int processId)
         {
             string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;

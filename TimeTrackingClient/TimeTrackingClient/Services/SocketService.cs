@@ -19,7 +19,6 @@ namespace TimeTrackingClient.Services
         private static IPEndPoint _ipPoint = new IPEndPoint(IPAddress.Parse(_address), _port);
         private static IdleTimeFinderService _idleTimeFinder = new IdleTimeFinderService();
         private static DataBaseService _dataBaseService = new DataBaseService();
-        private static WinApiService _window = new WinApiService();
         private static StreamingData _streamingData;
         private static BlockingCollection<StreamingData> bc;
         private static Socket _socket;
@@ -137,7 +136,7 @@ namespace TimeTrackingClient.Services
         {
             ApplicationStreamingData applicationStreamingData;
 
-            applicationStreamingData = _window.GetActiveWindow();
+            applicationStreamingData = new WinApiService().GetActiveWindow();
             return _streamingData = new StreamingData()
             {
                 ApplicationAlias = applicationStreamingData.ApplicationAlias,
