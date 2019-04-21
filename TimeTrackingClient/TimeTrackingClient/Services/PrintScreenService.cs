@@ -9,7 +9,8 @@ namespace TimeTrackingClient.Services
 {
     class PrintScreenService
     {
-        public string base64String = "";
+        public string imageBase64 = "";
+        public byte[] imageBytes = null;
 
         public PrintScreenService()
         {
@@ -27,8 +28,8 @@ namespace TimeTrackingClient.Services
             CaptureScreen().Save(ms, encoder, parameters);
 
             //CaptureScreen().Save(ms, ImageFormat.Jpeg);
-            byte[] byteImage = ms.ToArray();
-            base64String = Convert.ToBase64String(byteImage);
+            imageBytes = ms.ToArray();
+            imageBase64 = Convert.ToBase64String(imageBytes);
 
             // data:image/jpeg;base64,
         }

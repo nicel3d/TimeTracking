@@ -24,7 +24,7 @@ namespace TimeTrackingClient.Services
         private static Socket _socket;
 
         private static TimeSpan _waitingBeforeShipping = TimeSpan.FromSeconds(5);
-        private static TimeSpan _waitingBeforeReconnect = TimeSpan.FromSeconds(10);
+        private static TimeSpan _waitingBeforeReconnect = TimeSpan.FromSeconds(1);
         private static TimeSpan _waitingBeforeGetTemporaryStorage = TimeSpan.FromSeconds(10);
         private static TimeSpan _waitingBeforeDeleteTemporaryStorage = TimeSpan.FromMilliseconds(100);
 

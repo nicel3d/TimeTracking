@@ -8,10 +8,32 @@ namespace TimeTrackingServer.Helpers
 {
     public class ImageHelper
     {
+        public static byte[] GetSmallImageFromBytes(byte[] bytes)
+        {
+            var resize = Resize(BytesToImage(bytes), new Size(300, 300));
+            return ImageToByteArray(resize);
+        }
+
+        public static Image BytesToImage(byte[] byteArrayIn)
+        {
+            MemoryStream ms = new MemoryStream(byteArrayIn);
+            Image returnImage = Image.FromStream(ms);
+            return returnImage;
+        }
+
         public static string GetSmallImageFrombase64String(string base64String)
         {
             var resize = Resize(Base64ToImage(base64String), new Size(300, 300));
             return ImageToBase64(resize, ImageFormat.Jpeg);
+        }
+
+        public static byte[] ImageToByteArray(System.Drawing.Image image)
+        {
+            using (var ms = new MemoryStream())
+            {
+                image.Save(ms, ImageFormat.Jpeg);
+                return ms.ToArray();
+            }
         }
 
         public static Image Base64ToImage(string base64String)

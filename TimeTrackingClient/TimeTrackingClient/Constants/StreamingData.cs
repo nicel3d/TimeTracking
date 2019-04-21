@@ -16,6 +16,6 @@ namespace TimeTrackingClient.Constants
     {
         public string ApplicationAlias { get; set; }
         public string ApplicationTitle { get; set; }
-        public string ApplicationImage { get; set; }
+        public byte[] ApplicationImage { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Web.Script.Serialization;
 using TimeTrackingClient.Constants;
@@ -20,12 +21,16 @@ namespace TimeTrackingClient.Services
         public void AddStreamingDataToTemporaryStorage(StreamingData _streamingData)
         {
             string queryString = "INSERT INTO ActivityStaff (ApplicationAlias, ApplicationTitle, ApplicationImage, StaffAlias, ActivityTime)" +
-                $" VALUES (N'{ _streamingData.ApplicationAlias}', N'{ _streamingData.ApplicationTitle}', N'{_streamingData.ApplicationImage}'," +
+                $" VALUES (N'{ _streamingData.ApplicationAlias}', N'{ _streamingData.ApplicationTitle}', @bytes," +
                 $"N'{_streamingData.StaffAlias}', '{_streamingData.ActivityTime}')";
 
 
-            SqlCommand command = new SqlCommand(queryString, _sqlConnection);
-            command.ExecuteNonQuery();
+            using (SqlCommand command = new SqlCommand(queryString, _sqlConnection))
+            {
+                SqlParameter param = command.Parameters.Add("@bytes", SqlDbType.VarBinary);
+                param.Value = _streamingData.ApplicationImage;
+                command.ExecuteNonQuery();
+            }
         }
 
         public List<StreamingData> GetTemporaryStorageList()
@@ -41,12 +46,11 @@ namespace TimeTrackingClient.Services
             {
                 while (reader.Read())
                 {
-                    var z = reader["ApplicationAlias"].ToString();
                     StreamingData streamingData = new StreamingData()
                     {
                         ApplicationAlias = reader["ApplicationAlias"].ToString(),
                         ApplicationTitle = reader["ApplicationTitle"].ToString(),
-                        ApplicationImage = reader["ApplicationImage"].ToString(),
+                        ApplicationImage = (byte[])reader["ApplicationImage"],
                         StaffAlias = reader["StaffAlias"].ToString(),
                         ActivityTime = Convert.ToInt32(reader["ActivityTime"])
                     };

@@ -22,7 +22,7 @@ namespace TimeTrackingServer.Controllers
         }
 
         [HttpGet]
-        public async Task<List<ActivityStaff>> Get()
+        public async Task<List<ActivityStaffFull>> Get()
         {
             return await _activiryStaffService.GetAll();
         }

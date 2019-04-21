@@ -10,7 +10,7 @@ namespace TimeTrackingServer.Services
     {
         public string ApplicationAlias { get; set; }
         public string ApplicationTitle { get; set; }
-        public string ApplicationImage { get; set; }
+        public byte[] ApplicationImage { get; set; }
         public string StaffAlias { get; set; }
         public Int32 ActivityTime { get; set; }
     }

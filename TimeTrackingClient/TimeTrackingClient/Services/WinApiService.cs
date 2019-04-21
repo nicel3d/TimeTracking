@@ -74,7 +74,7 @@ namespace TimeTrackingClient.Services
 
                 //var proc = Process.GetProcessById((int)procId); // Работает только для 32bit win
                 //Console.WriteLine(proc.MainModule);
-                string base64image = new PrintScreenService().base64String;
+                byte[] imageBytes = new PrintScreenService().imageBytes;
                 string processFilePath = GetMainModuleFilepath((int)procId);
 
                 FileVersionInfo processFileVersionInfo = FileVersionInfo.GetVersionInfo(processFilePath);
@@ -84,7 +84,7 @@ namespace TimeTrackingClient.Services
                     // Regex.Replace(processPath, @".*\\", ""),
                     ApplicationAlias = processFileVersionInfo.ProductName,
                     ApplicationTitle = Buff.ToString(),
-                    ApplicationImage = base64image
+                    ApplicationImage = imageBytes
                 };
             }
 
