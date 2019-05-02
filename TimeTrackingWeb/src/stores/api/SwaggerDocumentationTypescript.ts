@@ -609,7 +609,7 @@ export interface IAuthenticateRequest {
 }
 
 export class ListCountResponse implements IListCountResponse {
-  count!: number;
+  total!: number;
 
   constructor(data?: IListCountResponse) {
     if (data) {
@@ -622,7 +622,7 @@ export class ListCountResponse implements IListCountResponse {
 
   init(data?: any) {
     if (data) {
-      this.count = data["Count"];
+      this.total = data["Total"];
     }
   }
 
@@ -635,13 +635,13 @@ export class ListCountResponse implements IListCountResponse {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data["Count"] = this.count;
+    data["Total"] = this.total;
     return data;
   }
 }
 
 export interface IListCountResponse {
-  count: number;
+  total: number;
 }
 
 export class ActivityStaffListResponse extends ListCountResponse implements IActivityStaffListResponse {

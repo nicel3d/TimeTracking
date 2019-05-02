@@ -24,7 +24,7 @@
           <v-icon
             small
             class="mr-2"
-            @click="editItem(props.item)"
+            @click="$emit('on-edit', props.item.id)"
           >
             edit
           </v-icon>
@@ -64,7 +64,7 @@ export default class VActivityTableComponent extends SkipTake {
   headers = [
     {
       sortable: false,
-      text: 'Действия'
+      text: 'Действия',
     },
     { text: 'Обновлено', value: nameof<ActivityStaff>('updatedAt') },
     { text: 'Название приложения', value: (item: ActivityStaff) => oc(item).application.caption('') },
@@ -82,9 +82,6 @@ export default class VActivityTableComponent extends SkipTake {
     this.loadActivityStaffList()
   }
 
-  editItem (item) {
-  }
-
   loadActivityStaffList (skip = this.skip, take = this.take) {
     this.loading = true
     const data = new SortingAndSkipTakeRequest({
@@ -96,7 +93,7 @@ export default class VActivityTableComponent extends SkipTake {
     this.$store.state.api.activityStaff_GetList(data)
       .then(res => {
         this.desserts = res.data
-        this.totalDesserts = res.count
+        this.totalDesserts = res.total
       })
       .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))

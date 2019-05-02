@@ -5,10 +5,12 @@ import router from './routes/Router'
 import store from './stores/store'
 import App from './App.vue'
 import './registerServiceWorker'
+import VuePictureSwipe from 'vue-picture-swipe'
 
 const moment: any = require('moment-timezone')
 const VueMoment: any = require('vue-moment')
 
+Vue.component('vue-picture-swipe', VuePictureSwipe)
 Vue.use(VueMoment, {
   moment
 })
