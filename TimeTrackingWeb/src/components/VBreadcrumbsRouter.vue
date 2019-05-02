@@ -1,13 +1,5 @@
 <template>
-  <v-breadcrumbs divider="/">
-    <v-breadcrumbs-item
-      v-for="(route, key) in $route.matched"
-      v-if="route.meta && route.meta.breadcrumb"
-      :to="route.patch"
-      :key="key">
-      {{ route.meta.breadcrumb }}
-    </v-breadcrumbs-item>
-  </v-breadcrumbs>
+  <v-breadcrumbs divider="/" :items="items"/>
 </template>
 
 <script lang="ts">
@@ -15,6 +7,13 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class VBreadcrumbsRouter extends Vue {
+  get items () {
+    return this.$route.matched.map((item, index, array) => ({
+      text: item.meta.breadcrumb,
+      disabled: index + 1 <= array.length,
+      href: item.path
+    }))
+  }
 }
 </script>
 

@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Services;
+using TimeTrackingServer.Stores;
 
 namespace TimeTrackingServer.Controllers
 {
     [Authorize]
     [ApiController]
-    //[EnableCors("cors")]
+    [EnableCors("cors")]
     [Route("api/[controller]")]
     public class ActivityStaffController : Controller
     {
@@ -21,32 +22,34 @@ namespace TimeTrackingServer.Controllers
             _activiryStaffService = activiryStaffService;
         }
 
-        [HttpGet]
-        public async Task<List<ActivityStaffFull>> Get()
+        [HttpPost(nameof(GetList))]
+        public async Task<ActivityStaffListResponse> GetList(SkipTakeRequest skipTakeRequest)
         {
-            return await _activiryStaffService.GetAll();
+            return await _activiryStaffService.Get(skipTakeRequest);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "Get")]
+        [Produces("application/json")]
         public async Task<ActivityStaff> Get(int id)
         {
             return await _activiryStaffService.Get(id);
         }
 
-        [HttpPost]
+        [HttpPost(nameof(Post))]
+        [Produces("application/json")]
         public async Task<ActivityStaff> Post([FromBody]ActivityStaff activityStaff)
         {
             //activityStaff.Id = null;
             return await _activiryStaffService.Post(activityStaff);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "Put")]
         public async Task Put(int id, [FromBody]ActivityStaff activityStaff)
         {
             await _activiryStaffService.Put(id, activityStaff);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "Delete")]
         public async Task Delete(int id)
         {
             await _activiryStaffService.Delete(id);

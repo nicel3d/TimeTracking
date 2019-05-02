@@ -121,49 +121,11 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  activityStaff_GetAll(): Promise<ActivityStaffFull[] | null> {
-    let url_ = this.baseUrl + "/api/ActivityStaff";
+  activityStaff_GetList(skipTakeRequest: SkipTakeRequest | null): Promise<ActivityStaffListResponse | null> {
+    let url_ = this.baseUrl + "/api/ActivityStaff/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
-    let options_ = <RequestInit>{
-      method: "GET",
-      headers: {
-        "Accept": "application/json"
-      }
-    };
-
-    return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processActivityStaff_GetAll(_response);
-    });
-  }
-
-  protected processActivityStaff_GetAll(response: Response): Promise<ActivityStaffFull[] | null> {
-    const status = response.status;
-    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-    if (status === 200) {
-      return response.text().then((_responseText) => {
-        let result200: any = null;
-        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        if (resultData200 && resultData200.constructor === Array) {
-          result200 = [] as any;
-          for (let item of resultData200)
-            result200!.push(ActivityStaffFull.fromJS(item));
-        }
-        return result200;
-      });
-    } else if (status !== 200 && status !== 204) {
-      return response.text().then((_responseText) => {
-        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-      });
-    }
-    return Promise.resolve<ActivityStaffFull[] | null>(<any>null);
-  }
-
-  activityStaff_Post(activityStaff: ActivityStaff | null): Promise<ActivityStaff | null> {
-    let url_ = this.baseUrl + "/api/ActivityStaff";
-    url_ = url_.replace(/[?&]$/, "");
-
-    const content_ = JSON.stringify(activityStaff);
+    const content_ = JSON.stringify(skipTakeRequest);
 
     let options_ = <RequestInit>{
       body: content_,
@@ -175,18 +137,18 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processActivityStaff_Post(_response);
+      return this.processActivityStaff_GetList(_response);
     });
   }
 
-  protected processActivityStaff_Post(response: Response): Promise<ActivityStaff | null> {
+  protected processActivityStaff_GetList(response: Response): Promise<ActivityStaffListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
       return response.text().then((_responseText) => {
         let result200: any = null;
         let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        result200 = resultData200 ? ActivityStaff.fromJS(resultData200) : <any>null;
+        result200 = resultData200 ? ActivityStaffListResponse.fromJS(resultData200) : <any>null;
         return result200;
       });
     } else if (status !== 200 && status !== 204) {
@@ -194,7 +156,7 @@ export class WSApi {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<ActivityStaff | null>(<any>null);
+    return Promise.resolve<ActivityStaffListResponse | null>(<any>null);
   }
 
   activityStaff_Get(id: number): Promise<ActivityStaff | null> {
@@ -302,6 +264,44 @@ export class WSApi {
       });
     }
     return Promise.resolve<void>(<any>null);
+  }
+
+  activityStaff_Post(activityStaff: ActivityStaff | null): Promise<ActivityStaff | null> {
+    let url_ = this.baseUrl + "/api/ActivityStaff/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(activityStaff);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processActivityStaff_Post(_response);
+    });
+  }
+
+  protected processActivityStaff_Post(response: Response): Promise<ActivityStaff | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ActivityStaff.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ActivityStaff | null>(<any>null);
   }
 
   values_GetAll(): Promise<string[] | null> {
@@ -608,13 +608,90 @@ export interface IAuthenticateRequest {
   password?: string | undefined;
 }
 
+export class ListCountResponse implements IListCountResponse {
+  count!: number;
+
+  constructor(data?: IListCountResponse) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.count = data["Count"];
+    }
+  }
+
+  static fromJS(data: any): ListCountResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new ListCountResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Count"] = this.count;
+    return data;
+  }
+}
+
+export interface IListCountResponse {
+  count: number;
+}
+
+export class ActivityStaffListResponse extends ListCountResponse implements IActivityStaffListResponse {
+  data?: ActivityStaff[] | undefined;
+
+  constructor(data?: IActivityStaffListResponse) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(ActivityStaff.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ActivityStaffListResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new ActivityStaffListResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IActivityStaffListResponse extends IListCountResponse {
+  data?: ActivityStaff[] | undefined;
+}
+
 export class ActivityStaff implements IActivityStaff {
   id!: number;
   updatedAt?: Date | undefined;
   applicationTitle?: string | undefined;
   staffId?: number | undefined;
-  imageUrlBig?: string | undefined;
-  imageUrlSmall?: string | undefined;
+  imageOrigin?: string | undefined;
+  imageThumb?: string | undefined;
   applicationId?: number | undefined;
   application?: Applications | undefined;
   staff?: Staff | undefined;
@@ -634,8 +711,8 @@ export class ActivityStaff implements IActivityStaff {
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.applicationTitle = data["ApplicationTitle"];
       this.staffId = data["StaffId"];
-      this.imageUrlBig = data["ImageUrlBig"];
-      this.imageUrlSmall = data["ImageUrlSmall"];
+      this.imageOrigin = data["ImageOrigin"];
+      this.imageThumb = data["ImageThumb"];
       this.applicationId = data["ApplicationId"];
       this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
       this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
@@ -655,8 +732,8 @@ export class ActivityStaff implements IActivityStaff {
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["ApplicationTitle"] = this.applicationTitle;
     data["StaffId"] = this.staffId;
-    data["ImageUrlBig"] = this.imageUrlBig;
-    data["ImageUrlSmall"] = this.imageUrlSmall;
+    data["ImageOrigin"] = this.imageOrigin;
+    data["ImageThumb"] = this.imageThumb;
     data["ApplicationId"] = this.applicationId;
     data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
     data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
@@ -669,58 +746,19 @@ export interface IActivityStaff {
   updatedAt?: Date | undefined;
   applicationTitle?: string | undefined;
   staffId?: number | undefined;
-  imageUrlBig?: string | undefined;
-  imageUrlSmall?: string | undefined;
+  imageOrigin?: string | undefined;
+  imageThumb?: string | undefined;
   applicationId?: number | undefined;
   application?: Applications | undefined;
   staff?: Staff | undefined;
 }
 
-export class ActivityStaffFull extends ActivityStaff implements IActivityStaffFull {
-  staffAlias?: string | undefined;
-  applicationName?: string | undefined;
-
-  constructor(data?: IActivityStaffFull) {
-    super(data);
-  }
-
-  init(data?: any) {
-    super.init(data);
-    if (data) {
-      this.staffAlias = data["StaffAlias"];
-      this.applicationName = data["ApplicationName"];
-    }
-  }
-
-  static fromJS(data: any): ActivityStaffFull {
-    data = typeof data === 'object' ? data : {};
-    let result = new ActivityStaffFull();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["StaffAlias"] = this.staffAlias;
-    data["ApplicationName"] = this.applicationName;
-    super.toJSON(data);
-    return data;
-  }
-}
-
-export interface IActivityStaffFull extends IActivityStaff {
-  staffAlias?: string | undefined;
-  applicationName?: string | undefined;
-}
-
 export class Applications implements IApplications {
   id!: number;
-  name?: string | undefined;
+  caption?: string | undefined;
   updatedAt?: Date | undefined;
   state!: StateEnum;
-  alias?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
-  applicationPaths?: ApplicationPaths[] | undefined;
   applicationTitles?: ApplicationTitles[] | undefined;
   applicationToGroup?: ApplicationToGroup[] | undefined;
 
@@ -736,19 +774,13 @@ export class Applications implements IApplications {
   init(data?: any) {
     if (data) {
       this.id = data["Id"];
-      this.name = data["Name"];
+      this.caption = data["Caption"];
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.state = data["State"];
-      this.alias = data["Alias"];
       if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
         this.activityStaff = [] as any;
         for (let item of data["ActivityStaff"])
           this.activityStaff!.push(ActivityStaff.fromJS(item));
-      }
-      if (data["ApplicationPaths"] && data["ApplicationPaths"].constructor === Array) {
-        this.applicationPaths = [] as any;
-        for (let item of data["ApplicationPaths"])
-          this.applicationPaths!.push(ApplicationPaths.fromJS(item));
       }
       if (data["ApplicationTitles"] && data["ApplicationTitles"].constructor === Array) {
         this.applicationTitles = [] as any;
@@ -773,19 +805,13 @@ export class Applications implements IApplications {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["Id"] = this.id;
-    data["Name"] = this.name;
+    data["Caption"] = this.caption;
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["State"] = this.state;
-    data["Alias"] = this.alias;
     if (this.activityStaff && this.activityStaff.constructor === Array) {
       data["ActivityStaff"] = [];
       for (let item of this.activityStaff)
         data["ActivityStaff"].push(item.toJSON());
-    }
-    if (this.applicationPaths && this.applicationPaths.constructor === Array) {
-      data["ApplicationPaths"] = [];
-      for (let item of this.applicationPaths)
-        data["ApplicationPaths"].push(item.toJSON());
     }
     if (this.applicationTitles && this.applicationTitles.constructor === Array) {
       data["ApplicationTitles"] = [];
@@ -803,12 +829,10 @@ export class Applications implements IApplications {
 
 export interface IApplications {
   id: number;
-  name?: string | undefined;
+  caption?: string | undefined;
   updatedAt?: Date | undefined;
   state: StateEnum;
-  alias?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
-  applicationPaths?: ApplicationPaths[] | undefined;
   applicationTitles?: ApplicationTitles[] | undefined;
   applicationToGroup?: ApplicationToGroup[] | undefined;
 }
@@ -819,78 +843,15 @@ export enum StateEnum {
   Neutral = 2,
 }
 
-export class ApplicationPaths implements IApplicationPaths {
-  applicationId!: number;
-  staffId!: number;
-  path?: string | undefined;
+export class ApplicationTitles implements IApplicationTitles {
   id!: number;
-  application?: Applications | undefined;
-  staff?: Staff | undefined;
-
-  constructor(data?: IApplicationPaths) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(data?: any) {
-    if (data) {
-      this.applicationId = data["ApplicationId"];
-      this.staffId = data["StaffId"];
-      this.path = data["Path"];
-      this.id = data["Id"];
-      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
-      this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
-    }
-  }
-
-  static fromJS(data: any): ApplicationPaths {
-    data = typeof data === 'object' ? data : {};
-    let result = new ApplicationPaths();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["ApplicationId"] = this.applicationId;
-    data["StaffId"] = this.staffId;
-    data["Path"] = this.path;
-    data["Id"] = this.id;
-    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
-    data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
-    return data;
-  }
-}
-
-export interface IApplicationPaths {
-  applicationId: number;
-  staffId: number;
-  path?: string | undefined;
-  id: number;
-  application?: Applications | undefined;
-  staff?: Staff | undefined;
-}
-
-export class Staff implements IStaff {
-  id!: number;
-  fullname?: string | undefined;
-  email?: string | undefined;
+  title?: string | undefined;
   updatedAt?: Date | undefined;
-  status?: boolean | undefined;
-  phone?: string | undefined;
-  activityFirst?: Date | undefined;
-  activityLast?: Date | undefined;
-  avatarUrl?: string | undefined;
-  alias?: string | undefined;
-  activityStaff?: ActivityStaff[] | undefined;
-  applicationPaths?: ApplicationPaths[] | undefined;
-  staffToGroup?: StaffToGroup[] | undefined;
+  applicationId?: number | undefined;
+  application?: Applications | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
 
-  constructor(data?: IStaff) {
+  constructor(data?: IApplicationTitles) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -902,36 +863,21 @@ export class Staff implements IStaff {
   init(data?: any) {
     if (data) {
       this.id = data["Id"];
-      this.fullname = data["Fullname"];
-      this.email = data["Email"];
+      this.title = data["Title"];
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-      this.status = data["Status"];
-      this.phone = data["Phone"];
-      this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
-      this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
-      this.avatarUrl = data["AvatarUrl"];
-      this.alias = data["Alias"];
-      if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
-        this.activityStaff = [] as any;
-        for (let item of data["ActivityStaff"])
-          this.activityStaff!.push(ActivityStaff.fromJS(item));
-      }
-      if (data["ApplicationPaths"] && data["ApplicationPaths"].constructor === Array) {
-        this.applicationPaths = [] as any;
-        for (let item of data["ApplicationPaths"])
-          this.applicationPaths!.push(ApplicationPaths.fromJS(item));
-      }
-      if (data["StaffToGroup"] && data["StaffToGroup"].constructor === Array) {
-        this.staffToGroup = [] as any;
-        for (let item of data["StaffToGroup"])
-          this.staffToGroup!.push(StaffToGroup.fromJS(item));
+      this.applicationId = data["ApplicationId"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
+      if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
+        this.applicationTitleToGroup = [] as any;
+        for (let item of data["ApplicationTitleToGroup"])
+          this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
       }
     }
   }
 
-  static fromJS(data: any): Staff {
+  static fromJS(data: any): ApplicationTitles {
     data = typeof data === 'object' ? data : {};
-    let result = new Staff();
+    let result = new ApplicationTitles();
     result.init(data);
     return result;
   }
@@ -939,57 +885,38 @@ export class Staff implements IStaff {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["Id"] = this.id;
-    data["Fullname"] = this.fullname;
-    data["Email"] = this.email;
+    data["Title"] = this.title;
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-    data["Status"] = this.status;
-    data["Phone"] = this.phone;
-    data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
-    data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
-    data["AvatarUrl"] = this.avatarUrl;
-    data["Alias"] = this.alias;
-    if (this.activityStaff && this.activityStaff.constructor === Array) {
-      data["ActivityStaff"] = [];
-      for (let item of this.activityStaff)
-        data["ActivityStaff"].push(item.toJSON());
-    }
-    if (this.applicationPaths && this.applicationPaths.constructor === Array) {
-      data["ApplicationPaths"] = [];
-      for (let item of this.applicationPaths)
-        data["ApplicationPaths"].push(item.toJSON());
-    }
-    if (this.staffToGroup && this.staffToGroup.constructor === Array) {
-      data["StaffToGroup"] = [];
-      for (let item of this.staffToGroup)
-        data["StaffToGroup"].push(item.toJSON());
+    data["ApplicationId"] = this.applicationId;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
+    if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
+      data["ApplicationTitleToGroup"] = [];
+      for (let item of this.applicationTitleToGroup)
+        data["ApplicationTitleToGroup"].push(item.toJSON());
     }
     return data;
   }
 }
 
-export interface IStaff {
+export interface IApplicationTitles {
   id: number;
-  fullname?: string | undefined;
-  email?: string | undefined;
+  title?: string | undefined;
   updatedAt?: Date | undefined;
-  status?: boolean | undefined;
-  phone?: string | undefined;
-  activityFirst?: Date | undefined;
-  activityLast?: Date | undefined;
-  avatarUrl?: string | undefined;
-  alias?: string | undefined;
-  activityStaff?: ActivityStaff[] | undefined;
-  applicationPaths?: ApplicationPaths[] | undefined;
-  staffToGroup?: StaffToGroup[] | undefined;
+  applicationId?: number | undefined;
+  application?: Applications | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
 }
 
-export class StaffToGroup implements IStaffToGroup {
-  staffId!: number;
-  groupId!: number;
+export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
+  id!: number;
+  applicationTitleId?: number | undefined;
+  groupId?: number | undefined;
+  updatedAt?: Date | undefined;
+  state?: string | undefined;
+  applicationTitle?: ApplicationTitles | undefined;
   group?: Groups | undefined;
-  staff?: Staff | undefined;
 
-  constructor(data?: IStaffToGroup) {
+  constructor(data?: IApplicationTitleToGroup) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -1000,35 +927,44 @@ export class StaffToGroup implements IStaffToGroup {
 
   init(data?: any) {
     if (data) {
-      this.staffId = data["StaffId"];
+      this.id = data["Id"];
+      this.applicationTitleId = data["ApplicationTitleId"];
       this.groupId = data["GroupId"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.state = data["State"];
+      this.applicationTitle = data["ApplicationTitle"] ? ApplicationTitles.fromJS(data["ApplicationTitle"]) : <any>undefined;
       this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
-      this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
     }
   }
 
-  static fromJS(data: any): StaffToGroup {
+  static fromJS(data: any): ApplicationTitleToGroup {
     data = typeof data === 'object' ? data : {};
-    let result = new StaffToGroup();
+    let result = new ApplicationTitleToGroup();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data["StaffId"] = this.staffId;
+    data["Id"] = this.id;
+    data["ApplicationTitleId"] = this.applicationTitleId;
     data["GroupId"] = this.groupId;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["State"] = this.state;
+    data["ApplicationTitle"] = this.applicationTitle ? this.applicationTitle.toJSON() : <any>undefined;
     data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
-    data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
     return data;
   }
 }
 
-export interface IStaffToGroup {
-  staffId: number;
-  groupId: number;
+export interface IApplicationTitleToGroup {
+  id: number;
+  applicationTitleId?: number | undefined;
+  groupId?: number | undefined;
+  updatedAt?: Date | undefined;
+  state?: string | undefined;
+  applicationTitle?: ApplicationTitles | undefined;
   group?: Groups | undefined;
-  staff?: Staff | undefined;
 }
 
 export class Groups implements IGroups {
@@ -1115,130 +1051,6 @@ export interface IGroups {
   staffToGroup?: StaffToGroup[] | undefined;
 }
 
-export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
-  id!: number;
-  titleId?: number | undefined;
-  groupId?: number | undefined;
-  updatedAt?: Date | undefined;
-  state?: string | undefined;
-  group?: Groups | undefined;
-  title?: ApplicationTitles | undefined;
-
-  constructor(data?: IApplicationTitleToGroup) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(data?: any) {
-    if (data) {
-      this.id = data["Id"];
-      this.titleId = data["TitleId"];
-      this.groupId = data["GroupId"];
-      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-      this.state = data["State"];
-      this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
-      this.title = data["Title"] ? ApplicationTitles.fromJS(data["Title"]) : <any>undefined;
-    }
-  }
-
-  static fromJS(data: any): ApplicationTitleToGroup {
-    data = typeof data === 'object' ? data : {};
-    let result = new ApplicationTitleToGroup();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["Id"] = this.id;
-    data["TitleId"] = this.titleId;
-    data["GroupId"] = this.groupId;
-    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-    data["State"] = this.state;
-    data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
-    data["Title"] = this.title ? this.title.toJSON() : <any>undefined;
-    return data;
-  }
-}
-
-export interface IApplicationTitleToGroup {
-  id: number;
-  titleId?: number | undefined;
-  groupId?: number | undefined;
-  updatedAt?: Date | undefined;
-  state?: string | undefined;
-  group?: Groups | undefined;
-  title?: ApplicationTitles | undefined;
-}
-
-export class ApplicationTitles implements IApplicationTitles {
-  id!: number;
-  title?: string | undefined;
-  updatedAt?: Date | undefined;
-  applicationId?: number | undefined;
-  application?: Applications | undefined;
-  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
-
-  constructor(data?: IApplicationTitles) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(data?: any) {
-    if (data) {
-      this.id = data["Id"];
-      this.title = data["Title"];
-      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-      this.applicationId = data["ApplicationId"];
-      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
-      if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
-        this.applicationTitleToGroup = [] as any;
-        for (let item of data["ApplicationTitleToGroup"])
-          this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): ApplicationTitles {
-    data = typeof data === 'object' ? data : {};
-    let result = new ApplicationTitles();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["Id"] = this.id;
-    data["Title"] = this.title;
-    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-    data["ApplicationId"] = this.applicationId;
-    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
-    if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
-      data["ApplicationTitleToGroup"] = [];
-      for (let item of this.applicationTitleToGroup)
-        data["ApplicationTitleToGroup"].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IApplicationTitles {
-  id: number;
-  title?: string | undefined;
-  updatedAt?: Date | undefined;
-  applicationId?: number | undefined;
-  application?: Applications | undefined;
-  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
-}
-
 export class ApplicationToGroup implements IApplicationToGroup {
   id!: number;
   applicationId?: number | undefined;
@@ -1297,6 +1109,174 @@ export interface IApplicationToGroup {
   state?: string | undefined;
   application?: Applications | undefined;
   group?: Groups | undefined;
+}
+
+export class StaffToGroup implements IStaffToGroup {
+  staffId!: number;
+  groupId!: number;
+  group?: Groups | undefined;
+  staff?: Staff | undefined;
+
+  constructor(data?: IStaffToGroup) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.staffId = data["StaffId"];
+      this.groupId = data["GroupId"];
+      this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
+      this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): StaffToGroup {
+    data = typeof data === 'object' ? data : {};
+    let result = new StaffToGroup();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["StaffId"] = this.staffId;
+    data["GroupId"] = this.groupId;
+    data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
+    data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IStaffToGroup {
+  staffId: number;
+  groupId: number;
+  group?: Groups | undefined;
+  staff?: Staff | undefined;
+}
+
+export class Staff implements IStaff {
+  id!: number;
+  updatedAt?: Date | undefined;
+  status?: boolean | undefined;
+  activityFirst?: Date | undefined;
+  activityLast?: Date | undefined;
+  caption?: string | undefined;
+  activityStaff?: ActivityStaff[] | undefined;
+  staffToGroup?: StaffToGroup[] | undefined;
+
+  constructor(data?: IStaff) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.status = data["Status"];
+      this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
+      this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
+      this.caption = data["Caption"];
+      if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
+        this.activityStaff = [] as any;
+        for (let item of data["ActivityStaff"])
+          this.activityStaff!.push(ActivityStaff.fromJS(item));
+      }
+      if (data["StaffToGroup"] && data["StaffToGroup"].constructor === Array) {
+        this.staffToGroup = [] as any;
+        for (let item of data["StaffToGroup"])
+          this.staffToGroup!.push(StaffToGroup.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): Staff {
+    data = typeof data === 'object' ? data : {};
+    let result = new Staff();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["Status"] = this.status;
+    data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
+    data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
+    data["Caption"] = this.caption;
+    if (this.activityStaff && this.activityStaff.constructor === Array) {
+      data["ActivityStaff"] = [];
+      for (let item of this.activityStaff)
+        data["ActivityStaff"].push(item.toJSON());
+    }
+    if (this.staffToGroup && this.staffToGroup.constructor === Array) {
+      data["StaffToGroup"] = [];
+      for (let item of this.staffToGroup)
+        data["StaffToGroup"].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IStaff {
+  id: number;
+  updatedAt?: Date | undefined;
+  status?: boolean | undefined;
+  activityFirst?: Date | undefined;
+  activityLast?: Date | undefined;
+  caption?: string | undefined;
+  activityStaff?: ActivityStaff[] | undefined;
+  staffToGroup?: StaffToGroup[] | undefined;
+}
+
+export class SkipTakeRequest implements ISkipTakeRequest {
+  skip?: number | undefined;
+  take?: number | undefined;
+
+  constructor(data?: ISkipTakeRequest) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.skip = data["Skip"];
+      this.take = data["Take"];
+    }
+  }
+
+  static fromJS(data: any): SkipTakeRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new SkipTakeRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Skip"] = this.skip;
+    data["Take"] = this.take;
+    return data;
+  }
+}
+
+export interface ISkipTakeRequest {
+  skip?: number | undefined;
+  take?: number | undefined;
 }
 
 export interface FileResponse {

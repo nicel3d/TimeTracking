@@ -15,6 +15,7 @@
       :headers="headers"
       :items="desserts"
       :search="search"
+      :pagination.sync="pagination"
     >
       <template v-slot:items="props">
         <td class="justify-center layout px-0">
@@ -30,46 +31,49 @@
           {{ props.item.updatedAt.toLocaleDateString() }}
           {{ props.item.updatedAt.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'}) }}
         </td>
-        <td></td>
+        <td>{{ props.item.application.caption }}</td>
         <td>{{ props.item.applicationTitle }}</td>
         <td>
           <div class="mx-1 my-1">
-            <img height="50" :src="'data:image/jpeg;base64,' + props.item.imageUrlSmall" alt="">
+            <img height="50" :src="'data:image/jpeg;base64,' + props.item.imageThumb" alt="">
           </div>
         </td>
-        <td>{{ props.item.staffAlias }}</td>
+        <td>{{ props.item.staff.caption }}</td>
         <td></td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
-        Your search for "{{ search }}" found no results.
+        По запросу "{{search}}" ничего не найдено.
       </v-alert>
     </v-data-table>
+    {{ pagination }}
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { ActivityStaffFull } from '%/stores/api/SwaggerDocumentationTypescript'
+import { ActivityStaff, SkipTakeRequest } from '%/stores/api/SwaggerDocumentationTypescript'
+import { oc } from 'ts-optchain'
 
 const nameof = <T> (name: Extract<keyof T, string>): string => name
 
 @Component
 export default class VActivityTableComponent extends Vue {
-  desserts: ActivityStaffFull[] = []
+  desserts: ActivityStaff[] = []
+  search: string = ''
+  pagination: DataTablePagination = {}
   headers = [
     {
       sortable: false,
       text: 'Действия'
     },
-    { text: 'Обновлено', value: nameof<ActivityStaffFull>('updatedAt') },
-    { text: 'Название приложения', value: (item) => item },
-    { text: 'Заголовок активнго окна', value: nameof<ActivityStaffFull>('applicationTitle') },
+    { text: 'Обновлено', value: nameof<ActivityStaff>('updatedAt') },
+    { text: 'Название приложения', value: (item: ActivityStaff) => oc(item).application.caption('') },
+    { text: 'Заголовок активнго окна', value: nameof<ActivityStaff>('applicationTitle') },
     {
       sortable: false,
-      text: 'Слепок экрана',
-      value: nameof<ActivityStaffFull>('imageUrlSmall')
+      text: 'Слепок экрана'
     },
-    { text: 'Пользователь', value: nameof<ActivityStaffFull>('staffAlias') },
+    { text: 'Пользователь', value: (item: ActivityStaff) => oc(item).staff.caption('') },
     { text: 'Состояние', value: '' }
   ]
 
@@ -77,9 +81,13 @@ export default class VActivityTableComponent extends Vue {
   }
 
   mounted () {
-    this.$store.state.api.activityStaff_GetAll()
+    const data = new SkipTakeRequest({
+      skip: 0,
+      take: 10
+    })
+    this.$store.state.api.activityStaff_GetList(data)
       .then(res => {
-        this.desserts = res
+        this.desserts = res.data
       })
   }
 }

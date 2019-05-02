@@ -63,6 +63,7 @@ namespace TimeTrackingServer
             //services.AddDbContext<ApplicationDbContext>(options =>
             //    options.UseSqlServer(
             //        Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationDbContext>(opt =>
             opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
@@ -74,9 +75,7 @@ namespace TimeTrackingServer
             services.AddMvc()
                 .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver())
                 .AddJsonOptions(options =>
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize)
-                .AddJsonOptions(options =>
-                    options.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects)
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                  .SetCompatibilityVersion(CompatibilityVersion.Version_2_2); ;
 
             // configure strongly typed settings objects

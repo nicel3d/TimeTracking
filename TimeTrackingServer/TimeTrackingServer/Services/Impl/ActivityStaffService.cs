@@ -8,6 +8,7 @@ using TimeTrackingServer.Constants;
 using TimeTrackingServer.Data;
 using TimeTrackingServer.Helpers;
 using TimeTrackingServer.Models;
+using TimeTrackingServer.Stores;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -31,31 +32,35 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.ActivityStaff.FindAsync(id);
         }
 
-        public async Task<List<ActivityStaffFull>> GetAll()
+        public async Task<ActivityStaffListResponse> Get(SkipTakeRequest skipTakeRequest)
         {
+            var data = await _dbContext.Set<ActivityStaff>()
+                                        .Include(x => x.Application)
+                                        .ThenInclude(x => x.ActivityStaff)
+                                        .Include(x => x.Staff)
+                                        .ThenInclude(x => x.ActivityStaff)
+                                        .Skip(skipTakeRequest.Skip ?? 0)
+                                        .Take(skipTakeRequest.Take ?? Int32.MaxValue)
+                                        .Select(x => new ActivityStaff
+                                        {
+                                            Id = x.Id,
+                                            Staff = x.Staff,
+                                            ImageThumb = x.ImageThumb,
+                                            UpdatedAt = x.UpdatedAt,
+                                            Application = x.Application,
+                                            ApplicationTitle = x.ApplicationTitle,
+                                            ApplicationId = x.ApplicationId,
+                                            StaffId = x.StaffId
+                                        })
+                                        .ToListAsync();
 
-            return await (from activity in _dbContext.ActivityStaff
-                          where activity.ApplicationId != null && activity.StaffId != null
-                          //join app in _dbContext.Applications on activity.ApplicationId equals app.Id
-                          join s in _dbContext.Staff on activity.StaffId equals s.Id
-                          select new ActivityStaffFull
-                          {
-                              ApplicationId = activity.ApplicationId,
-                              ApplicationTitle = activity.ApplicationTitle,
-                              Id = activity.Id,
-                              StaffId = activity.StaffId,
-                              Staff = (Staff)s,
-                              StaffAlias = s.Caption,
-                              ApplicationName = null,
-                              ImageOrigin = activity.ImageOrigin,
-                              ImageThumb = activity.ImageThumb,
-                              Application = null,
-                              UpdatedAt = activity.UpdatedAt
-                          }
-                    )
-                        .Skip(0)
-                        .Take(3)
-                    .ToListAsync();
+            var count = await _dbContext.ActivityStaff.CountAsync();
+
+            return new ActivityStaffListResponse
+            {
+                Data = data,
+                Count = count
+            };
         }
 
         public async Task<ActivityStaff> Post(ActivityStaff activityStaff)

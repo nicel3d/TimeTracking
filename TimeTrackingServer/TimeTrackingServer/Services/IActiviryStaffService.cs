@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeTrackingServer.Models;
+using TimeTrackingServer.Stores;
 
 namespace TimeTrackingServer.Services
 {
-    public class ActivityStaffFull : ActivityStaff
+    public class ActivityStaffListResponse : ListCountResponse
     {
-        public string StaffAlias { get; set; }
-        public string ApplicationName { get; set; }
+        public List<ActivityStaff> Data { get; set; }
     }
 
     public interface IActivityStaffService
@@ -18,6 +18,6 @@ namespace TimeTrackingServer.Services
         Task<ActivityStaff> Post(ActivityStaff activityStaff);
         Task Put(int id, ActivityStaff activityStaff);
         Task Delete(int id);
-        Task<List<ActivityStaffFull>> GetAll();
+        Task<ActivityStaffListResponse> Get(SkipTakeRequest skipTakeRequest);
     }
 }
