@@ -8,6 +8,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import VActivityTableComponent from '%/components/VActivityTableComponent.vue'
+
 @Component({
   components: { VActivityTableComponent }
 })

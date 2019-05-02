@@ -1,8 +1,13 @@
 ﻿namespace TimeTrackingServer.Stores
 {
-    public interface IListCountResponse
+    public interface IListTotalResponse
     {
-        int Count { get; set; }
+        int Total { get; set; }
+    }
+
+    public interface IListTotalResponse
+    {
+        int Total { get; set; }
     }
 
     public interface ISkipTakeRequest

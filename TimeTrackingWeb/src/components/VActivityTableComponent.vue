@@ -20,7 +20,7 @@
     >
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <td class="justify-center layout px-0">
+        <td class="justify-center layout px-0 align-center">
           <v-icon
             small
             class="mr-2"
@@ -79,7 +79,7 @@ export default class VActivityTableComponent extends SkipTake {
 
   @Watch('pagination')
   onPagination () {
-      this.loadActivityStaffList()
+    this.loadActivityStaffList()
   }
 
   editItem (item) {
@@ -98,7 +98,7 @@ export default class VActivityTableComponent extends SkipTake {
         this.desserts = res.data
         this.totalDesserts = res.count
       })
-      .catch()
+      .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))
   }
 

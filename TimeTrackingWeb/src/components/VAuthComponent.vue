@@ -12,6 +12,7 @@
         <v-toolbar-title>Форма авторизации</v-toolbar-title>
         <v-spacer/>
       </v-toolbar>
+      <v-progress-linear v-if="loading" color="blue" indeterminate></v-progress-linear>
       <v-card-text>
         <v-form>
           <v-text-field
@@ -62,6 +63,7 @@ export default class VAuthComponent extends Vue {
 
   login: string = ''
   password: string = ''
+  loading: boolean = false
 
   mounted () {
     const vm = this
@@ -71,6 +73,7 @@ export default class VAuthComponent extends Vue {
   }
 
   auth () {
+    this.loading = true
     const authenticateRequest = new AuthenticateRequest({
       email: this.login,
       password: this.password
@@ -79,10 +82,8 @@ export default class VAuthComponent extends Vue {
       .then(res => {
         this.$store.dispatch('setToken', res.token).then()
       })
-      .catch(res => {
-        const errorBase = JSON.parse(res.response) as ErrorBase
-        console.error(errorBase)
-      })
+      .catch(res => this.$root.$emit('snackbar', res))
+      .then(() => (this.loading = false))
   }
 
   submit () {

@@ -68,7 +68,7 @@ namespace TimeTrackingServer.Services.Impl
                                     StaffId = x.StaffId
                                 })
                                 .ToListAsync(),
-                Count = await dataCount.CountAsync()
+                Total = await dataCount.CountAsync()
             };
         }
 
