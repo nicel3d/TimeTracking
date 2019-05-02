@@ -8,18 +8,17 @@ namespace TimeTrackingServer.Models
     {
         public Applications()
         {
-            ApplicationPaths = new HashSet<ApplicationPaths>();
+            ActivityStaff = new HashSet<ActivityStaff>();
             ApplicationTitles = new HashSet<ApplicationTitles>();
             ApplicationToGroup = new HashSet<ApplicationToGroup>();
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Caption { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public StateEnum State { get; set; }
-        public string Alias { get; set; }
 
-        public virtual ICollection<ApplicationPaths> ApplicationPaths { get; set; }
+        public virtual ICollection<ActivityStaff> ActivityStaff { get; set; }
         public virtual ICollection<ApplicationTitles> ApplicationTitles { get; set; }
         public virtual ICollection<ApplicationToGroup> ApplicationToGroup { get; set; }
     }

@@ -8,1274 +8,1331 @@
 // ReSharper disable InconsistentNaming
 
 export class WSApi {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+  private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl ? baseUrl : "";
+  constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+    this.http = http ? http : <any>window;
+    this.baseUrl = baseUrl ? baseUrl : "";
+  }
+
+  users_ErrorBaseRegistred(errorBase: ErrorBase | null): Promise<void> {
+    let url_ = this.baseUrl + "/api/Users/ErrorBaseRegistred";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(errorBase);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processUsers_ErrorBaseRegistred(_response);
+    });
+  }
+
+  protected processUsers_ErrorBaseRegistred(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<void>(<any>null);
+  }
 
-    users_ErrorBaseRegistred(errorBase: ErrorBase | null): Promise<void> {
-        let url_ = this.baseUrl + "/api/Users/ErrorBaseRegistred";
-        url_ = url_.replace(/[?&]$/, "");
+  users_Authenticate(authenticateRequest: AuthenticateRequest | null): Promise<SecurityTokenUser | null> {
+    let url_ = this.baseUrl + "/api/Users/Authenticate";
+    url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(errorBase);
+    const content_ = JSON.stringify(authenticateRequest);
 
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUsers_ErrorBaseRegistred(_response);
-        });
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processUsers_Authenticate(_response);
+    });
+  }
+
+  protected processUsers_Authenticate(response: Response): Promise<SecurityTokenUser | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? SecurityTokenUser.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<SecurityTokenUser | null>(<any>null);
+  }
 
-    protected processUsers_ErrorBaseRegistred(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-                return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+  users_GetAll(): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Users";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processUsers_GetAll(_response);
+    });
+  }
+
+  protected processUsers_GetAll(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  activityStaff_GetAll(): Promise<ActivityStaffFull[] | null> {
+    let url_ = this.baseUrl + "/api/ActivityStaff";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processActivityStaff_GetAll(_response);
+    });
+  }
+
+  protected processActivityStaff_GetAll(response: Response): Promise<ActivityStaffFull[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(ActivityStaffFull.fromJS(item));
         }
-        return Promise.resolve<void>(<any>null);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<ActivityStaffFull[] | null>(<any>null);
+  }
 
-    users_Authenticate(authenticateRequest: AuthenticateRequest | null): Promise<SecurityTokenUser | null> {
-        let url_ = this.baseUrl + "/api/Users/Authenticate";
-        url_ = url_.replace(/[?&]$/, "");
+  activityStaff_Post(activityStaff: ActivityStaff | null): Promise<ActivityStaff | null> {
+    let url_ = this.baseUrl + "/api/ActivityStaff";
+    url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(authenticateRequest);
+    const content_ = JSON.stringify(activityStaff);
 
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUsers_Authenticate(_response);
-        });
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processActivityStaff_Post(_response);
+    });
+  }
+
+  protected processActivityStaff_Post(response: Response): Promise<ActivityStaff | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ActivityStaff.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<ActivityStaff | null>(<any>null);
+  }
 
-    protected processUsers_Authenticate(response: Response): Promise<SecurityTokenUser | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? SecurityTokenUser.fromJS(resultData200) : <any>null;
-                return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+  activityStaff_Get(id: number): Promise<ActivityStaff | null> {
+    let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processActivityStaff_Get(_response);
+    });
+  }
+
+  protected processActivityStaff_Get(response: Response): Promise<ActivityStaff | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ActivityStaff.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ActivityStaff | null>(<any>null);
+  }
+
+  activityStaff_Put(id: number, activityStaff: ActivityStaff | null): Promise<void> {
+    let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(activityStaff);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processActivityStaff_Put(_response);
+    });
+  }
+
+  protected processActivityStaff_Put(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  activityStaff_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processActivityStaff_Delete(_response);
+    });
+  }
+
+  protected processActivityStaff_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  values_GetAll(): Promise<string[] | null> {
+    let url_ = this.baseUrl + "/api/Values";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processValues_GetAll(_response);
+    });
+  }
+
+  protected processValues_GetAll(response: Response): Promise<string[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(item);
         }
-        return Promise.resolve<SecurityTokenUser | null>(<any>null);
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<string[] | null>(<any>null);
+  }
 
-    users_GetAll(): Promise<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/Users";
-        url_ = url_.replace(/[?&]$/, "");
+  values_Post(value: string | null): Promise<void> {
+    let url_ = this.baseUrl + "/api/Values";
+    url_ = url_.replace(/[?&]$/, "");
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
+    const content_ = JSON.stringify(value);
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUsers_GetAll(_response);
-        });
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processValues_Post(_response);
+    });
+  }
+
+  protected processValues_Post(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<void>(<any>null);
+  }
 
-    protected processUsers_GetAll(response: Response): Promise<FileResponse | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse | null>(<any>null);
+  values_Get(id: number): Promise<string | null> {
+    let url_ = this.baseUrl + "/api/Values/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processValues_Get(_response);
+    });
+  }
+
+  protected processValues_Get(response: Response): Promise<string | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 !== undefined ? resultData200 : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<string | null>(<any>null);
+  }
 
-    activityStaff_GetAll(): Promise<ActivityStaff[] | null> {
-        let url_ = this.baseUrl + "/api/ActivityStaff";
-        url_ = url_.replace(/[?&]$/, "");
+  values_Put(id: number, value: string | null): Promise<void> {
+    let url_ = this.baseUrl + "/api/Values/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
+    const content_ = JSON.stringify(value);
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActivityStaff_GetAll(_response);
-        });
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processValues_Put(_response);
+    });
+  }
+
+  protected processValues_Put(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
+    return Promise.resolve<void>(<any>null);
+  }
 
-    protected processActivityStaff_GetAll(response: Response): Promise<ActivityStaff[] | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                if (resultData200 && resultData200.constructor === Array) {
-                    result200 = [] as any;
-                    for (let item of resultData200)
-                        result200!.push(ActivityStaff.fromJS(item));
-                }
-                return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ActivityStaff[] | null>(<any>null);
+  values_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/Values/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processValues_Delete(_response);
+    });
+  }
+
+  protected processValues_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
     }
-
-    activityStaff_Post(activityStaff: ActivityStaff | null): Promise<ActivityStaff | null> {
-        let url_ = this.baseUrl + "/api/ActivityStaff";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(activityStaff);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActivityStaff_Post(_response);
-        });
-    }
-
-    protected processActivityStaff_Post(response: Response): Promise<ActivityStaff | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? ActivityStaff.fromJS(resultData200) : <any>null;
-                return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ActivityStaff | null>(<any>null);
-    }
-
-    activityStaff_Get(id: number): Promise<ActivityStaff | null> {
-        let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActivityStaff_Get(_response);
-        });
-    }
-
-    protected processActivityStaff_Get(response: Response): Promise<ActivityStaff | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 ? ActivityStaff.fromJS(resultData200) : <any>null;
-                return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ActivityStaff | null>(<any>null);
-    }
-
-    activityStaff_Put(id: number, activityStaff: ActivityStaff | null): Promise<void> {
-        let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(activityStaff);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActivityStaff_Put(_response);
-        });
-    }
-
-    protected processActivityStaff_Put(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-                return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    activityStaff_Delete(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/ActivityStaff/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "DELETE",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActivityStaff_Delete(_response);
-        });
-    }
-
-    protected processActivityStaff_Delete(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-                return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    values_GetAll(): Promise<string[] | null> {
-        let url_ = this.baseUrl + "/api/Values";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processValues_GetAll(_response);
-        });
-    }
-
-    protected processValues_GetAll(response: Response): Promise<string[] | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                if (resultData200 && resultData200.constructor === Array) {
-                    result200 = [] as any;
-                    for (let item of resultData200)
-                        result200!.push(item);
-                }
-                return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<string[] | null>(<any>null);
-    }
-
-    values_Post(value: string | null): Promise<void> {
-        let url_ = this.baseUrl + "/api/Values";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(value);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processValues_Post(_response);
-        });
-    }
-
-    protected processValues_Post(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-                return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    values_Get(id: number): Promise<string | null> {
-        let url_ = this.baseUrl + "/api/Values/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processValues_Get(_response);
-        });
-    }
-
-    protected processValues_Get(response: Response): Promise<string | null> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-                return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<string | null>(<any>null);
-    }
-
-    values_Put(id: number, value: string | null): Promise<void> {
-        let url_ = this.baseUrl + "/api/Values/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(value);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processValues_Put(_response);
-        });
-    }
-
-    protected processValues_Put(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-                return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    values_Delete(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/Values/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "DELETE",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processValues_Delete(_response);
-        });
-    }
-
-    protected processValues_Delete(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-                return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
+    return Promise.resolve<void>(<any>null);
+  }
 }
 
 export class ErrorBase implements IErrorBase {
-    errorCode!: number;
-    failReason?: string | undefined;
-    exceptionType?: string | undefined;
+  errorCode!: number;
+  failReason?: string | undefined;
+  exceptionType?: string | undefined;
 
-    constructor(data?: IErrorBase) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IErrorBase) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.errorCode = data["ErrorCode"];
-            this.failReason = data["FailReason"];
-            this.exceptionType = data["ExceptionType"];
-        }
+  init(data?: any) {
+    if (data) {
+      this.errorCode = data["ErrorCode"];
+      this.failReason = data["FailReason"];
+      this.exceptionType = data["ExceptionType"];
     }
+  }
 
-    static fromJS(data: any): ErrorBase {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorBase();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): ErrorBase {
+    data = typeof data === 'object' ? data : {};
+    let result = new ErrorBase();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ErrorCode"] = this.errorCode;
-        data["FailReason"] = this.failReason;
-        data["ExceptionType"] = this.exceptionType;
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["ErrorCode"] = this.errorCode;
+    data["FailReason"] = this.failReason;
+    data["ExceptionType"] = this.exceptionType;
+    return data;
+  }
 }
 
 export interface IErrorBase {
-    errorCode: number;
-    failReason?: string | undefined;
-    exceptionType?: string | undefined;
+  errorCode: number;
+  failReason?: string | undefined;
+  exceptionType?: string | undefined;
 }
 
 export class SecurityTokenUser implements ISecurityTokenUser {
-    token?: string | undefined;
-    userFullName?: string | undefined;
+  token?: string | undefined;
+  userFullName?: string | undefined;
 
-    constructor(data?: ISecurityTokenUser) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ISecurityTokenUser) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.token = data["Token"];
-            this.userFullName = data["UserFullName"];
-        }
+  init(data?: any) {
+    if (data) {
+      this.token = data["Token"];
+      this.userFullName = data["UserFullName"];
     }
+  }
 
-    static fromJS(data: any): SecurityTokenUser {
-        data = typeof data === 'object' ? data : {};
-        let result = new SecurityTokenUser();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): SecurityTokenUser {
+    data = typeof data === 'object' ? data : {};
+    let result = new SecurityTokenUser();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Token"] = this.token;
-        data["UserFullName"] = this.userFullName;
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Token"] = this.token;
+    data["UserFullName"] = this.userFullName;
+    return data;
+  }
 }
 
 export interface ISecurityTokenUser {
-    token?: string | undefined;
-    userFullName?: string | undefined;
+  token?: string | undefined;
+  userFullName?: string | undefined;
 }
 
 export class AuthenticateRequest implements IAuthenticateRequest {
-    email?: string | undefined;
-    password?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
 
-    constructor(data?: IAuthenticateRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IAuthenticateRequest) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.email = data["Email"];
-            this.password = data["Password"];
-        }
+  init(data?: any) {
+    if (data) {
+      this.email = data["Email"];
+      this.password = data["Password"];
     }
+  }
 
-    static fromJS(data: any): AuthenticateRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new AuthenticateRequest();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): AuthenticateRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new AuthenticateRequest();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Email"] = this.email;
-        data["Password"] = this.password;
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Email"] = this.email;
+    data["Password"] = this.password;
+    return data;
+  }
 }
 
 export interface IAuthenticateRequest {
-    email?: string | undefined;
-    password?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
 }
 
 export class ActivityStaff implements IActivityStaff {
-    id!: number;
-    updatedAt?: Date | undefined;
-    applicationTitle?: string | undefined;
-    staffId?: number | undefined;
-    imageUrlBig?: string | undefined;
-    imageUrlSmall?: string | undefined;
-    staff?: Staff | undefined;
+  id!: number;
+  updatedAt?: Date | undefined;
+  applicationTitle?: string | undefined;
+  staffId?: number | undefined;
+  imageUrlBig?: string | undefined;
+  imageUrlSmall?: string | undefined;
+  applicationId?: number | undefined;
+  application?: Applications | undefined;
+  staff?: Staff | undefined;
 
-    constructor(data?: IActivityStaff) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IActivityStaff) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            this.applicationTitle = data["ApplicationTitle"];
-            this.staffId = data["StaffId"];
-            this.imageUrlBig = data["ImageUrlBig"];
-            this.imageUrlSmall = data["ImageUrlSmall"];
-            this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
-        }
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.applicationTitle = data["ApplicationTitle"];
+      this.staffId = data["StaffId"];
+      this.imageUrlBig = data["ImageUrlBig"];
+      this.imageUrlSmall = data["ImageUrlSmall"];
+      this.applicationId = data["ApplicationId"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
+      this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): ActivityStaff {
-        data = typeof data === 'object' ? data : {};
-        let result = new ActivityStaff();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): ActivityStaff {
+    data = typeof data === 'object' ? data : {};
+    let result = new ActivityStaff();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["ApplicationTitle"] = this.applicationTitle;
-        data["StaffId"] = this.staffId;
-        data["ImageUrlBig"] = this.imageUrlBig;
-        data["ImageUrlSmall"] = this.imageUrlSmall;
-        data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["ApplicationTitle"] = this.applicationTitle;
+    data["StaffId"] = this.staffId;
+    data["ImageUrlBig"] = this.imageUrlBig;
+    data["ImageUrlSmall"] = this.imageUrlSmall;
+    data["ApplicationId"] = this.applicationId;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
+    data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
+    return data;
+  }
 }
 
 export interface IActivityStaff {
-    id: number;
-    updatedAt?: Date | undefined;
-    applicationTitle?: string | undefined;
-    staffId?: number | undefined;
-    imageUrlBig?: string | undefined;
-    imageUrlSmall?: string | undefined;
-    staff?: Staff | undefined;
+  id: number;
+  updatedAt?: Date | undefined;
+  applicationTitle?: string | undefined;
+  staffId?: number | undefined;
+  imageUrlBig?: string | undefined;
+  imageUrlSmall?: string | undefined;
+  applicationId?: number | undefined;
+  application?: Applications | undefined;
+  staff?: Staff | undefined;
 }
 
-export class Staff implements IStaff {
-    id!: number;
-    fullname?: string | undefined;
-    email?: string | undefined;
-    updatedAt?: Date | undefined;
-    status?: boolean | undefined;
-    phone?: string | undefined;
-    activityFirst?: Date | undefined;
-    activityLast?: Date | undefined;
-    avatarUrl?: string | undefined;
-    alias?: string | undefined;
-    activityStaff?: ActivityStaff[] | undefined;
-    applicationPaths?: ApplicationPaths[] | undefined;
-    staffToGroup?: StaffToGroup[] | undefined;
+export class ActivityStaffFull extends ActivityStaff implements IActivityStaffFull {
+  staffAlias?: string | undefined;
+  applicationName?: string | undefined;
 
-    constructor(data?: IStaff) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
+  constructor(data?: IActivityStaffFull) {
+    super(data);
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.fullname = data["Fullname"];
-            this.email = data["Email"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            this.status = data["Status"];
-            this.phone = data["Phone"];
-            this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
-            this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
-            this.avatarUrl = data["AvatarUrl"];
-            this.alias = data["Alias"];
-            if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
-                this.activityStaff = [] as any;
-                for (let item of data["ActivityStaff"])
-                    this.activityStaff!.push(ActivityStaff.fromJS(item));
-            }
-            if (data["ApplicationPaths"] && data["ApplicationPaths"].constructor === Array) {
-                this.applicationPaths = [] as any;
-                for (let item of data["ApplicationPaths"])
-                    this.applicationPaths!.push(ApplicationPaths.fromJS(item));
-            }
-            if (data["StaffToGroup"] && data["StaffToGroup"].constructor === Array) {
-                this.staffToGroup = [] as any;
-                for (let item of data["StaffToGroup"])
-                    this.staffToGroup!.push(StaffToGroup.fromJS(item));
-            }
-        }
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.staffAlias = data["StaffAlias"];
+      this.applicationName = data["ApplicationName"];
     }
+  }
 
-    static fromJS(data: any): Staff {
-        data = typeof data === 'object' ? data : {};
-        let result = new Staff();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): ActivityStaffFull {
+    data = typeof data === 'object' ? data : {};
+    let result = new ActivityStaffFull();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["Fullname"] = this.fullname;
-        data["Email"] = this.email;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["Status"] = this.status;
-        data["Phone"] = this.phone;
-        data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
-        data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
-        data["AvatarUrl"] = this.avatarUrl;
-        data["Alias"] = this.alias;
-        if (this.activityStaff && this.activityStaff.constructor === Array) {
-            data["ActivityStaff"] = [];
-            for (let item of this.activityStaff)
-                data["ActivityStaff"].push(item.toJSON());
-        }
-        if (this.applicationPaths && this.applicationPaths.constructor === Array) {
-            data["ApplicationPaths"] = [];
-            for (let item of this.applicationPaths)
-                data["ApplicationPaths"].push(item.toJSON());
-        }
-        if (this.staffToGroup && this.staffToGroup.constructor === Array) {
-            data["StaffToGroup"] = [];
-            for (let item of this.staffToGroup)
-                data["StaffToGroup"].push(item.toJSON());
-        }
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["StaffAlias"] = this.staffAlias;
+    data["ApplicationName"] = this.applicationName;
+    super.toJSON(data);
+    return data;
+  }
 }
 
-export interface IStaff {
-    id: number;
-    fullname?: string | undefined;
-    email?: string | undefined;
-    updatedAt?: Date | undefined;
-    status?: boolean | undefined;
-    phone?: string | undefined;
-    activityFirst?: Date | undefined;
-    activityLast?: Date | undefined;
-    avatarUrl?: string | undefined;
-    alias?: string | undefined;
-    activityStaff?: ActivityStaff[] | undefined;
-    applicationPaths?: ApplicationPaths[] | undefined;
-    staffToGroup?: StaffToGroup[] | undefined;
-}
-
-export class ApplicationPaths implements IApplicationPaths {
-    applicationId!: number;
-    staffId!: number;
-    path?: string | undefined;
-    id!: number;
-    application?: Applications | undefined;
-    staff?: Staff | undefined;
-
-    constructor(data?: IApplicationPaths) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.applicationId = data["ApplicationId"];
-            this.staffId = data["StaffId"];
-            this.path = data["Path"];
-            this.id = data["Id"];
-            this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
-            this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ApplicationPaths {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplicationPaths();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["ApplicationId"] = this.applicationId;
-        data["StaffId"] = this.staffId;
-        data["Path"] = this.path;
-        data["Id"] = this.id;
-        data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
-        data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IApplicationPaths {
-    applicationId: number;
-    staffId: number;
-    path?: string | undefined;
-    id: number;
-    application?: Applications | undefined;
-    staff?: Staff | undefined;
+export interface IActivityStaffFull extends IActivityStaff {
+  staffAlias?: string | undefined;
+  applicationName?: string | undefined;
 }
 
 export class Applications implements IApplications {
-    id!: number;
-    name?: string | undefined;
-    updatedAt?: Date | undefined;
-    state!: StateEnum;
-    alias?: string | undefined;
-    applicationPaths?: ApplicationPaths[] | undefined;
-    applicationTitles?: ApplicationTitles[] | undefined;
-    applicationToGroup?: ApplicationToGroup[] | undefined;
+  id!: number;
+  name?: string | undefined;
+  updatedAt?: Date | undefined;
+  state!: StateEnum;
+  alias?: string | undefined;
+  activityStaff?: ActivityStaff[] | undefined;
+  applicationPaths?: ApplicationPaths[] | undefined;
+  applicationTitles?: ApplicationTitles[] | undefined;
+  applicationToGroup?: ApplicationToGroup[] | undefined;
 
-    constructor(data?: IApplications) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IApplications) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.name = data["Name"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            this.state = data["State"];
-            this.alias = data["Alias"];
-            if (data["ApplicationPaths"] && data["ApplicationPaths"].constructor === Array) {
-                this.applicationPaths = [] as any;
-                for (let item of data["ApplicationPaths"])
-                    this.applicationPaths!.push(ApplicationPaths.fromJS(item));
-            }
-            if (data["ApplicationTitles"] && data["ApplicationTitles"].constructor === Array) {
-                this.applicationTitles = [] as any;
-                for (let item of data["ApplicationTitles"])
-                    this.applicationTitles!.push(ApplicationTitles.fromJS(item));
-            }
-            if (data["ApplicationToGroup"] && data["ApplicationToGroup"].constructor === Array) {
-                this.applicationToGroup = [] as any;
-                for (let item of data["ApplicationToGroup"])
-                    this.applicationToGroup!.push(ApplicationToGroup.fromJS(item));
-            }
-        }
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.name = data["Name"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.state = data["State"];
+      this.alias = data["Alias"];
+      if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
+        this.activityStaff = [] as any;
+        for (let item of data["ActivityStaff"])
+          this.activityStaff!.push(ActivityStaff.fromJS(item));
+      }
+      if (data["ApplicationPaths"] && data["ApplicationPaths"].constructor === Array) {
+        this.applicationPaths = [] as any;
+        for (let item of data["ApplicationPaths"])
+          this.applicationPaths!.push(ApplicationPaths.fromJS(item));
+      }
+      if (data["ApplicationTitles"] && data["ApplicationTitles"].constructor === Array) {
+        this.applicationTitles = [] as any;
+        for (let item of data["ApplicationTitles"])
+          this.applicationTitles!.push(ApplicationTitles.fromJS(item));
+      }
+      if (data["ApplicationToGroup"] && data["ApplicationToGroup"].constructor === Array) {
+        this.applicationToGroup = [] as any;
+        for (let item of data["ApplicationToGroup"])
+          this.applicationToGroup!.push(ApplicationToGroup.fromJS(item));
+      }
     }
+  }
 
-    static fromJS(data: any): Applications {
-        data = typeof data === 'object' ? data : {};
-        let result = new Applications();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): Applications {
+    data = typeof data === 'object' ? data : {};
+    let result = new Applications();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["Name"] = this.name;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["State"] = this.state;
-        data["Alias"] = this.alias;
-        if (this.applicationPaths && this.applicationPaths.constructor === Array) {
-            data["ApplicationPaths"] = [];
-            for (let item of this.applicationPaths)
-                data["ApplicationPaths"].push(item.toJSON());
-        }
-        if (this.applicationTitles && this.applicationTitles.constructor === Array) {
-            data["ApplicationTitles"] = [];
-            for (let item of this.applicationTitles)
-                data["ApplicationTitles"].push(item.toJSON());
-        }
-        if (this.applicationToGroup && this.applicationToGroup.constructor === Array) {
-            data["ApplicationToGroup"] = [];
-            for (let item of this.applicationToGroup)
-                data["ApplicationToGroup"].push(item.toJSON());
-        }
-        return data;
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["Name"] = this.name;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["State"] = this.state;
+    data["Alias"] = this.alias;
+    if (this.activityStaff && this.activityStaff.constructor === Array) {
+      data["ActivityStaff"] = [];
+      for (let item of this.activityStaff)
+        data["ActivityStaff"].push(item.toJSON());
     }
+    if (this.applicationPaths && this.applicationPaths.constructor === Array) {
+      data["ApplicationPaths"] = [];
+      for (let item of this.applicationPaths)
+        data["ApplicationPaths"].push(item.toJSON());
+    }
+    if (this.applicationTitles && this.applicationTitles.constructor === Array) {
+      data["ApplicationTitles"] = [];
+      for (let item of this.applicationTitles)
+        data["ApplicationTitles"].push(item.toJSON());
+    }
+    if (this.applicationToGroup && this.applicationToGroup.constructor === Array) {
+      data["ApplicationToGroup"] = [];
+      for (let item of this.applicationToGroup)
+        data["ApplicationToGroup"].push(item.toJSON());
+    }
+    return data;
+  }
 }
 
 export interface IApplications {
-    id: number;
-    name?: string | undefined;
-    updatedAt?: Date | undefined;
-    state: StateEnum;
-    alias?: string | undefined;
-    applicationPaths?: ApplicationPaths[] | undefined;
-    applicationTitles?: ApplicationTitles[] | undefined;
-    applicationToGroup?: ApplicationToGroup[] | undefined;
+  id: number;
+  name?: string | undefined;
+  updatedAt?: Date | undefined;
+  state: StateEnum;
+  alias?: string | undefined;
+  activityStaff?: ActivityStaff[] | undefined;
+  applicationPaths?: ApplicationPaths[] | undefined;
+  applicationTitles?: ApplicationTitles[] | undefined;
+  applicationToGroup?: ApplicationToGroup[] | undefined;
 }
 
 export enum StateEnum {
-    Allowed = 0,
-    Forbidden = 1,
-    Neutral = 2,
+  Allowed = 0,
+  Forbidden = 1,
+  Neutral = 2,
 }
 
-export class ApplicationTitles implements IApplicationTitles {
-    id!: number;
-    title?: string | undefined;
-    updatedAt?: Date | undefined;
-    applicationId?: number | undefined;
-    application?: Applications | undefined;
-    applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
+export class ApplicationPaths implements IApplicationPaths {
+  applicationId!: number;
+  staffId!: number;
+  path?: string | undefined;
+  id!: number;
+  application?: Applications | undefined;
+  staff?: Staff | undefined;
 
-    constructor(data?: IApplicationTitles) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IApplicationPaths) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.title = data["Title"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            this.applicationId = data["ApplicationId"];
-            this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
-            if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
-                this.applicationTitleToGroup = [] as any;
-                for (let item of data["ApplicationTitleToGroup"])
-                    this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
-            }
-        }
+  init(data?: any) {
+    if (data) {
+      this.applicationId = data["ApplicationId"];
+      this.staffId = data["StaffId"];
+      this.path = data["Path"];
+      this.id = data["Id"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
+      this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): ApplicationTitles {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplicationTitles();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): ApplicationPaths {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationPaths();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["Title"] = this.title;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["ApplicationId"] = this.applicationId;
-        data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
-        if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
-            data["ApplicationTitleToGroup"] = [];
-            for (let item of this.applicationTitleToGroup)
-                data["ApplicationTitleToGroup"].push(item.toJSON());
-        }
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["ApplicationId"] = this.applicationId;
+    data["StaffId"] = this.staffId;
+    data["Path"] = this.path;
+    data["Id"] = this.id;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
+    data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
+    return data;
+  }
 }
 
-export interface IApplicationTitles {
-    id: number;
-    title?: string | undefined;
-    updatedAt?: Date | undefined;
-    applicationId?: number | undefined;
-    application?: Applications | undefined;
-    applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
+export interface IApplicationPaths {
+  applicationId: number;
+  staffId: number;
+  path?: string | undefined;
+  id: number;
+  application?: Applications | undefined;
+  staff?: Staff | undefined;
 }
 
-export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
-    id!: number;
-    titleId?: number | undefined;
-    groupId?: number | undefined;
-    updatedAt?: Date | undefined;
-    state?: string | undefined;
-    group?: Groups | undefined;
-    title?: ApplicationTitles | undefined;
+export class Staff implements IStaff {
+  id!: number;
+  fullname?: string | undefined;
+  email?: string | undefined;
+  updatedAt?: Date | undefined;
+  status?: boolean | undefined;
+  phone?: string | undefined;
+  activityFirst?: Date | undefined;
+  activityLast?: Date | undefined;
+  avatarUrl?: string | undefined;
+  alias?: string | undefined;
+  activityStaff?: ActivityStaff[] | undefined;
+  applicationPaths?: ApplicationPaths[] | undefined;
+  staffToGroup?: StaffToGroup[] | undefined;
 
-    constructor(data?: IApplicationTitleToGroup) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IStaff) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.titleId = data["TitleId"];
-            this.groupId = data["GroupId"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            this.state = data["State"];
-            this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
-            this.title = data["Title"] ? ApplicationTitles.fromJS(data["Title"]) : <any>undefined;
-        }
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.fullname = data["Fullname"];
+      this.email = data["Email"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.status = data["Status"];
+      this.phone = data["Phone"];
+      this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
+      this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
+      this.avatarUrl = data["AvatarUrl"];
+      this.alias = data["Alias"];
+      if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
+        this.activityStaff = [] as any;
+        for (let item of data["ActivityStaff"])
+          this.activityStaff!.push(ActivityStaff.fromJS(item));
+      }
+      if (data["ApplicationPaths"] && data["ApplicationPaths"].constructor === Array) {
+        this.applicationPaths = [] as any;
+        for (let item of data["ApplicationPaths"])
+          this.applicationPaths!.push(ApplicationPaths.fromJS(item));
+      }
+      if (data["StaffToGroup"] && data["StaffToGroup"].constructor === Array) {
+        this.staffToGroup = [] as any;
+        for (let item of data["StaffToGroup"])
+          this.staffToGroup!.push(StaffToGroup.fromJS(item));
+      }
     }
+  }
 
-    static fromJS(data: any): ApplicationTitleToGroup {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplicationTitleToGroup();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): Staff {
+    data = typeof data === 'object' ? data : {};
+    let result = new Staff();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["TitleId"] = this.titleId;
-        data["GroupId"] = this.groupId;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["State"] = this.state;
-        data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
-        data["Title"] = this.title ? this.title.toJSON() : <any>undefined;
-        return data;
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["Fullname"] = this.fullname;
+    data["Email"] = this.email;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["Status"] = this.status;
+    data["Phone"] = this.phone;
+    data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
+    data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
+    data["AvatarUrl"] = this.avatarUrl;
+    data["Alias"] = this.alias;
+    if (this.activityStaff && this.activityStaff.constructor === Array) {
+      data["ActivityStaff"] = [];
+      for (let item of this.activityStaff)
+        data["ActivityStaff"].push(item.toJSON());
     }
+    if (this.applicationPaths && this.applicationPaths.constructor === Array) {
+      data["ApplicationPaths"] = [];
+      for (let item of this.applicationPaths)
+        data["ApplicationPaths"].push(item.toJSON());
+    }
+    if (this.staffToGroup && this.staffToGroup.constructor === Array) {
+      data["StaffToGroup"] = [];
+      for (let item of this.staffToGroup)
+        data["StaffToGroup"].push(item.toJSON());
+    }
+    return data;
+  }
 }
 
-export interface IApplicationTitleToGroup {
-    id: number;
-    titleId?: number | undefined;
-    groupId?: number | undefined;
-    updatedAt?: Date | undefined;
-    state?: string | undefined;
-    group?: Groups | undefined;
-    title?: ApplicationTitles | undefined;
-}
-
-export class Groups implements IGroups {
-    id!: number;
-    name?: string | undefined;
-    status?: boolean | undefined;
-    updatedAt?: Date | undefined;
-    applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
-    applicationToGroup?: ApplicationToGroup[] | undefined;
-    staffToGroup?: StaffToGroup[] | undefined;
-
-    constructor(data?: IGroups) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.name = data["Name"];
-            this.status = data["Status"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
-                this.applicationTitleToGroup = [] as any;
-                for (let item of data["ApplicationTitleToGroup"])
-                    this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
-            }
-            if (data["ApplicationToGroup"] && data["ApplicationToGroup"].constructor === Array) {
-                this.applicationToGroup = [] as any;
-                for (let item of data["ApplicationToGroup"])
-                    this.applicationToGroup!.push(ApplicationToGroup.fromJS(item));
-            }
-            if (data["StaffToGroup"] && data["StaffToGroup"].constructor === Array) {
-                this.staffToGroup = [] as any;
-                for (let item of data["StaffToGroup"])
-                    this.staffToGroup!.push(StaffToGroup.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): Groups {
-        data = typeof data === 'object' ? data : {};
-        let result = new Groups();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["Name"] = this.name;
-        data["Status"] = this.status;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
-            data["ApplicationTitleToGroup"] = [];
-            for (let item of this.applicationTitleToGroup)
-                data["ApplicationTitleToGroup"].push(item.toJSON());
-        }
-        if (this.applicationToGroup && this.applicationToGroup.constructor === Array) {
-            data["ApplicationToGroup"] = [];
-            for (let item of this.applicationToGroup)
-                data["ApplicationToGroup"].push(item.toJSON());
-        }
-        if (this.staffToGroup && this.staffToGroup.constructor === Array) {
-            data["StaffToGroup"] = [];
-            for (let item of this.staffToGroup)
-                data["StaffToGroup"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IGroups {
-    id: number;
-    name?: string | undefined;
-    status?: boolean | undefined;
-    updatedAt?: Date | undefined;
-    applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
-    applicationToGroup?: ApplicationToGroup[] | undefined;
-    staffToGroup?: StaffToGroup[] | undefined;
-}
-
-export class ApplicationToGroup implements IApplicationToGroup {
-    id!: number;
-    applicationId?: number | undefined;
-    groupId?: number | undefined;
-    updatedAt?: Date | undefined;
-    state?: string | undefined;
-    application?: Applications | undefined;
-    group?: Groups | undefined;
-
-    constructor(data?: IApplicationToGroup) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.id = data["Id"];
-            this.applicationId = data["ApplicationId"];
-            this.groupId = data["GroupId"];
-            this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-            this.state = data["State"];
-            this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
-            this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ApplicationToGroup {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplicationToGroup();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Id"] = this.id;
-        data["ApplicationId"] = this.applicationId;
-        data["GroupId"] = this.groupId;
-        data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-        data["State"] = this.state;
-        data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
-        data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IApplicationToGroup {
-    id: number;
-    applicationId?: number | undefined;
-    groupId?: number | undefined;
-    updatedAt?: Date | undefined;
-    state?: string | undefined;
-    application?: Applications | undefined;
-    group?: Groups | undefined;
+export interface IStaff {
+  id: number;
+  fullname?: string | undefined;
+  email?: string | undefined;
+  updatedAt?: Date | undefined;
+  status?: boolean | undefined;
+  phone?: string | undefined;
+  activityFirst?: Date | undefined;
+  activityLast?: Date | undefined;
+  avatarUrl?: string | undefined;
+  alias?: string | undefined;
+  activityStaff?: ActivityStaff[] | undefined;
+  applicationPaths?: ApplicationPaths[] | undefined;
+  staffToGroup?: StaffToGroup[] | undefined;
 }
 
 export class StaffToGroup implements IStaffToGroup {
-    staffId!: number;
-    groupId!: number;
-    group?: Groups | undefined;
-    staff?: Staff | undefined;
+  staffId!: number;
+  groupId!: number;
+  group?: Groups | undefined;
+  staff?: Staff | undefined;
 
-    constructor(data?: IStaffToGroup) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IStaffToGroup) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(data?: any) {
-        if (data) {
-            this.staffId = data["StaffId"];
-            this.groupId = data["GroupId"];
-            this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
-            this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
-        }
+  init(data?: any) {
+    if (data) {
+      this.staffId = data["StaffId"];
+      this.groupId = data["GroupId"];
+      this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
+      this.staff = data["Staff"] ? Staff.fromJS(data["Staff"]) : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): StaffToGroup {
-        data = typeof data === 'object' ? data : {};
-        let result = new StaffToGroup();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): StaffToGroup {
+    data = typeof data === 'object' ? data : {};
+    let result = new StaffToGroup();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["StaffId"] = this.staffId;
-        data["GroupId"] = this.groupId;
-        data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
-        data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
-        return data;
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["StaffId"] = this.staffId;
+    data["GroupId"] = this.groupId;
+    data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
+    data["Staff"] = this.staff ? this.staff.toJSON() : <any>undefined;
+    return data;
+  }
 }
 
 export interface IStaffToGroup {
-    staffId: number;
-    groupId: number;
-    group?: Groups | undefined;
-    staff?: Staff | undefined;
+  staffId: number;
+  groupId: number;
+  group?: Groups | undefined;
+  staff?: Staff | undefined;
+}
+
+export class Groups implements IGroups {
+  id!: number;
+  name?: string | undefined;
+  status?: boolean | undefined;
+  updatedAt?: Date | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
+  applicationToGroup?: ApplicationToGroup[] | undefined;
+  staffToGroup?: StaffToGroup[] | undefined;
+
+  constructor(data?: IGroups) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.name = data["Name"];
+      this.status = data["Status"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
+        this.applicationTitleToGroup = [] as any;
+        for (let item of data["ApplicationTitleToGroup"])
+          this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
+      }
+      if (data["ApplicationToGroup"] && data["ApplicationToGroup"].constructor === Array) {
+        this.applicationToGroup = [] as any;
+        for (let item of data["ApplicationToGroup"])
+          this.applicationToGroup!.push(ApplicationToGroup.fromJS(item));
+      }
+      if (data["StaffToGroup"] && data["StaffToGroup"].constructor === Array) {
+        this.staffToGroup = [] as any;
+        for (let item of data["StaffToGroup"])
+          this.staffToGroup!.push(StaffToGroup.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): Groups {
+    data = typeof data === 'object' ? data : {};
+    let result = new Groups();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["Name"] = this.name;
+    data["Status"] = this.status;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
+      data["ApplicationTitleToGroup"] = [];
+      for (let item of this.applicationTitleToGroup)
+        data["ApplicationTitleToGroup"].push(item.toJSON());
+    }
+    if (this.applicationToGroup && this.applicationToGroup.constructor === Array) {
+      data["ApplicationToGroup"] = [];
+      for (let item of this.applicationToGroup)
+        data["ApplicationToGroup"].push(item.toJSON());
+    }
+    if (this.staffToGroup && this.staffToGroup.constructor === Array) {
+      data["StaffToGroup"] = [];
+      for (let item of this.staffToGroup)
+        data["StaffToGroup"].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IGroups {
+  id: number;
+  name?: string | undefined;
+  status?: boolean | undefined;
+  updatedAt?: Date | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
+  applicationToGroup?: ApplicationToGroup[] | undefined;
+  staffToGroup?: StaffToGroup[] | undefined;
+}
+
+export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
+  id!: number;
+  titleId?: number | undefined;
+  groupId?: number | undefined;
+  updatedAt?: Date | undefined;
+  state?: string | undefined;
+  group?: Groups | undefined;
+  title?: ApplicationTitles | undefined;
+
+  constructor(data?: IApplicationTitleToGroup) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.titleId = data["TitleId"];
+      this.groupId = data["GroupId"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.state = data["State"];
+      this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
+      this.title = data["Title"] ? ApplicationTitles.fromJS(data["Title"]) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): ApplicationTitleToGroup {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationTitleToGroup();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["TitleId"] = this.titleId;
+    data["GroupId"] = this.groupId;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["State"] = this.state;
+    data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
+    data["Title"] = this.title ? this.title.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IApplicationTitleToGroup {
+  id: number;
+  titleId?: number | undefined;
+  groupId?: number | undefined;
+  updatedAt?: Date | undefined;
+  state?: string | undefined;
+  group?: Groups | undefined;
+  title?: ApplicationTitles | undefined;
+}
+
+export class ApplicationTitles implements IApplicationTitles {
+  id!: number;
+  title?: string | undefined;
+  updatedAt?: Date | undefined;
+  applicationId?: number | undefined;
+  application?: Applications | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
+
+  constructor(data?: IApplicationTitles) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.title = data["Title"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.applicationId = data["ApplicationId"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
+      if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
+        this.applicationTitleToGroup = [] as any;
+        for (let item of data["ApplicationTitleToGroup"])
+          this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ApplicationTitles {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationTitles();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["Title"] = this.title;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["ApplicationId"] = this.applicationId;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
+    if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
+      data["ApplicationTitleToGroup"] = [];
+      for (let item of this.applicationTitleToGroup)
+        data["ApplicationTitleToGroup"].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IApplicationTitles {
+  id: number;
+  title?: string | undefined;
+  updatedAt?: Date | undefined;
+  applicationId?: number | undefined;
+  application?: Applications | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
+}
+
+export class ApplicationToGroup implements IApplicationToGroup {
+  id!: number;
+  applicationId?: number | undefined;
+  groupId?: number | undefined;
+  updatedAt?: Date | undefined;
+  state?: string | undefined;
+  application?: Applications | undefined;
+  group?: Groups | undefined;
+
+  constructor(data?: IApplicationToGroup) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.applicationId = data["ApplicationId"];
+      this.groupId = data["GroupId"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.state = data["State"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
+      this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): ApplicationToGroup {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationToGroup();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["ApplicationId"] = this.applicationId;
+    data["GroupId"] = this.groupId;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["State"] = this.state;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
+    data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IApplicationToGroup {
+  id: number;
+  applicationId?: number | undefined;
+  groupId?: number | undefined;
+  updatedAt?: Date | undefined;
+  state?: string | undefined;
+  application?: Applications | undefined;
+  group?: Groups | undefined;
 }
 
 export interface FileResponse {
-    data: Blob;
-    status: number;
-    fileName?: string;
-    headers?: { [name: string]: any };
+  data: Blob;
+  status: number;
+  fileName?: string;
+  headers?: { [name: string]: any };
 }
 
 export class SwaggerException extends Error {
-    message: string;
-    status: number;
-    response: string;
-    headers: { [key: string]: any; };
-    result: any;
+  message: string;
+  status: number;
+  response: string;
+  headers: { [key: string]: any; };
+  result: any;
 
-    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-        super();
+  constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+    super();
 
-        this.message = message;
-        this.status = status;
-        this.response = response;
-        this.headers = headers;
-        this.result = result;
-    }
+    this.message = message;
+    this.status = status;
+    this.response = response;
+    this.headers = headers;
+    this.result = result;
+  }
 
-    protected isSwaggerException = true;
+  protected isSwaggerException = true;
 
-    static isSwaggerException(obj: any): obj is SwaggerException {
-        return obj.isSwaggerException === true;
-    }
+  static isSwaggerException(obj: any): obj is SwaggerException {
+    return obj.isSwaggerException === true;
+  }
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
-    if(result !== null && result !== undefined)
-        throw result;
-    else
-        throw new SwaggerException(message, status, response, headers, null);
+  if(result !== null && result !== undefined)
+    throw result;
+  else
+    throw new SwaggerException(message, status, response, headers, null);
 }

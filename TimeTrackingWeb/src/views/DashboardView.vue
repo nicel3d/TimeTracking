@@ -1,19 +1,16 @@
 <template>
   <div>
+    <v-activity-table-component/>
     Dashboard
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-
-@Component
+import VActivityTableComponent from '%/components/VActivityTableComponent.vue'
+@Component({
+  components: { VActivityTableComponent }
+})
 export default class DashboardView extends Vue {
-  mounted () {
-    this.$store.state.api.activityStaff_GetAll()
-      .then(res => {
-        console.error(res)
-      })
-  }
 }
 </script>

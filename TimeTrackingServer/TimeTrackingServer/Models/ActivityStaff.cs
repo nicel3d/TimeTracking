@@ -9,9 +9,11 @@ namespace TimeTrackingServer.Models
         public DateTime? UpdatedAt { get; set; }
         public string ApplicationTitle { get; set; }
         public int? StaffId { get; set; }
-        public string ImageUrlBig { get; set; }
-        public string ImageUrlSmall { get; set; }
+        public byte[] ImageOrigin { get; set; }
+        public byte[] ImageThumb { get; set; }
+        public int? ApplicationId { get; set; }
 
+        public virtual Applications Application { get; set; }
         public virtual Staff Staff { get; set; }
     }
 }

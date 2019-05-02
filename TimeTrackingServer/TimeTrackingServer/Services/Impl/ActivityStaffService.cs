@@ -31,9 +31,31 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.ActivityStaff.FindAsync(id);
         }
 
-        public async Task<List<ActivityStaff>> GetAll()
+        public async Task<List<ActivityStaffFull>> GetAll()
         {
-            return await _dbContext.ActivityStaff.ToListAsync();
+
+            return await (from activity in _dbContext.ActivityStaff
+                          where activity.ApplicationId != null && activity.StaffId != null
+                          //join app in _dbContext.Applications on activity.ApplicationId equals app.Id
+                          join s in _dbContext.Staff on activity.StaffId equals s.Id
+                          select new ActivityStaffFull
+                          {
+                              ApplicationId = activity.ApplicationId,
+                              ApplicationTitle = activity.ApplicationTitle,
+                              Id = activity.Id,
+                              StaffId = activity.StaffId,
+                              Staff = (Staff)s,
+                              StaffAlias = s.Caption,
+                              ApplicationName = null,
+                              ImageOrigin = activity.ImageOrigin,
+                              ImageThumb = activity.ImageThumb,
+                              Application = null,
+                              UpdatedAt = activity.UpdatedAt
+                          }
+                    )
+                        .Skip(0)
+                        .Take(3)
+                    .ToListAsync();
         }
 
         public async Task<ActivityStaff> Post(ActivityStaff activityStaff)

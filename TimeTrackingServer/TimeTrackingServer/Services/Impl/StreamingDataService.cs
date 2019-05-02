@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TimeTrackingServer.Constants;
@@ -20,17 +22,16 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<Applications> AddAndGetApplication(string applicationAlias)
         {
-            Applications application = _dbContext.Applications
-                .Where(x => x.Alias == applicationAlias)
-                .FirstOrDefault();
+            Applications application = await _dbContext.Applications
+                .Where(x => x.Caption == applicationAlias)
+                .FirstOrDefaultAsync();
 
             if (application == null)
             {
                 application = new Applications()
                 {
-                    Alias = applicationAlias,
-                    Name = applicationAlias != null ? Regex.Replace(applicationAlias, @"\..*", "") : "",
-                    State = StateEnum.Neutral,
+                    Caption = applicationAlias,
+                    State = StateEnum.Neutral
                 };
 
                 _dbContext.Applications.Add(application);
@@ -42,15 +43,15 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<Staff> AddAndGetStaff(string staffAlias)
         {
-            Staff staff = _dbContext.Staff
-                .Where(x => x.Alias == staffAlias)
-                .FirstOrDefault();
+            Staff staff = await _dbContext.Staff
+                .Where(x => x.Caption == staffAlias)
+                .FirstOrDefaultAsync();
 
             if (staff == null)
             {
                 staff = new Staff()
                 {
-                    Alias = staffAlias,
+                    Caption = staffAlias,
                     Status = true
                 };
                 _dbContext.Staff.Add(staff);
@@ -65,17 +66,21 @@ namespace TimeTrackingServer.Services.Impl
             var staff = await AddAndGetStaff(streamingDataRequest.StaffAlias);
             var application = await AddAndGetApplication(streamingDataRequest.ApplicationAlias);
 
-            ActivityStaff activityStaff = new ActivityStaff()
+            if (staff != null && application != null)
             {
-                ApplicationTitle = streamingDataRequest.ApplicationTitle,
-                ImageUrlBig = streamingDataRequest.ApplicationImage,
-                ImageUrlSmall = ImageHelper.GetSmallImageFrombase64String(streamingDataRequest.ApplicationImage),
-                StaffId = staff.Id,
-                UpdatedAt = DateTimeHelper.UnixTimeStampToDateTime(streamingDataRequest.ActivityTime)
-            };
+                ActivityStaff activityStaff = new ActivityStaff()
+                {
+                    ApplicationTitle = streamingDataRequest.ApplicationTitle,
+                    ImageOrigin = streamingDataRequest.ApplicationImage,
+                    ImageThumb = ImageHelper.GetSmallImageFromBytes(streamingDataRequest.ApplicationImage),
+                    StaffId = staff?.Id,
+                    ApplicationId = application?.Id,
+                    UpdatedAt = DateTimeHelper.UnixTimeStampToDateTime(streamingDataRequest.ActivityTime)
+                };
 
-            _dbContext.ActivityStaff.Add(activityStaff);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.ActivityStaff.Add(activityStaff);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }
