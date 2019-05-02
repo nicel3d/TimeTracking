@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-activity-table-component @on-edit="$refs.dialog.onEdit($event)"/>
+    <v-activity-table-component @on-edit="$refs.dialog.onView($event)"/>
     <v-activity-details-component ref="dialog"/>
     Dashboard
   </div>

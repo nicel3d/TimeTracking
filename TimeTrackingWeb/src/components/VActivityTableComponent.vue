@@ -41,7 +41,7 @@
           </div>
         </td>
         <td>{{ props.item.staff.caption }}</td>
-        <td></td>
+        <td>{{ getState(props.item.application.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -52,9 +52,10 @@
 
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator'
-import { ActivityStaff, SortingAndSkipTakeRequest } from '%/stores/api/SwaggerDocumentationTypescript'
+import { ActivityStaff, SortingAndSkipTakeRequest, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
+import { States } from '%/constants/States'
 
 const nameof = <T> (name: Extract<keyof T, string>): string => name
 
@@ -80,6 +81,10 @@ export default class VActivityTableComponent extends SkipTake {
   @Watch('pagination')
   onPagination () {
     this.loadActivityStaffList()
+  }
+
+  getState(state?: StateEnum) {
+    return oc(States.find(item => item.state === state)).text(States[1].text)
   }
 
   loadActivityStaffList (skip = this.skip, take = this.take) {
