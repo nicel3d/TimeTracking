@@ -121,11 +121,11 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  activityStaff_GetList(skipTakeRequest: SkipTakeRequest | null): Promise<ActivityStaffListResponse | null> {
+  activityStaff_GetList(request: SortingAndSkipTakeRequest | null): Promise<ActivityStaffListResponse | null> {
     let url_ = this.baseUrl + "/api/ActivityStaff/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
-    const content_ = JSON.stringify(skipTakeRequest);
+    const content_ = JSON.stringify(request);
 
     let options_ = <RequestInit>{
       body: content_,
@@ -1239,11 +1239,16 @@ export interface IStaff {
   staffToGroup?: StaffToGroup[] | undefined;
 }
 
-export class SkipTakeRequest implements ISkipTakeRequest {
+export class SortingAndSkipTakeRequest implements ISortingAndSkipTakeRequest {
+  descending?: boolean | undefined;
+  page?: number | undefined;
+  rowsPerPage?: number | undefined;
+  sortBy?: string | undefined;
+  totalItems?: number | undefined;
   skip?: number | undefined;
   take?: number | undefined;
 
-  constructor(data?: ISkipTakeRequest) {
+  constructor(data?: ISortingAndSkipTakeRequest) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -1254,27 +1259,42 @@ export class SkipTakeRequest implements ISkipTakeRequest {
 
   init(data?: any) {
     if (data) {
+      this.descending = data["Descending"];
+      this.page = data["Page"];
+      this.rowsPerPage = data["RowsPerPage"];
+      this.sortBy = data["SortBy"];
+      this.totalItems = data["TotalItems"];
       this.skip = data["Skip"];
       this.take = data["Take"];
     }
   }
 
-  static fromJS(data: any): SkipTakeRequest {
+  static fromJS(data: any): SortingAndSkipTakeRequest {
     data = typeof data === 'object' ? data : {};
-    let result = new SkipTakeRequest();
+    let result = new SortingAndSkipTakeRequest();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data["Descending"] = this.descending;
+    data["Page"] = this.page;
+    data["RowsPerPage"] = this.rowsPerPage;
+    data["SortBy"] = this.sortBy;
+    data["TotalItems"] = this.totalItems;
     data["Skip"] = this.skip;
     data["Take"] = this.take;
     return data;
   }
 }
 
-export interface ISkipTakeRequest {
+export interface ISortingAndSkipTakeRequest {
+  descending?: boolean | undefined;
+  page?: number | undefined;
+  rowsPerPage?: number | undefined;
+  sortBy?: string | undefined;
+  totalItems?: number | undefined;
   skip?: number | undefined;
   take?: number | undefined;
 }

@@ -1,12 +1,12 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card>
     <v-card-title>
-      Nutrition
+      Активность пользователей
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
         append-icon="search"
-        label="Search"
+        label="Поиск"
         single-line
         hide-details
       ></v-text-field>
@@ -14,9 +14,11 @@
     <v-data-table
       :headers="headers"
       :items="desserts"
-      :search="search"
+      :loading="loading"
       :pagination.sync="pagination"
+      :total-items="totalDesserts"
     >
+      <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
         <td class="justify-center layout px-0">
           <v-icon
@@ -45,22 +47,20 @@
         По запросу "{{search}}" ничего не найдено.
       </v-alert>
     </v-data-table>
-    {{ pagination }}
   </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { ActivityStaff, SkipTakeRequest } from '%/stores/api/SwaggerDocumentationTypescript'
+import { Component, Watch } from 'vue-property-decorator'
+import { ActivityStaff, SortingAndSkipTakeRequest } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
+import SkipTake from '%/utils/SkipTake'
 
 const nameof = <T> (name: Extract<keyof T, string>): string => name
 
 @Component
-export default class VActivityTableComponent extends Vue {
+export default class VActivityTableComponent extends SkipTake {
   desserts: ActivityStaff[] = []
-  search: string = ''
-  pagination: DataTablePagination = {}
   headers = [
     {
       sortable: false,
@@ -77,18 +77,33 @@ export default class VActivityTableComponent extends Vue {
     { text: 'Состояние', value: '' }
   ]
 
+  @Watch('pagination')
+  onPagination () {
+      this.loadActivityStaffList()
+  }
+
   editItem (item) {
   }
 
-  mounted () {
-    const data = new SkipTakeRequest({
-      skip: 0,
-      take: 10
+  loadActivityStaffList (skip = this.skip, take = this.take) {
+    this.loading = true
+    const data = new SortingAndSkipTakeRequest({
+      descending: this.pagination.descending,
+      sortBy: this.pagination.sortBy,
+      skip,
+      take
     })
     this.$store.state.api.activityStaff_GetList(data)
       .then(res => {
         this.desserts = res.data
+        this.totalDesserts = res.count
       })
+      .catch()
+      .then(() => (this.loading = false))
+  }
+
+  mounted () {
+    this.loadActivityStaffList()
   }
 }
 </script>

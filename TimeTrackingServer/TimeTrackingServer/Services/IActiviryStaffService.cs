@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TimeTrackingServer.Models;
-using TimeTrackingServer.Stores;
+using TimeTrackingServer.Stores.Impl;
 
 namespace TimeTrackingServer.Services
 {
@@ -18,6 +16,6 @@ namespace TimeTrackingServer.Services
         Task<ActivityStaff> Post(ActivityStaff activityStaff);
         Task Put(int id, ActivityStaff activityStaff);
         Task Delete(int id);
-        Task<ActivityStaffListResponse> Get(SkipTakeRequest skipTakeRequest);
+        Task<ActivityStaffListResponse> Get(SortingAndSkipTakeRequest paginationWithSkipTakeRequest);
     }
 }

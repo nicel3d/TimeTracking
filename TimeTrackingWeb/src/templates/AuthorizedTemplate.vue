@@ -140,10 +140,6 @@ export default class AuthorizedTemplate extends Vue {
 </script>
 
 <style lang="scss">
-.container.wrapper {
-  max-width: 900px;
-}
-
 @media (min-width: 1390px) {
   .container.wrapper {
     margin: 0;

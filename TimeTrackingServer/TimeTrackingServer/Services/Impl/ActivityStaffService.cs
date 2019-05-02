@@ -9,6 +9,7 @@ using TimeTrackingServer.Data;
 using TimeTrackingServer.Helpers;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Stores;
+using TimeTrackingServer.Stores.Impl;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -32,34 +33,42 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.ActivityStaff.FindAsync(id);
         }
 
-        public async Task<ActivityStaffListResponse> Get(SkipTakeRequest skipTakeRequest)
+        public async Task<ActivityStaffListResponse> Get(SortingAndSkipTakeRequest request)
         {
-            var data = await _dbContext.Set<ActivityStaff>()
-                                        .Include(x => x.Application)
-                                        .ThenInclude(x => x.ActivityStaff)
-                                        .Include(x => x.Staff)
-                                        .ThenInclude(x => x.ActivityStaff)
-                                        .Skip(skipTakeRequest.Skip ?? 0)
-                                        .Take(skipTakeRequest.Take ?? Int32.MaxValue)
-                                        .Select(x => new ActivityStaff
-                                        {
-                                            Id = x.Id,
-                                            Staff = x.Staff,
-                                            ImageThumb = x.ImageThumb,
-                                            UpdatedAt = x.UpdatedAt,
-                                            Application = x.Application,
-                                            ApplicationTitle = x.ApplicationTitle,
-                                            ApplicationId = x.ApplicationId,
-                                            StaffId = x.StaffId
-                                        })
-                                        .ToListAsync();
+            var data = _dbContext.Set<ActivityStaff>()
+                                .Include(x => x.Application)
+                                .ThenInclude(x => x.ActivityStaff)
+                                .Include(x => x.Staff)
+                                .ThenInclude(x => x.ActivityStaff)
+                                .Skip(request.Skip ?? 0)
+                                .Take(request.Take ?? Int32.MaxValue);
 
-            var count = await _dbContext.ActivityStaff.CountAsync();
+            var dataCount = _dbContext.ActivityStaff;
+
+            if (request.Descending == false)
+            {
+                data = data.OrderByDescending(x => x.UpdatedAt);
+            }
+            else
+            {
+                data = data.OrderBy(x => x.UpdatedAt);
+            }
 
             return new ActivityStaffListResponse
             {
-                Data = data,
-                Count = count
+                Data = await data.Select(x => new ActivityStaff
+                                {
+                                    Id = x.Id,
+                                    Staff = x.Staff,
+                                    ImageThumb = x.ImageThumb,
+                                    UpdatedAt = x.UpdatedAt,
+                                    Application = x.Application,
+                                    ApplicationTitle = x.ApplicationTitle,
+                                    ApplicationId = x.ApplicationId,
+                                    StaffId = x.StaffId
+                                })
+                                .ToListAsync(),
+                Count = await dataCount.CountAsync()
             };
         }
 

@@ -1,19 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TimeTrackingServer.Models;
-
-namespace TimeTrackingServer.Stores
+﻿namespace TimeTrackingServer.Stores
 {
-    public class SkipTakeRequest
+    public interface IListCountResponse
     {
-        public int? Skip { get; set; }
-        public int? Take { get; set; }
+        int Count { get; set; }
     }
 
-    public class ListCountResponse
+    public interface ISkipTakeRequest
     {
-        public int Count { get; set; }
+        int? Skip { get; set; }
+        int? Take { get; set; }
+    }
+
+    public interface ISortingRequest
+    {
+        bool? Descending { get; set; }
+        string SortBy { get; set; }
+    }
+
+    public interface ISortingAndSkipTakeRequest : ISortingRequest, ISkipTakeRequest
+    {
     }
 }

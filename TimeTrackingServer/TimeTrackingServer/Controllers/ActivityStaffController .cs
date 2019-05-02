@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Services;
-using TimeTrackingServer.Stores;
+using TimeTrackingServer.Stores.Impl;
 
 namespace TimeTrackingServer.Controllers
 {
@@ -23,9 +22,9 @@ namespace TimeTrackingServer.Controllers
         }
 
         [HttpPost(nameof(GetList))]
-        public async Task<ActivityStaffListResponse> GetList(SkipTakeRequest skipTakeRequest)
+        public async Task<ActivityStaffListResponse> GetList([FromBody] SortingAndSkipTakeRequest request)
         {
-            return await _activiryStaffService.Get(skipTakeRequest);
+            return await _activiryStaffService.Get(request);
         }
 
         [HttpGet("{id}", Name = "Get")]
@@ -37,7 +36,7 @@ namespace TimeTrackingServer.Controllers
 
         [HttpPost(nameof(Post))]
         [Produces("application/json")]
-        public async Task<ActivityStaff> Post([FromBody]ActivityStaff activityStaff)
+        public async Task<ActivityStaff> Post([FromBody] ActivityStaff activityStaff)
         {
             //activityStaff.Id = null;
             return await _activiryStaffService.Post(activityStaff);
