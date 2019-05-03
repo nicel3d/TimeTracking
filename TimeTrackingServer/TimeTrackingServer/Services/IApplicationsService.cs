@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TimeTrackingServer.Constants;
 using TimeTrackingServer.Models;
+using TimeTrackingServer.Stores.Impl;
 
 namespace TimeTrackingServer.Services
 {
-    public interface IApplicationServices
+    public class ApplicationsListResponse : ListCountResponse
     {
-        Task<ActivityStaff> Get(int id);
-        Task<ActivityStaff> Post(ActivityStaff activityStaff);
-        Task Put(int id, ActivityStaff activityStaff);
+        public List<Applications> Data { get; set; }
+    }
+
+    public interface IApplicationsService
+    {
+        Task<Applications> Get(int id);
+        Task<ApplicationsListResponse> Get(SortingSearchSkipTakeRequest request);
+        Task<Applications> Post(Applications activityStaff);
+        Task PutState(int id, StateEnum stateEnum);
         Task Delete(int id);
-        Task<List<ActivityStaff>> GetAll();
     }
 }

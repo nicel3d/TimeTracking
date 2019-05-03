@@ -47,6 +47,12 @@ namespace TimeTrackingServer.Services.Impl
                         );
             }
 
+            if (request.SortBy != null && request.Descending != null)
+            {
+                var order = request.Descending != true ? "DESC" : "ASC";
+                dataSearch = data.AsQueryable().OrderBy($"{request.SortBy} {order}");
+            }
+
             var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)
                                 .Take(request.Take ?? Int32.MaxValue)
                                 .Select(x =>
@@ -61,12 +67,6 @@ namespace TimeTrackingServer.Services.Impl
                                     ApplicationId = x.ApplicationId,
                                     StaffId = x.StaffId
                                 });
-
-            if (request.SortBy != null && request.Descending != null)
-            {
-                var order = request.Descending != true ? "DESC" : "ASC";
-                dataSlipTake = dataSlipTake.AsQueryable().OrderBy($"{request.SortBy} {order}");
-            }
 
             return new ActivityStaffListResponse
             {

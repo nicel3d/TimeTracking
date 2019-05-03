@@ -1,16 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TimeTrackingServer.Constants;
 using TimeTrackingServer.Data;
 using TimeTrackingServer.Models;
+using TimeTrackingServer.Stores.Impl;
 
 namespace TimeTrackingServer.Services.Impl
 {
-    public class ApplicationServices : IApplicationServices
+    public class ApplicationsService : IApplicationsService
     {
         ApplicationDbContext _dbContext;
 
-        public ApplicationServices(ApplicationDbContext dbContext)
+        public ApplicationsService(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -21,30 +23,32 @@ namespace TimeTrackingServer.Services.Impl
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<ActivityStaff> Get(int id)
+        public async Task<Applications> Get(int id)
         {
-            return await _dbContext.ActivityStaff.FindAsync(id);
+            return await _dbContext.Applications.FindAsync(id);
         }
 
-        public async Task<List<ActivityStaff>> GetAll()
+        public async Task<ApplicationsListResponse> Get(SortingSearchSkipTakeRequest request)
         {
-            return await _dbContext.ActivityStaff.ToListAsync();
-        }
-
-        public async Task<ActivityStaff> Post(ActivityStaff activityStaff)
-        {
-            _dbContext.ActivityStaff.Add(activityStaff);
-            await _dbContext.SaveChangesAsync();
-            return activityStaff;
-        }
-
-        public async Task Put(int id, ActivityStaff activityStaff)
-        {
-            var oldActivityStaff = await _dbContext.ActivityStaff.FindAsync(id);
-            if (oldActivityStaff != null)
+            return new ApplicationsListResponse
             {
-            }
+                Data = await _dbContext.Applications.ToListAsync(),
+                Total = await _dbContext.Applications.CountAsync()
+            };
+        }
 
+        public async Task<Applications> Post(Applications applications)
+        {
+            _dbContext.Applications.Add(applications);
+            await _dbContext.SaveChangesAsync();
+            return applications;
+        }
+
+        public async Task PutState(int id, StateEnum stateEnum)
+        {
+            var applications = await _dbContext.Applications.FindAsync(id);
+            _dbContext.Applications.Attach(applications);
+            applications.State = stateEnum;
             await _dbContext.SaveChangesAsync();
         }
     }

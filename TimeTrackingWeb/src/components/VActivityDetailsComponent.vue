@@ -1,85 +1,74 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-layout row justify-center>
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <v-progress-linear v-if="loading" color="blue" indeterminate></v-progress-linear>
-        <template v-else>
-          <v-toolbar dark color="primary">
-            <v-btn icon dark @click="dialog = false">
-              <v-icon>close</v-icon>
-            </v-btn>
-            <v-toolbar-title>Детали активности</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn dark flat @click="onEdit">Сохранить</v-btn>
-            </v-toolbar-items>
-          </v-toolbar>
+<template>
+  <v-dialog-full-window
+    @on-save="onEdit"
+    :item="item"
+    :loading="loading"
+    v-model="dialog"
+  >
+    <template v-if="item">
+      <v-container grid-list-xl>
+        <v-layout wrap justify-space-between>
+          <v-flex xs12>
+            <div class="mb-4">
+              <vue-picture-swipe class="text-xs-center image-origin" :items="[image]"></vue-picture-swipe>
+            </div>
+          </v-flex>
 
-          <v-container grid-list-xl>
-            <v-layout wrap justify-space-between>
-              <v-flex xs12>
-                <div class="mb-4">
-                  <vue-picture-swipe class="text-xs-center image-origin" :items="[image]"></vue-picture-swipe>
-                </div>
-              </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field
+              :value="item.application.caption"
+              label="Название программы"
+              readonly
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field
+              :value="item.applicationTitle"
+              label="Заголовок программы"
+              readonly
+            ></v-text-field>
+          </v-flex>
 
-              <v-flex xs12 md6>
-                <v-text-field
-                  :value="item.application.caption"
-                  label="Название программы"
-                  readonly
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12 md6>
-                <v-text-field
-                  :value="item.applicationTitle"
-                  label="Заголовок программы"
-                  readonly
-                ></v-text-field>
-              </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field
+              :value="item.staff.caption"
+              label="Пользователь"
+              readonly
+            ></v-text-field>
+          </v-flex>
 
-              <v-flex xs12 md6>
-                <v-text-field
-                  :value="item.staff.caption"
-                  label="Пользователь"
-                  readonly
-                ></v-text-field>
-              </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field
+              :value="item.updatedAt.toLocaleDateString()"
+              label="Дата"
+              readonly
+            ></v-text-field>
+          </v-flex>
 
-              <v-flex xs12 md6>
-                <v-text-field
-                  :value="item.updatedAt.toLocaleDateString()"
-                  label="Дата"
-                  readonly
-                ></v-text-field>
-              </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field
+              :value="item.updatedAt.toLocaleDateString('ru', {weekday: 'long'})"
+              label="День недели"
+              readonly
+            ></v-text-field>
+          </v-flex>
 
-              <v-flex xs12 md6>
-                <v-text-field
-                  :value="item.updatedAt.toLocaleDateString('ru', {weekday: 'long'})"
-                  label="День недели"
-                  readonly
-                ></v-text-field>
-              </v-flex>
-
-              <v-flex xs12 sm6>
-                <v-select
-                  v-model="state"
-                  :items="states"
-                  item-value="state"
-                  item-text="text"
-                  single-line
-                  persistent-hint
-                  label="Статус"
-                ></v-select>
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <v-divider></v-divider>
-        </template>
-      </v-card>
-    </v-dialog>
-  </v-layout>
+          <v-flex xs12 sm6>
+            <v-select
+              v-model="state"
+              :items="states"
+              item-value="state"
+              item-text="text"
+              single-line
+              persistent-hint
+              label="Статус"
+            ></v-select>
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <v-divider></v-divider>
+    </template>
+  </v-dialog-full-window>
 </template>
 
 <script lang="ts">
@@ -88,10 +77,13 @@ import SkipTake from '%/utils/SkipTake'
 import { ActivityStaff, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import { States } from '%/constants/States'
+import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 
-@Component
+@Component({
+  components: { VDialogFullWindow }
+})
 export default class VActivityDetailsComponent extends SkipTake {
-  item!: ActivityStaff
+  item: ActivityStaff | null = null
   dialog: boolean = false
   loading: boolean = true
   state: StateEnum = StateEnum.Neutral
@@ -111,18 +103,23 @@ export default class VActivityDetailsComponent extends SkipTake {
     this.dialog = true
     this.loading = true
     this.$store.state.api.activityStaff_Get(id)
-      .then(res => (this.item = res))
+      .then(res => {
+        this.item = res
+        this.state = res.application.state
+      })
       .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))
   }
 
   onEdit () {
-    if (!this.item.applicationId || !this.item.application) return
+    if (!this.item || !this.item.applicationId) return
 
     this.loading = true
-    this.item.application.state = this.state
-    this.$store.state.api.activityStaff_Put(this.item.applicationId, this.item.application)
-      .then(() => (this.dialog = false))
+    this.$store.state.api.applications_PutState(this.item.applicationId, this.state)
+      .then(() => {
+        this.$emit('on-success')
+        this.dialog = false
+      })
       .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))
   }

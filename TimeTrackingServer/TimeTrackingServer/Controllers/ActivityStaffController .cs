@@ -22,12 +22,13 @@ namespace TimeTrackingServer.Controllers
         }
 
         [HttpPost(nameof(GetList))]
+        [Produces("application/json")]
         public async Task<ActivityStaffListResponse> GetList([FromBody] SortingSearchSkipTakeRequest request)
         {
             return await _activiryStaffService.Get(request);
         }
 
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<ActivityStaff> Get(int id)
         {
@@ -42,13 +43,13 @@ namespace TimeTrackingServer.Controllers
             return await _activiryStaffService.Post(activityStaff);
         }
 
-        [HttpPut("{id}", Name = "Put")]
+        [HttpPut("{id}")]
         public async Task Put(int id, [FromBody]ActivityStaff activityStaff)
         {
             await _activiryStaffService.Put(id, activityStaff);
         }
 
-        [HttpDelete("{id}", Name = "Delete")]
+        [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
             await _activiryStaffService.Delete(id);

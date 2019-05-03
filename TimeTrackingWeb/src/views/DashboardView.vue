@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-activity-table-component @on-edit="$refs.dialog.onView($event)"/>
-    <v-activity-details-component ref="dialog"/>
+    <v-activity-table-component ref="table" @on-edit="$refs.dialog.onView($event)"/>
+    <v-activity-details-component ref="dialog" @on-success="$refs.table.onPagination()"/>
     Dashboard
   </div>
 </template>

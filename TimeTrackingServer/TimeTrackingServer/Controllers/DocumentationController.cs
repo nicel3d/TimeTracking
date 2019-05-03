@@ -14,6 +14,7 @@ namespace TimeTrackingServer.Controllers
         private List<Type> _documentationControllerList = new List<Type> {
             typeof(UsersController),
             typeof(ActivityStaffController),
+            typeof(ApplicationsController),
             typeof(ValuesController)
         };
 

@@ -304,6 +304,189 @@ export class WSApi {
     return Promise.resolve<ActivityStaff | null>(<any>null);
   }
 
+  applications_GetList(request: SortingSearchSkipTakeRequest | null): Promise<ApplicationsListResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/GetList";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_GetList(_response);
+    });
+  }
+
+  protected processApplications_GetList(response: Response): Promise<ApplicationsListResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationsListResponse.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationsListResponse | null>(<any>null);
+  }
+
+  applications_Get(id: number): Promise<Applications | null> {
+    let url_ = this.baseUrl + "/api/Applications/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_Get(_response);
+    });
+  }
+
+  protected processApplications_Get(response: Response): Promise<Applications | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? Applications.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Applications | null>(<any>null);
+  }
+
+  applications_PutState(id: number, stateEnum: StateEnum): Promise<void> {
+    let url_ = this.baseUrl + "/api/Applications/{id}?";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    if (stateEnum === undefined || stateEnum === null)
+      throw new Error("The parameter 'stateEnum' must be defined and cannot be null.");
+    else
+      url_ += "stateEnum=" + encodeURIComponent("" + stateEnum) + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "PUT",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_PutState(_response);
+    });
+  }
+
+  protected processApplications_PutState(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  applications_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/Applications/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_Delete(_response);
+    });
+  }
+
+  protected processApplications_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  applications_Post(applications: Applications | null): Promise<Applications | null> {
+    let url_ = this.baseUrl + "/api/Applications/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(applications);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_Post(_response);
+    });
+  }
+
+  protected processApplications_Post(response: Response): Promise<Applications | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? Applications.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Applications | null>(<any>null);
+  }
+
   values_GetAll(): Promise<string[] | null> {
     let url_ = this.baseUrl + "/api/Values";
     url_ = url_.replace(/[?&]$/, "");
@@ -1301,6 +1484,47 @@ export interface ISortingSearchSkipTakeRequest {
   skip?: number | undefined;
   take?: number | undefined;
   search?: string | undefined;
+}
+
+export class ApplicationsListResponse extends ListCountResponse implements IApplicationsListResponse {
+  data?: Applications[] | undefined;
+
+  constructor(data?: IApplicationsListResponse) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(Applications.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ApplicationsListResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationsListResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IApplicationsListResponse extends IListCountResponse {
+  data?: Applications[] | undefined;
 }
 
 export interface FileResponse {
