@@ -1,15 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using TimeTrackingServer.Constants;
 using TimeTrackingServer.Data;
-using TimeTrackingServer.Helpers;
 using TimeTrackingServer.Models;
-using TimeTrackingServer.Stores;
 using TimeTrackingServer.Stores.Impl;
+using System.Linq.Dynamic;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -45,13 +41,10 @@ namespace TimeTrackingServer.Services.Impl
 
             var dataCount = _dbContext.ActivityStaff;
 
-            if (request.Descending == false)
+            if (request.SortBy != null && request.Descending != null)
             {
-                data = data.OrderByDescending(x => x.UpdatedAt);
-            }
-            else
-            {
-                data = data.OrderBy(x => x.UpdatedAt);
+                var order = request.Descending != true ? "DESC" : "ASC";
+                data = data.AsQueryable().OrderBy($"{request.SortBy} {order}");
             }
 
             return new ActivityStaffListResponse

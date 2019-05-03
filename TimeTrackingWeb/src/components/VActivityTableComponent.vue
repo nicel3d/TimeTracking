@@ -15,6 +15,7 @@
       :headers="headers"
       :items="desserts"
       :loading="loading"
+      :rows-per-page-items="rowsPerPageItems"
       :pagination.sync="pagination"
       :total-items="totalDesserts"
     >
@@ -51,31 +52,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator'
-import { ActivityStaff, SortingAndSkipTakeRequest, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
+import {
+  ActivityStaff, SortingAndSkipTakeRequest, StateEnum
+} from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
-
-const nameof = <T> (name: Extract<keyof T, string>): string => name
+import { nameOf } from '%/constants/NameOf'
 
 @Component
-export default class VActivityTableComponent extends SkipTake {
+export default class VActivityTableComponent extends Mixins(SkipTake) {
   desserts: ActivityStaff[] = []
+  rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
-    {
-      sortable: false,
-      text: 'Действия',
-    },
-    { text: 'Обновлено', value: nameof<ActivityStaff>('updatedAt') },
-    { text: 'Название приложения', value: (item: ActivityStaff) => oc(item).application.caption('') },
-    { text: 'Заголовок активнго окна', value: nameof<ActivityStaff>('applicationTitle') },
-    {
-      sortable: false,
-      text: 'Слепок экрана'
-    },
-    { text: 'Пользователь', value: (item: ActivityStaff) => oc(item).staff.caption('') },
-    { text: 'Состояние', value: '' }
+    { sortable: false, text: 'Действия' },
+    { text: 'Обновлено', value: 'UpdatedAt' },
+    { text: 'Название приложения', value: 'Application.Caption' },
+    { text: 'Заголовок активнго окна', value: 'ApplicationTitle' },
+    { sortable: false, text: 'Слепок экрана' },
+    { text: 'Пользователь', value: 'Staff.Caption' },
+    { text: 'Состояние', value: 'Application.State' }
   ]
 
   @Watch('pagination')
@@ -83,7 +80,7 @@ export default class VActivityTableComponent extends SkipTake {
     this.loadActivityStaffList()
   }
 
-  getState(state?: StateEnum) {
+  getState (state?: StateEnum) {
     return oc(States.find(item => item.state === state)).text(States[1].text)
   }
 
@@ -92,6 +89,7 @@ export default class VActivityTableComponent extends SkipTake {
     const data = new SortingAndSkipTakeRequest({
       descending: this.pagination.descending,
       sortBy: this.pagination.sortBy,
+      // search: this.search,
       skip,
       take
     })

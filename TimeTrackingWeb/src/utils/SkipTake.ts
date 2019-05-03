@@ -13,8 +13,6 @@ export default class SkipTake extends Vue {
   search: string = ''
   loading: boolean = true
   pagination: DataTablePagination = {
-    descending: true,
-    sortBy: 'updatedAt',
     page: 1,
     rowsPerPage: 5
   }
@@ -22,7 +20,7 @@ export default class SkipTake extends Vue {
 
   get skip () {
     return this.pagination.page && this.pagination.page > 1 && this.pagination.rowsPerPage
-      ? this.pagination.rowsPerPage * this.pagination.page : 0
+      ? this.pagination.rowsPerPage * (this.pagination.page - 1) : 0
   }
 
   get take () {
