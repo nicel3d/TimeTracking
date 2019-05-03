@@ -5,6 +5,7 @@
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
+        @change="onPagination"
         append-icon="search"
         label="Поиск"
         single-line
@@ -54,7 +55,7 @@
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import {
-  ActivityStaff, SortingAndSkipTakeRequest, StateEnum
+  ActivityStaff, SortingSearchSkipTakeRequest, StateEnum
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
@@ -77,7 +78,9 @@ export default class VActivityTableComponent extends Mixins(SkipTake) {
 
   @Watch('pagination')
   onPagination () {
-    this.loadActivityStaffList()
+    if (!this.loading) {
+      this.loadActivityStaffList()
+    }
   }
 
   getState (state?: StateEnum) {
@@ -86,10 +89,10 @@ export default class VActivityTableComponent extends Mixins(SkipTake) {
 
   loadActivityStaffList (skip = this.skip, take = this.take) {
     this.loading = true
-    const data = new SortingAndSkipTakeRequest({
+    const data = new SortingSearchSkipTakeRequest({
       descending: this.pagination.descending,
       sortBy: this.pagination.sortBy,
-      // search: this.search,
+      search: this.search,
       skip,
       take
     })

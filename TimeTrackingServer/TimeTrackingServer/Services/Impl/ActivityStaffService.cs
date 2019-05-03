@@ -29,27 +29,28 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.ActivityStaff.FindAsync(id);
         }
 
-        public async Task<ActivityStaffListResponse> Get(SortingAndSkipTakeRequest request)
+        public async Task<ActivityStaffListResponse> Get(SortingSearchSkipTakeRequest request)
         {
             var data = _dbContext.Set<ActivityStaff>()
                                 .Include(x => x.Application)
-                                .ThenInclude(x => x.ActivityStaff)
-                                .Include(x => x.Staff)
-                                .ThenInclude(x => x.ActivityStaff)
-                                .Skip(request.Skip ?? 0)
-                                .Take(request.Take ?? Int32.MaxValue);
+                                .Include(x => x.Staff);
 
-            var dataCount = _dbContext.ActivityStaff;
+            IQueryable<ActivityStaff> dataSearch = null;
 
-            if (request.SortBy != null && request.Descending != null)
+            if (!String.IsNullOrEmpty(request.Search))
             {
-                var order = request.Descending != true ? "DESC" : "ASC";
-                data = data.AsQueryable().OrderBy($"{request.SortBy} {order}");
+                dataSearch = data.Where(x =>
+                            x.Application.Caption.Contains(request.Search) ||
+                            x.Staff.Caption.Contains(request.Search) ||
+                            x.ApplicationTitle.Contains(request.Search) ||
+                            x.UpdatedAt.ToString().Contains(request.Search)
+                        );
             }
 
-            return new ActivityStaffListResponse
-            {
-                Data = await data.Select(x => new ActivityStaff
+            var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)
+                                .Take(request.Take ?? Int32.MaxValue)
+                                .Select(x =>
+                                new ActivityStaff
                                 {
                                     Id = x.Id,
                                     Staff = x.Staff,
@@ -59,9 +60,18 @@ namespace TimeTrackingServer.Services.Impl
                                     ApplicationTitle = x.ApplicationTitle,
                                     ApplicationId = x.ApplicationId,
                                     StaffId = x.StaffId
-                                })
-                                .ToListAsync(),
-                Total = await dataCount.CountAsync()
+                                });
+
+            if (request.SortBy != null && request.Descending != null)
+            {
+                var order = request.Descending != true ? "DESC" : "ASC";
+                dataSlipTake = dataSlipTake.AsQueryable().OrderBy($"{request.SortBy} {order}");
+            }
+
+            return new ActivityStaffListResponse
+            {
+                Data = await dataSlipTake.ToListAsync(),
+                Total = await (dataSearch ?? data).CountAsync()
             };
         }
 

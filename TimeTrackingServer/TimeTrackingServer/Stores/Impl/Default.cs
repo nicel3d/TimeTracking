@@ -5,6 +5,12 @@
         public int Total { get; set; }
     }
 
+
+    public class SearchRequest : ISearchRequest
+    {
+        public string Search { get; set; }
+    }
+
     public class SkipTakeRequest : ISkipTakeRequest
     {
         public int? Skip { get; set; }
@@ -20,7 +26,7 @@
         public int? TotalItems { get; set; }
     }
 
-    public class SortingAndSkipTakeRequest : ISortingAndSkipTakeRequest
+    public class SortingSearchSkipTakeRequest : ISortingSearchSkipTakeRequest
     {
         public bool? Descending { get; set; }
         public int? Page { get; set; }
@@ -29,5 +35,6 @@
         public int? TotalItems { get; set; }
         public int? Skip { get; set; }
         public int? Take { get; set; }
+        public string Search { get; set; }
     }
 }

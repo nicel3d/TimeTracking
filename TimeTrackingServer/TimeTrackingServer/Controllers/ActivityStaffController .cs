@@ -22,7 +22,7 @@ namespace TimeTrackingServer.Controllers
         }
 
         [HttpPost(nameof(GetList))]
-        public async Task<ActivityStaffListResponse> GetList([FromBody] SortingAndSkipTakeRequest request)
+        public async Task<ActivityStaffListResponse> GetList([FromBody] SortingSearchSkipTakeRequest request)
         {
             return await _activiryStaffService.Get(request);
         }

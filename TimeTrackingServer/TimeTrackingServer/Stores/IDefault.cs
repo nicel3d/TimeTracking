@@ -11,13 +11,18 @@
         int? Take { get; set; }
     }
 
+    public interface ISearchRequest
+    {
+        string Search { get; set; }
+    }
+
     public interface ISortingRequest
     {
         bool? Descending { get; set; }
         string SortBy { get; set; }
     }
 
-    public interface ISortingAndSkipTakeRequest : ISortingRequest, ISkipTakeRequest
+    public interface ISortingSearchSkipTakeRequest : ISortingRequest, ISkipTakeRequest, ISearchRequest
     {
     }
 }

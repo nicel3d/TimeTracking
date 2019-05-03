@@ -121,7 +121,7 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  activityStaff_GetList(request: SortingAndSkipTakeRequest | null): Promise<ActivityStaffListResponse | null> {
+  activityStaff_GetList(request: SortingSearchSkipTakeRequest | null): Promise<ActivityStaffListResponse | null> {
     let url_ = this.baseUrl + "/api/ActivityStaff/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -1239,7 +1239,7 @@ export interface IStaff {
   staffToGroup?: StaffToGroup[] | undefined;
 }
 
-export class SortingAndSkipTakeRequest implements ISortingAndSkipTakeRequest {
+export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeRequest {
   descending?: boolean | undefined;
   page?: number | undefined;
   rowsPerPage?: number | undefined;
@@ -1247,8 +1247,9 @@ export class SortingAndSkipTakeRequest implements ISortingAndSkipTakeRequest {
   totalItems?: number | undefined;
   skip?: number | undefined;
   take?: number | undefined;
+  search?: string | undefined;
 
-  constructor(data?: ISortingAndSkipTakeRequest) {
+  constructor(data?: ISortingSearchSkipTakeRequest) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -1266,12 +1267,13 @@ export class SortingAndSkipTakeRequest implements ISortingAndSkipTakeRequest {
       this.totalItems = data["TotalItems"];
       this.skip = data["Skip"];
       this.take = data["Take"];
+      this.search = data["Search"];
     }
   }
 
-  static fromJS(data: any): SortingAndSkipTakeRequest {
+  static fromJS(data: any): SortingSearchSkipTakeRequest {
     data = typeof data === 'object' ? data : {};
-    let result = new SortingAndSkipTakeRequest();
+    let result = new SortingSearchSkipTakeRequest();
     result.init(data);
     return result;
   }
@@ -1285,11 +1287,12 @@ export class SortingAndSkipTakeRequest implements ISortingAndSkipTakeRequest {
     data["TotalItems"] = this.totalItems;
     data["Skip"] = this.skip;
     data["Take"] = this.take;
+    data["Search"] = this.search;
     return data;
   }
 }
 
-export interface ISortingAndSkipTakeRequest {
+export interface ISortingSearchSkipTakeRequest {
   descending?: boolean | undefined;
   page?: number | undefined;
   rowsPerPage?: number | undefined;
@@ -1297,6 +1300,7 @@ export interface ISortingAndSkipTakeRequest {
   totalItems?: number | undefined;
   skip?: number | undefined;
   take?: number | undefined;
+  search?: string | undefined;
 }
 
 export interface FileResponse {
