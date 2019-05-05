@@ -29,7 +29,7 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.ActivityStaff.FindAsync(id);
         }
 
-        public async Task<ActivityStaffListResponse> Get(SortingSearchSkipTakeRequest request)
+        public async Task<ActivityStaffListResponse> Get(TableSortingWithFilterRequest request)
         {
             var data = _dbContext.Set<ActivityStaff>()
                                 .Include(x => x.Application)
@@ -79,6 +79,7 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<ActivityStaff> Post(ActivityStaff activityStaff)
         {
+
             _dbContext.ActivityStaff.Update(activityStaff);
             await _dbContext.SaveChangesAsync();
             return activityStaff;

@@ -33,12 +33,16 @@ namespace TimeTrackingServer.Stores.Impl
         public int EndHour { get; set; }
     }
 
-    public class SortingSearchSkipTakeRequest : ISortingSearchSkipTakeRequest
+    public class TableSortingRequest : ISortingSkipTakeRequest
     {
         public SortingRequest Sorting { get; set; }
-        public FilterRequest Filter { get; set; }
         public string Search { get; set; }
         public int? Skip { get; set; }
         public int? Take { get; set; }
+    }
+
+    public class TableSortingWithFilterRequest : TableSortingRequest
+    {
+        public FilterRequest Filter { get; set; }
     }
 }

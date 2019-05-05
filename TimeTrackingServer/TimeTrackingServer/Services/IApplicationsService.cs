@@ -14,7 +14,8 @@ namespace TimeTrackingServer.Services
     public interface IApplicationsService
     {
         Task<Applications> Get(int id);
-        Task<ApplicationsListResponse> Get(SortingSearchSkipTakeRequest request);
+        Task<ApplicationsListResponse> Get(TableSortingWithFilterRequest request);
+        Task<ApplicationsListResponse> Get(TableSortingRequest request);
         Task<Applications> Post(Applications activityStaff);
         Task PutState(int id, StateEnum stateEnum);
         Task Delete(int id);

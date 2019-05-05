@@ -40,6 +40,14 @@ const router = new Router({
           meta: {
             breadcrumb: 'Активность пользователя'
           }
+        },
+        {
+          path: 'applications',
+          name: RouterNameEnum.Applications,
+          component: () => import('../views/ApplicationsView.vue'),
+          meta: {
+            breadcrumb: 'Приложения'
+          }
         }
       ],
       beforeEnter: (to, from, next) => {

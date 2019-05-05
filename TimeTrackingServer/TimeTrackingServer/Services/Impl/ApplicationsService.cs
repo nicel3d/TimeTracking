@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TimeTrackingServer.Constants;
 using TimeTrackingServer.Data;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Stores.Impl;
+using System.Linq.Dynamic;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -28,12 +30,42 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.Applications.FindAsync(id);
         }
 
-        public async Task<ApplicationsListResponse> Get(SortingSearchSkipTakeRequest request)
+        public async Task<ApplicationsListResponse> Get(TableSortingWithFilterRequest request)
         {
             return new ApplicationsListResponse
             {
                 Data = await _dbContext.Applications.ToListAsync(),
                 Total = await _dbContext.Applications.CountAsync()
+            };
+        }
+
+        public async Task<ApplicationsListResponse> Get(TableSortingRequest request)
+        {
+            var data = _dbContext.Applications;
+
+            IQueryable<Applications> dataSearch = null;
+
+            if (!String.IsNullOrEmpty(request.Search))
+            {
+                dataSearch = data.AsQueryable().Where(x =>
+                            x.Caption.Contains(request.Search) ||
+                            x.UpdatedAt.ToString().Contains(request.Search)
+                        );
+            }
+
+            if (request.Sorting.SortBy != null && request.Sorting.Descending != null)
+            {
+                var order = request.Sorting.Descending != true ? "DESC" : "ASC";
+                dataSearch = (dataSearch ?? data).AsQueryable().OrderBy($"{request.Sorting.SortBy} {order}");
+            }
+
+            var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)
+                                .Take(request.Take ?? Int32.MaxValue);
+
+            return new ApplicationsListResponse
+            {
+                Data = await dataSlipTake.ToListAsync(),
+                Total = await (dataSearch ?? data).CountAsync()
             };
         }
 

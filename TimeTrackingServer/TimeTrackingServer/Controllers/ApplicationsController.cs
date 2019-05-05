@@ -25,7 +25,14 @@ namespace TimeTrackingServer.Controllers
 
         [HttpPost(nameof(GetList))]
         [Produces("application/json")]
-        public async Task<ApplicationsListResponse> GetList([FromBody] SortingSearchSkipTakeRequest request)
+        public async Task<ApplicationsListResponse> GetList([FromBody] TableSortingWithFilterRequest request)
+        {
+            return await _applicationsService.Get(request);
+        }
+
+        [HttpPost(nameof(GetListWithoutFilter))]
+        [Produces("application/json")]
+        public async Task<ApplicationsListResponse> GetListWithoutFilter([FromBody] TableSortingRequest request)
         {
             return await _applicationsService.Get(request);
         }

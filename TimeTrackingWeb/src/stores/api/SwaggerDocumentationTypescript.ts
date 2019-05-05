@@ -121,7 +121,7 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  activityStaff_GetList(request: SortingSearchSkipTakeRequest | null): Promise<ActivityStaffListResponse | null> {
+  activityStaff_GetList(request: TableSortingWithFilterRequest | null): Promise<ActivityStaffListResponse | null> {
     let url_ = this.baseUrl + "/api/ActivityStaff/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -304,7 +304,7 @@ export class WSApi {
     return Promise.resolve<ActivityStaff | null>(<any>null);
   }
 
-  applications_GetList(request: SortingSearchSkipTakeRequest | null): Promise<ApplicationsListResponse | null> {
+  applications_GetList(request: TableSortingWithFilterRequest | null): Promise<ApplicationsListResponse | null> {
     let url_ = this.baseUrl + "/api/Applications/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -325,6 +325,44 @@ export class WSApi {
   }
 
   protected processApplications_GetList(response: Response): Promise<ApplicationsListResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationsListResponse.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationsListResponse | null>(<any>null);
+  }
+
+  applications_GetListWithoutFilter(request: TableSortingRequest | null): Promise<ApplicationsListResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/GetListWithoutFilter";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_GetListWithoutFilter(_response);
+    });
+  }
+
+  protected processApplications_GetListWithoutFilter(response: Response): Promise<ApplicationsListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -1422,14 +1460,13 @@ export interface IStaff {
   staffToGroup?: StaffToGroup[] | undefined;
 }
 
-export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeRequest {
+export class TableSortingRequest implements ITableSortingRequest {
   sorting?: SortingRequest | undefined;
-  filter?: FilterRequest | undefined;
   search?: string | undefined;
   skip?: number | undefined;
   take?: number | undefined;
 
-  constructor(data?: ISortingSearchSkipTakeRequest) {
+  constructor(data?: ITableSortingRequest) {
     if (data) {
       for (var property in data) {
         if (data.hasOwnProperty(property))
@@ -1441,16 +1478,15 @@ export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeReque
   init(data?: any) {
     if (data) {
       this.sorting = data["Sorting"] ? SortingRequest.fromJS(data["Sorting"]) : <any>undefined;
-      this.filter = data["Filter"] ? FilterRequest.fromJS(data["Filter"]) : <any>undefined;
       this.search = data["Search"];
       this.skip = data["Skip"];
       this.take = data["Take"];
     }
   }
 
-  static fromJS(data: any): SortingSearchSkipTakeRequest {
+  static fromJS(data: any): TableSortingRequest {
     data = typeof data === 'object' ? data : {};
-    let result = new SortingSearchSkipTakeRequest();
+    let result = new TableSortingRequest();
     result.init(data);
     return result;
   }
@@ -1458,7 +1494,6 @@ export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeReque
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["Sorting"] = this.sorting ? this.sorting.toJSON() : <any>undefined;
-    data["Filter"] = this.filter ? this.filter.toJSON() : <any>undefined;
     data["Search"] = this.search;
     data["Skip"] = this.skip;
     data["Take"] = this.take;
@@ -1466,52 +1501,44 @@ export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeReque
   }
 }
 
-export interface ISortingSearchSkipTakeRequest {
+export interface ITableSortingRequest {
   sorting?: SortingRequest | undefined;
-  filter?: FilterRequest | undefined;
   search?: string | undefined;
   skip?: number | undefined;
   take?: number | undefined;
 }
 
-export class SortingRequest implements ISortingRequest {
-  descending?: boolean | undefined;
-  sortBy?: string | undefined;
+export class TableSortingWithFilterRequest extends TableSortingRequest implements ITableSortingWithFilterRequest {
+  filter?: FilterRequest | undefined;
 
-  constructor(data?: ISortingRequest) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
+  constructor(data?: ITableSortingWithFilterRequest) {
+    super(data);
   }
 
   init(data?: any) {
+    super.init(data);
     if (data) {
-      this.descending = data["Descending"];
-      this.sortBy = data["SortBy"];
+      this.filter = data["Filter"] ? FilterRequest.fromJS(data["Filter"]) : <any>undefined;
     }
   }
 
-  static fromJS(data: any): SortingRequest {
+  static fromJS(data: any): TableSortingWithFilterRequest {
     data = typeof data === 'object' ? data : {};
-    let result = new SortingRequest();
+    let result = new TableSortingWithFilterRequest();
     result.init(data);
     return result;
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data["Descending"] = this.descending;
-    data["SortBy"] = this.sortBy;
+    data["Filter"] = this.filter ? this.filter.toJSON() : <any>undefined;
+    super.toJSON(data);
     return data;
   }
 }
 
-export interface ISortingRequest {
-  descending?: boolean | undefined;
-  sortBy?: string | undefined;
+export interface ITableSortingWithFilterRequest extends ITableSortingRequest {
+  filter?: FilterRequest | undefined;
 }
 
 export class FilterRequest implements IFilterRequest {
@@ -1560,6 +1587,46 @@ export interface IFilterRequest {
   endDate: Date;
   begHour: number;
   endHour: number;
+}
+
+export class SortingRequest implements ISortingRequest {
+  descending?: boolean | undefined;
+  sortBy?: string | undefined;
+
+  constructor(data?: ISortingRequest) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.descending = data["Descending"];
+      this.sortBy = data["SortBy"];
+    }
+  }
+
+  static fromJS(data: any): SortingRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new SortingRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Descending"] = this.descending;
+    data["SortBy"] = this.sortBy;
+    return data;
+  }
+}
+
+export interface ISortingRequest {
+  descending?: boolean | undefined;
+  sortBy?: string | undefined;
 }
 
 export class ApplicationsListResponse extends ListCountResponse implements IApplicationsListResponse {

@@ -32,7 +32,7 @@ namespace TimeTrackingServer.Stores
         int EndHour { get; set; }
     }
 
-    public interface ISortingSearchSkipTakeRequest : ISkipTakeRequest, ISearchRequest
+    public interface ISortingSkipTakeRequest : ISkipTakeRequest, ISearchRequest
     {
     }
 }

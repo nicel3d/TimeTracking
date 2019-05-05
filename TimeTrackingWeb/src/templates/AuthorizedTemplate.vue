@@ -136,6 +136,11 @@ export default class AuthorizedTemplate extends Vue {
       icon: 'fas fa-users',
       title: 'Активность пользователей',
       name: RouterNameEnum.ActivityStaff
+    },
+    {
+      icon: 'fas fa-project-diagram',
+      title: 'Приложения',
+      name: RouterNameEnum.Applications
     }
   ]
   miniVariant = false
