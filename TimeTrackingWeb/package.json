@@ -10,6 +10,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@types/moment": "^2.13.0",
     "fetch-intercept": "^2.3.1",
     "moment-timezone": "^0.5.23",
     "register-service-worker": "^1.6.2",
@@ -23,6 +24,7 @@
     "vue-picture-swipe": "^1.1.0",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.1",
+    "vue2-datepicker": "^2.11.1",
     "vuetify": "^1.5.5",
     "vuex": "^3.0.1",
     "whatwg-fetch": "^3.0.0"

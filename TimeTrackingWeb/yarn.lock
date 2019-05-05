@@ -647,6 +647,12 @@
   version "5.2.6"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.6.tgz#b8622d50557dd155e9f2f634b7d68fd38de5e94b"
 
+"@types/moment@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
+  dependencies:
+    moment "*"
+
 "@types/node@*":
   version "11.13.8"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.8.tgz#e5d71173c95533be9842b2c798978f095f912aab"
@@ -3492,6 +3498,10 @@ fd-slicer@~1.0.1:
   dependencies:
     pend "~1.2.0"
 
+fecha@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
+
 fetch-intercept@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/fetch-intercept/-/fetch-intercept-2.3.1.tgz#1f37ac57d7f0742aae5e3ae11ed18c2acbc43f61"
@@ -5536,7 +5546,7 @@ moment-timezone@^0.5.23:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.11.1:
+moment@*, "moment@>= 2.9.0", moment@^2.11.1:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
 
@@ -8479,6 +8489,12 @@ vue-template-compiler@^2.5.21:
 vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
+
+vue2-datepicker@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/vue2-datepicker/-/vue2-datepicker-2.11.1.tgz#a57ff002972cbc6a908bef2f26b061650197bd43"
+  dependencies:
+    fecha "^2.3.3"
 
 vue@^2.5.16, vue@^2.6.6:
   version "2.6.10"

@@ -870,7 +870,7 @@ export interface IActivityStaffListResponse extends IListCountResponse {
 
 export class ActivityStaff implements IActivityStaff {
   id!: number;
-  updatedAt?: Date | undefined;
+  updatedAt!: Date;
   applicationTitle?: string | undefined;
   staffId?: number | undefined;
   imageOrigin?: string | undefined;
@@ -926,7 +926,7 @@ export class ActivityStaff implements IActivityStaff {
 
 export interface IActivityStaff {
   id: number;
-  updatedAt?: Date | undefined;
+  updatedAt: Date;
   applicationTitle?: string | undefined;
   staffId?: number | undefined;
   imageOrigin?: string | undefined;
@@ -1423,14 +1423,11 @@ export interface IStaff {
 }
 
 export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeRequest {
-  descending?: boolean | undefined;
-  page?: number | undefined;
-  rowsPerPage?: number | undefined;
-  sortBy?: string | undefined;
-  totalItems?: number | undefined;
+  sorting?: SortingRequest | undefined;
+  filter?: FilterRequest | undefined;
+  search?: string | undefined;
   skip?: number | undefined;
   take?: number | undefined;
-  search?: string | undefined;
 
   constructor(data?: ISortingSearchSkipTakeRequest) {
     if (data) {
@@ -1443,14 +1440,11 @@ export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeReque
 
   init(data?: any) {
     if (data) {
-      this.descending = data["Descending"];
-      this.page = data["Page"];
-      this.rowsPerPage = data["RowsPerPage"];
-      this.sortBy = data["SortBy"];
-      this.totalItems = data["TotalItems"];
+      this.sorting = data["Sorting"] ? SortingRequest.fromJS(data["Sorting"]) : <any>undefined;
+      this.filter = data["Filter"] ? FilterRequest.fromJS(data["Filter"]) : <any>undefined;
+      this.search = data["Search"];
       this.skip = data["Skip"];
       this.take = data["Take"];
-      this.search = data["Search"];
     }
   }
 
@@ -1463,27 +1457,109 @@ export class SortingSearchSkipTakeRequest implements ISortingSearchSkipTakeReque
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data["Descending"] = this.descending;
-    data["Page"] = this.page;
-    data["RowsPerPage"] = this.rowsPerPage;
-    data["SortBy"] = this.sortBy;
-    data["TotalItems"] = this.totalItems;
+    data["Sorting"] = this.sorting ? this.sorting.toJSON() : <any>undefined;
+    data["Filter"] = this.filter ? this.filter.toJSON() : <any>undefined;
+    data["Search"] = this.search;
     data["Skip"] = this.skip;
     data["Take"] = this.take;
-    data["Search"] = this.search;
     return data;
   }
 }
 
 export interface ISortingSearchSkipTakeRequest {
-  descending?: boolean | undefined;
-  page?: number | undefined;
-  rowsPerPage?: number | undefined;
-  sortBy?: string | undefined;
-  totalItems?: number | undefined;
+  sorting?: SortingRequest | undefined;
+  filter?: FilterRequest | undefined;
+  search?: string | undefined;
   skip?: number | undefined;
   take?: number | undefined;
-  search?: string | undefined;
+}
+
+export class SortingRequest implements ISortingRequest {
+  descending?: boolean | undefined;
+  sortBy?: string | undefined;
+
+  constructor(data?: ISortingRequest) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.descending = data["Descending"];
+      this.sortBy = data["SortBy"];
+    }
+  }
+
+  static fromJS(data: any): SortingRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new SortingRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Descending"] = this.descending;
+    data["SortBy"] = this.sortBy;
+    return data;
+  }
+}
+
+export interface ISortingRequest {
+  descending?: boolean | undefined;
+  sortBy?: string | undefined;
+}
+
+export class FilterRequest implements IFilterRequest {
+  begDate!: Date;
+  endDate!: Date;
+  begHour!: number;
+  endHour!: number;
+
+  constructor(data?: IFilterRequest) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.begDate = data["BegDate"] ? new Date(data["BegDate"].toString()) : <any>undefined;
+      this.endDate = data["EndDate"] ? new Date(data["EndDate"].toString()) : <any>undefined;
+      this.begHour = data["BegHour"];
+      this.endHour = data["EndHour"];
+    }
+  }
+
+  static fromJS(data: any): FilterRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new FilterRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["BegDate"] = this.begDate ? this.begDate.toISOString() : <any>undefined;
+    data["EndDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+    data["BegHour"] = this.begHour;
+    data["EndHour"] = this.endHour;
+    return data;
+  }
+}
+
+export interface IFilterRequest {
+  begDate: Date;
+  endDate: Date;
+  begHour: number;
+  endHour: number;
 }
 
 export class ApplicationsListResponse extends ListCountResponse implements IApplicationsListResponse {

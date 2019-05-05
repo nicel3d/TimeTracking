@@ -1,4 +1,6 @@
-﻿namespace TimeTrackingServer.Stores.Impl
+﻿using System;
+
+namespace TimeTrackingServer.Stores.Impl
 {
     public class ListCountResponse : IListTotalResponse
     {
@@ -17,24 +19,26 @@
         public int? Take { get; set; }
     }
 
-    public class DataTablePaginationRequest : ISortingRequest
+    public class SortingRequest : ISortingRequest
     {
         public bool? Descending { get; set; }
-        public int? Page { get; set; }
-        public int? RowsPerPage { get; set; }
         public string SortBy { get; set; }
-        public int? TotalItems { get; set; }
+    }
+
+    public class FilterRequest : IFilterRequest
+    {
+        public DateTime BegDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int BegHour { get; set; }
+        public int EndHour { get; set; }
     }
 
     public class SortingSearchSkipTakeRequest : ISortingSearchSkipTakeRequest
     {
-        public bool? Descending { get; set; }
-        public int? Page { get; set; }
-        public int? RowsPerPage { get; set; }
-        public string SortBy { get; set; }
-        public int? TotalItems { get; set; }
+        public SortingRequest Sorting { get; set; }
+        public FilterRequest Filter { get; set; }
+        public string Search { get; set; }
         public int? Skip { get; set; }
         public int? Take { get; set; }
-        public string Search { get; set; }
     }
 }

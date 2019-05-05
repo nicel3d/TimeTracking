@@ -33,7 +33,9 @@ namespace TimeTrackingServer.Services.Impl
         {
             var data = _dbContext.Set<ActivityStaff>()
                                 .Include(x => x.Application)
-                                .Include(x => x.Staff);
+                                .Include(x => x.Staff)
+                                .Where(x => x.UpdatedAt > request.Filter.BegDate && x.UpdatedAt < request.Filter.EndDate)
+                                .Where(x => x.UpdatedAt.Hour > request.Filter.BegHour && x.UpdatedAt.Hour < request.Filter.EndHour);
 
             IQueryable<ActivityStaff> dataSearch = null;
 
@@ -47,10 +49,10 @@ namespace TimeTrackingServer.Services.Impl
                         );
             }
 
-            if (request.SortBy != null && request.Descending != null)
+            if (request.Sorting.SortBy != null && request.Sorting.Descending != null)
             {
-                var order = request.Descending != true ? "DESC" : "ASC";
-                dataSearch = (dataSearch ?? data).AsQueryable().OrderBy($"{request.SortBy} {order}");
+                var order = request.Sorting.Descending != true ? "DESC" : "ASC";
+                dataSearch = (dataSearch ?? data).AsQueryable().OrderBy($"{request.Sorting.SortBy} {order}");
             }
 
             var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)

@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card>
-    <v-card-title>
-      Активность пользователей
+    <v-card-title primary-title>
+      <h3 class="mb-0">Активность пользователей</h3>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -53,17 +53,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  ActivityStaff, SortingSearchSkipTakeRequest, StateEnum
+  ActivityStaff, FilterRequest, SortingRequest, SortingSearchSkipTakeRequest, StateEnum
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
-import { nameOf } from '%/constants/NameOf'
 
 @Component
 export default class VActivityTableComponent extends Mixins(SkipTake) {
+  @Prop() filter!: FilterRequest
+
   desserts: ActivityStaff[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
@@ -77,6 +78,7 @@ export default class VActivityTableComponent extends Mixins(SkipTake) {
   ]
 
   @Watch('pagination')
+  @Watch('filter')
   onPagination () {
     if (!this.loading) {
       this.loadActivityStaffList()
@@ -90,8 +92,11 @@ export default class VActivityTableComponent extends Mixins(SkipTake) {
   loadActivityStaffList (skip = this.skip, take = this.take) {
     this.loading = true
     const data = new SortingSearchSkipTakeRequest({
-      descending: this.pagination.descending,
-      sortBy: this.pagination.sortBy,
+      sorting: new SortingRequest({
+        descending: this.pagination.descending,
+        sortBy: this.pagination.sortBy
+      }),
+      filter: this.filter,
       search: this.search,
       skip,
       take

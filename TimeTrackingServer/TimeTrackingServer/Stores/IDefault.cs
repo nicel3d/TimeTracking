@@ -1,4 +1,6 @@
-﻿namespace TimeTrackingServer.Stores
+﻿using System;
+
+namespace TimeTrackingServer.Stores
 {
     public interface IListTotalResponse
     {
@@ -22,7 +24,15 @@
         string SortBy { get; set; }
     }
 
-    public interface ISortingSearchSkipTakeRequest : ISortingRequest, ISkipTakeRequest, ISearchRequest
+    public interface IFilterRequest
+    {
+        DateTime BegDate { get; set; }
+        DateTime EndDate { get; set; }
+        int BegHour { get; set; }
+        int EndHour { get; set; }
+    }
+
+    public interface ISortingSearchSkipTakeRequest : ISkipTakeRequest, ISearchRequest
     {
     }
 }

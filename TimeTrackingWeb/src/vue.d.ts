@@ -1,9 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router/types'
+import { Moment } from 'moment'
 
 declare module 'vue/types/vue' {
   // Глобальные свойства можно объявлять
   // на интерфейсе `VueConstructor`
+
+  interface Vue {
+    $moment(): Moment
+  }
 
   interface VueConstructor {
     router: VueRouter;
