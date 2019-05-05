@@ -39,7 +39,7 @@ namespace TimeTrackingServer.Services.Impl
 
             if (!String.IsNullOrEmpty(request.Search))
             {
-                dataSearch = data.Where(x =>
+                dataSearch = data.AsQueryable().Where(x =>
                             x.Application.Caption.Contains(request.Search) ||
                             x.Staff.Caption.Contains(request.Search) ||
                             x.ApplicationTitle.Contains(request.Search) ||
@@ -50,7 +50,7 @@ namespace TimeTrackingServer.Services.Impl
             if (request.SortBy != null && request.Descending != null)
             {
                 var order = request.Descending != true ? "DESC" : "ASC";
-                dataSearch = data.AsQueryable().OrderBy($"{request.SortBy} {order}");
+                dataSearch = (dataSearch ?? data).AsQueryable().OrderBy($"{request.SortBy} {order}");
             }
 
             var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)
