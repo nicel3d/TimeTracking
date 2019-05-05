@@ -128,9 +128,14 @@ export default class AuthorizedTemplate extends Vue {
   dialog = false
   items = [
     {
-      icon: 'fas fa-tachometer-alt',
+      icon: 'fas fa-home',
       title: 'Dashboard',
       name: RouterNameEnum.Dashboard
+    },
+    {
+      icon: 'fas fa-users',
+      title: 'Активность пользователей',
+      name: RouterNameEnum.ActivityStaff
     }
   ]
   miniVariant = false
@@ -140,6 +145,10 @@ export default class AuthorizedTemplate extends Vue {
 </script>
 
 <style lang="scss">
+.v-list__tile__title {
+  color: #000000;
+}
+
 @media (min-width: 1390px) {
   .container.wrapper {
     margin: 0;

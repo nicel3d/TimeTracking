@@ -32,6 +32,14 @@ const router = new Router({
           meta: {
             breadcrumb: 'Dashboard'
           }
+        },
+        {
+          path: 'activity-staff',
+          name: RouterNameEnum.ActivityStaff,
+          component: () => import('../views/ActivityStaffView.vue'),
+          meta: {
+            breadcrumb: 'Активность пользователя'
+          }
         }
       ],
       beforeEnter: (to, from, next) => {
