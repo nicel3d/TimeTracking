@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>aspnet-TimeTrackingServer-A69A26BF-C3D9-4019-8C5A-72B01647FDF3</UserSecretsId>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
