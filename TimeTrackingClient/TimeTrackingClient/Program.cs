@@ -1,16 +1,25 @@
-﻿using System;
-using TimeTrackingClient.Services;
+﻿using System.ServiceProcess;
 
 namespace TimeTrackingClient
 {
     class Program
     {
-        private static SocketService _socketService = new SocketService();
 
         static void Main(string[] args)
         {
-            _socketService.LoopConnectServerAndSendMessage();
-            Console.Read();
+
+#if DEBUG
+            Service service = new Service();
+            service.OnDebug();
+            System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+#else
+            ServiceBase[] ServicesToRun;
+            ServicesToRun = new ServiceBase[]
+            {
+                new Service()
+            };
+            ServiceBase.Run(ServicesToRun);
+#endif
         }
     }
 }

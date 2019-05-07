@@ -124,12 +124,12 @@ namespace TimeTrackingClient.Services
                 }
                 catch (SocketException)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Connection attempts: {0}", attempts.ToString());
+                    //Console.Clear();
+                    //Console.WriteLine("Connection attempts: {0}", attempts.ToString());
                     Thread.Sleep(_waitingBeforeReconnect);
                 }
             }
-            Console.WriteLine("Connected!");
+            //Console.WriteLine("Connected!");
         }
 
         private static StreamingData GetActivityStaffToStreamingData()
@@ -166,7 +166,7 @@ namespace TimeTrackingClient.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
                 _socket.Shutdown(SocketShutdown.Both);
                 _socket.Close();
                 LoopConnectServerAndSendMessage();

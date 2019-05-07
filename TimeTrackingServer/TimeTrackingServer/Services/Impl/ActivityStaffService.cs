@@ -34,8 +34,8 @@ namespace TimeTrackingServer.Services.Impl
             var data = _dbContext.Set<ActivityStaff>()
                                 .Include(x => x.Application)
                                 .Include(x => x.Staff)
-                                .Where(x => x.UpdatedAt > request.Filter.BegDate && x.UpdatedAt < request.Filter.EndDate)
-                                .Where(x => x.UpdatedAt.Hour > request.Filter.BegHour && x.UpdatedAt.Hour < request.Filter.EndHour);
+                                .Where(x => x.UpdatedAt >= request.Filter.BegDate && x.UpdatedAt <= request.Filter.EndDate)
+                                .Where(x => x.UpdatedAt.Hour >= request.Filter.BegHour && x.UpdatedAt.Hour <= request.Filter.EndHour);
 
             IQueryable<ActivityStaff> dataSearch = null;
 
