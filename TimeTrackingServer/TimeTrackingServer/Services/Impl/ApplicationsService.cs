@@ -30,12 +30,52 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.Applications.FindAsync(id);
         }
 
-        public async Task<ApplicationsListResponse> Get(TableSortingWithFilterRequest request)
+        public async Task<ApplicationsRangeListResponse> Get(TableSortingWithFilterRequest request)
         {
-            return new ApplicationsListResponse
+            var data = _dbContext.Set<Applications>()
+                                .GroupJoin(_dbContext.ActivityStaff, app => app.Id,
+                                            f => f.ApplicationId, (app, f) => new
+                                            {
+                                                app,
+                                                act = f
+                                                .Where(x => x.UpdatedAt > request.Filter.BegDate && x.UpdatedAt < request.Filter.EndDate)
+                                                .Where(x => x.UpdatedAt.Hour > request.Filter.BegHour && x.UpdatedAt.Hour < request.Filter.EndHour)
+                                                .GroupBy(x => x.StaffId)
+                                            }
+                                )
+                                .Select(x => new ApplicationsRange
+                                {
+                                    Id = x.app.Id,
+                                    Caption = x.app.Caption,
+                                    State = x.app.State,
+                                    UpdatedAt = x.app.UpdatedAt,
+                                    UserUsed = x.act.Count()
+                                })
+                                .Where(x => x.UserUsed > 0);
+
+            IQueryable<ApplicationsRange> dataSearch = null;
+
+            if (!String.IsNullOrEmpty(request.Search))
             {
-                Data = await _dbContext.Applications.ToListAsync(),
-                Total = await _dbContext.Applications.CountAsync()
+                dataSearch = data.AsQueryable().Where(x =>
+                            x.Caption.Contains(request.Search) ||
+                            x.UpdatedAt.ToString().Contains(request.Search)
+                        );
+            }
+
+            if (request.Sorting.SortBy != null && request.Sorting.Descending != null)
+            {
+                var order = request.Sorting.Descending != true ? "DESC" : "ASC";
+                dataSearch = (dataSearch ?? data).AsQueryable().OrderBy($"{request.Sorting.SortBy} {order}");
+            }
+
+            var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)
+                                .Take(request.Take ?? Int32.MaxValue);
+
+            return new ApplicationsRangeListResponse
+            {
+                Data = await dataSlipTake.ToListAsync(),
+                Total = await (dataSearch ?? data).CountAsync()
             };
         }
 

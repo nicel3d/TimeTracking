@@ -304,8 +304,8 @@ export class WSApi {
     return Promise.resolve<ActivityStaff | null>(<any>null);
   }
 
-  applications_GetList(request: TableSortingWithFilterRequest | null): Promise<ApplicationsListResponse | null> {
-    let url_ = this.baseUrl + "/api/Applications/GetList";
+  applications_GetRangeList(request: TableSortingWithFilterRequest | null): Promise<ApplicationsRangeListResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/GetRangeList";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -320,18 +320,18 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processApplications_GetList(_response);
+      return this.processApplications_GetRangeList(_response);
     });
   }
 
-  protected processApplications_GetList(response: Response): Promise<ApplicationsListResponse | null> {
+  protected processApplications_GetRangeList(response: Response): Promise<ApplicationsRangeListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
       return response.text().then((_responseText) => {
         let result200: any = null;
         let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        result200 = resultData200 ? ApplicationsListResponse.fromJS(resultData200) : <any>null;
+        result200 = resultData200 ? ApplicationsRangeListResponse.fromJS(resultData200) : <any>null;
         return result200;
       });
     } else if (status !== 200 && status !== 204) {
@@ -339,7 +339,7 @@ export class WSApi {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<ApplicationsListResponse | null>(<any>null);
+    return Promise.resolve<ApplicationsRangeListResponse | null>(<any>null);
   }
 
   applications_GetListWithoutFilter(request: TableSortingRequest | null): Promise<ApplicationsListResponse | null> {
@@ -977,7 +977,7 @@ export interface IActivityStaff {
 export class Applications implements IApplications {
   id!: number;
   caption?: string | undefined;
-  updatedAt?: Date | undefined;
+  updatedAt!: Date;
   state!: StateEnum;
   activityStaff?: ActivityStaff[] | undefined;
   applicationTitles?: ApplicationTitles[] | undefined;
@@ -1051,7 +1051,7 @@ export class Applications implements IApplications {
 export interface IApplications {
   id: number;
   caption?: string | undefined;
-  updatedAt?: Date | undefined;
+  updatedAt: Date;
   state: StateEnum;
   activityStaff?: ActivityStaff[] | undefined;
   applicationTitles?: ApplicationTitles[] | undefined;
@@ -1627,6 +1627,80 @@ export class SortingRequest implements ISortingRequest {
 export interface ISortingRequest {
   descending?: boolean | undefined;
   sortBy?: string | undefined;
+}
+
+export class ApplicationsRangeListResponse extends ListCountResponse implements IApplicationsRangeListResponse {
+  data?: ApplicationsRange[] | undefined;
+
+  constructor(data?: IApplicationsRangeListResponse) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(ApplicationsRange.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ApplicationsRangeListResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationsRangeListResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IApplicationsRangeListResponse extends IListCountResponse {
+  data?: ApplicationsRange[] | undefined;
+}
+
+export class ApplicationsRange extends Applications implements IApplicationsRange {
+  userUsed!: number;
+
+  constructor(data?: IApplicationsRange) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.userUsed = data["UserUsed"];
+    }
+  }
+
+  static fromJS(data: any): ApplicationsRange {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationsRange();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["UserUsed"] = this.userUsed;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IApplicationsRange extends IApplications {
+  userUsed: number;
 }
 
 export class ApplicationsListResponse extends ListCountResponse implements IApplicationsListResponse {

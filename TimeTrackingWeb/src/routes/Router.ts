@@ -43,8 +43,16 @@ const router = new Router({
         },
         {
           path: 'applications',
-          name: RouterNameEnum.Applications,
+          name: RouterNameEnum.ApplicationsList,
           component: () => import('../views/ApplicationsView.vue'),
+          meta: {
+            breadcrumb: 'Приложения'
+          }
+        },
+        {
+          path: 'applications-range',
+          name: RouterNameEnum.ApplicationsRange,
+          component: () => import('../views/ApplicationsRangeView.vue'),
           meta: {
             breadcrumb: 'Приложения'
           }

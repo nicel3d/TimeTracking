@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-app>
     <v-navigation-drawer
       :mini-variant="miniVariant"
@@ -13,19 +13,44 @@
         class="pt-0"
         dense>
         <v-divider/>
-        <v-list-tile
-          v-for="(item, key) in items"
-          :key="key"
-          :to="{name: item.name}"
-          value="true"
-        >
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+        <template v-for="(item, key) in items">
+          <v-list-tile
+            v-if="!item.items"
+            :key="key"
+            :to="{name: item.name}"
+            value="true"
+          >
+            <v-list-tile-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-group
+            v-else
+            :key="key"
+            value="true"
+            :prepend-icon="item.icon"
+          >
+            <template v-slot:activator>
+              <v-list-tile>
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              </v-list-tile>
+            </template>
+            <v-list-tile
+              :class="{'pl-4': !miniVariant}"
+              v-for="(child, index) in item.items"
+              :key="index"
+              :to="{name: child.name}"
+            >
+              <v-list-tile-action>
+                <v-icon>{{ child.icon }}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-title>{{ child.title }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list-group>
+        </template>
         <v-list-tile @click.prevent="dialog = true">
           <v-list-tile-action>
             <v-icon>fas fa-sign-out-alt</v-icon>
@@ -140,7 +165,18 @@ export default class AuthorizedTemplate extends Vue {
     {
       icon: 'fas fa-project-diagram',
       title: 'Приложения',
-      name: RouterNameEnum.Applications
+      items: [
+        {
+          icon: 'fas fa-project-diagram',
+          title: 'Приложения, список',
+          name: RouterNameEnum.ApplicationsList
+        },
+        {
+          icon: 'fas fa-project-diagram',
+          title: 'Приложения за период',
+          name: RouterNameEnum.ApplicationsRange
+        }
+      ]
     }
   ]
   miniVariant = false

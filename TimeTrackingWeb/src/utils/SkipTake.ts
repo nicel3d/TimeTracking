@@ -14,7 +14,7 @@ export default class SkipTake extends Vue {
   loading: boolean = true
   pagination: DataTablePagination = {
     page: 1,
-    rowsPerPage: 5
+    rowsPerPage: 10
   }
   totalDesserts: number = 0
 

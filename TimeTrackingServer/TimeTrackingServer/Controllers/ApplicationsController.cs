@@ -23,9 +23,9 @@ namespace TimeTrackingServer.Controllers
             _applicationsService = applicationsService;
         }
 
-        [HttpPost(nameof(GetList))]
+        [HttpPost(nameof(GetRangeList))]
         [Produces("application/json")]
-        public async Task<ApplicationsListResponse> GetList([FromBody] TableSortingWithFilterRequest request)
+        public async Task<ApplicationsRangeListResponse> GetRangeList([FromBody] TableSortingWithFilterRequest request)
         {
             return await _applicationsService.Get(request);
         }

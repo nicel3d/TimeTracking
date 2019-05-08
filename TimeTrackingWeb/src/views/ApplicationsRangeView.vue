@@ -4,26 +4,29 @@
       class="mb-5"
       v-model="filter"
     />
-    <v-activity-table-component
+    <v-applications-range-table-component
       ref="table"
       :filter="filter"
       @on-edit="$refs.dialog.onView($event)"/>
-    <v-activity-details-component ref="dialog" @on-success="$refs.table.onPagination()"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import VActivityTableComponent from '%/components/ActivityStaff/VActivityTableComponent.vue'
-import VActivityDetailsComponent from '%/components/ActivityStaff/VActivityDetailsComponent.vue'
 import VActivityFilterComponent from '%/components/ActivityStaff/VActivityFilterComponent.vue'
 import { FilterRequest } from '%/stores/api/SwaggerDocumentationTypescript'
+import VApplicationsRangeTableComponent from '%/components/Applications/VApplicationsRangeTableComponent.vue'
 import { filterDefault } from '%/constants/FilterDefault'
 
 @Component({
-  components: { VActivityFilterComponent, VActivityDetailsComponent, VActivityTableComponent }
+  components: {
+    VApplicationsRangeTableComponent,
+    VActivityFilterComponent,
+    VActivityTableComponent
+  }
 })
-export default class ActivityStaffView extends Vue {
+export default class ApplicationsRangeView extends Vue {
   filter: FilterRequest = filterDefault
 }
 </script>
