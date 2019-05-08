@@ -13,8 +13,8 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
-      <v-btn color="primary" dark class="mb-2" @click="ImportApplicationList()">Экспорт в xlsx</v-btn>
-      <v-btn color="primary" dark class="mb-2">Экспорт в csv</v-btn>
+      <v-btn color="primary" dark class="mb-2" @click="ImportXLSXApplicationList()">Экспорт в xlsx</v-btn>
+      <v-btn color="primary" dark class="mb-2" @click="ImportCSVApplicationList()">Экспорт в csv</v-btn>
     </div>
     <v-data-table
       :headers="headers"
@@ -83,7 +83,7 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
     return oc(States.find(item => item.state === state)).text(States[1].text)
   }
 
-  ImportApplicationList (skip = this.skip, take = this.take) {
+  ImportXLSXApplicationList (skip = this.skip, take = this.take) {
     const data = new TableSortingRequest({
       sorting: new SortingRequest({
         descending: this.pagination.descending,
@@ -93,17 +93,43 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
       skip,
       take
     })
-    this.$store.state.api.applications_ImportGetListWithoutFilter(data)
+    this.$store.state.api.applications_ImportXLSXGetListWithoutFilter(data)
       .then(res => {
         if (!window.navigator.msSaveOrOpenBlob) {
           const url = window.URL.createObjectURL(new Blob([res.data], { type: res.data.type }))
           let link = document.createElement('a')
           link.href = url
-          link.download = res.fileName
+          link.download = 'application.xlsx'
           link.click()
           link.remove()
         } else {
-          const url = window.navigator.msSaveOrOpenBlob(new Blob([res.data]), res.fileName)
+          const url = window.navigator.msSaveOrOpenBlob(new Blob([res.data]), 'application.xlsx')
+        }
+      })
+      .catch(res => this.$root.$emit('snackbar', res))
+  }
+
+  ImportCSVApplicationList (skip = this.skip, take = this.take) {
+    const data = new TableSortingRequest({
+      sorting: new SortingRequest({
+        descending: this.pagination.descending,
+        sortBy: this.pagination.sortBy
+      }),
+      search: this.search,
+      skip,
+      take
+    })
+    this.$store.state.api.applications_ImportCSVGetListWithoutFilter(data)
+      .then(res => {
+        if (!window.navigator.msSaveOrOpenBlob) {
+          const url = window.URL.createObjectURL(new Blob([res.data], { type: res.data.type }))
+          let link = document.createElement('a')
+          link.href = url
+          link.download = 'application.csv'
+          link.click()
+          link.remove()
+        } else {
+          const url = window.navigator.msSaveOrOpenBlob(new Blob([res.data]), 'application.csv')
         }
       })
       .catch(res => this.$root.$emit('snackbar', res))
