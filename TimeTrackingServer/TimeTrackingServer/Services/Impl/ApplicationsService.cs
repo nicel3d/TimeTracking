@@ -47,8 +47,15 @@ namespace TimeTrackingServer.Services.Impl
                                             {
                                                 app,
                                                 act = f
-                                                .Where(x => x.UpdatedAt > request.Filter.BegDate && x.UpdatedAt < request.Filter.EndDate)
-                                                .Where(x => x.UpdatedAt.Hour > request.Filter.BegHour && x.UpdatedAt.Hour < request.Filter.EndHour)
+                                                //.WhereDateFilter2(request.Filter)
+                                                .Where(x => 
+                                                        x.UpdatedAt.Date.CompareTo(request.Filter.BegDate.Date) >= 0 &&
+                                                        x.UpdatedAt.Date.CompareTo(request.Filter.EndDate.Date) <= 0
+                                                        )
+                                                .Where(x => 
+                                                        x.UpdatedAt.Hour >= request.Filter.BegHour &&
+                                                        x.UpdatedAt.Hour <= request.Filter.EndHour
+                                                        )
                                                 .GroupBy(x => x.StaffId)
                                             }
                                 )

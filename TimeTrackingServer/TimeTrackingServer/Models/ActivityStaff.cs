@@ -1,8 +1,9 @@
 ﻿using System;
+using TimeTrackingServer.Exceptions;
 
 namespace TimeTrackingServer.Models
 {
-    public partial class ActivityStaff
+    public partial class ActivityStaff : ITWithUpdateAt
     {
         public int Id { get; set; }
         public DateTime UpdatedAt { get; set; }

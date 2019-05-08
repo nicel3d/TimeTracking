@@ -10,7 +10,7 @@ namespace TimeTrackingServer.Helpers
     {
         public static byte[] GetSmallImageFromBytes(byte[] bytes)
         {
-            var resize = Resize(BytesToImage(bytes), new Size(300, 300));
+            var resize = Resize(BytesToImage(bytes), new Size(100, 100));
             return ImageToByteArray(resize);
         }
 
@@ -23,7 +23,7 @@ namespace TimeTrackingServer.Helpers
 
         public static string GetSmallImageFrombase64String(string base64String)
         {
-            var resize = Resize(Base64ToImage(base64String), new Size(300, 300));
+            var resize = Resize(Base64ToImage(base64String), new Size(100, 100));
             return ImageToBase64(resize, ImageFormat.Jpeg);
         }
 

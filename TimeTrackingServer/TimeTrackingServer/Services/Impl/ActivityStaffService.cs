@@ -6,6 +6,7 @@ using TimeTrackingServer.Data;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Stores.Impl;
 using System.Linq.Dynamic;
+using TimeTrackingServer.Exceptions;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -31,17 +32,14 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<ActivityStaffListResponse> Get(TableSortingWithFilterRequest request)
         {
-            var data = _dbContext.Set<ActivityStaff>()
+            IQueryable<ActivityStaff> data = _dbContext.Set<ActivityStaff>()
                                 .Include(x => x.Application)
                                 .Include(x => x.Staff)
-                                .Where(x => x.UpdatedAt > request.Filter.BegDate && x.UpdatedAt < request.Filter.EndDate)
-                                .Where(x => x.UpdatedAt.Hour > request.Filter.BegHour && x.UpdatedAt.Hour < request.Filter.EndHour);
-
-            IQueryable<ActivityStaff> dataSearch = null;
+                                .WhereDateFilter(request.Filter);
 
             if (!String.IsNullOrEmpty(request.Search))
             {
-                dataSearch = data.AsQueryable().Where(x =>
+                data = data.AsQueryable().Where(x =>
                             x.Application.Caption.Contains(request.Search) ||
                             x.Staff.Caption.Contains(request.Search) ||
                             x.ApplicationTitle.Contains(request.Search) ||
@@ -49,14 +47,10 @@ namespace TimeTrackingServer.Services.Impl
                         );
             }
 
-            if (request.Sorting.SortBy != null && request.Sorting.Descending != null)
+            return new ActivityStaffListResponse
             {
-                var order = request.Sorting.Descending != true ? "DESC" : "ASC";
-                dataSearch = (dataSearch ?? data).AsQueryable().OrderBy($"{request.Sorting.SortBy} {order}");
-            }
-
-            var dataSlipTake = (dataSearch ?? data).Skip(request.Skip ?? 0)
-                                .Take(request.Take ?? Int32.MaxValue)
+                Data = await data.Sort(request.Sorting)
+                                .AddSkipTake(request)
                                 .Select(x =>
                                 new ActivityStaff
                                 {
@@ -68,12 +62,8 @@ namespace TimeTrackingServer.Services.Impl
                                     ApplicationTitle = x.ApplicationTitle,
                                     ApplicationId = x.ApplicationId,
                                     StaffId = x.StaffId
-                                });
-
-            return new ActivityStaffListResponse
-            {
-                Data = await dataSlipTake.ToListAsync(),
-                Total = await (dataSearch ?? data).CountAsync()
+                                }).ToListAsync(),
+                Total = await data.CountAsync()
             };
         }
 
