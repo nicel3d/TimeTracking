@@ -11,11 +11,23 @@ namespace TimeTrackingServer.Services
         public List<Applications> Data { get; set; }
     }
 
+    public class ApplicationsRange : Applications
+    {
+        public int UserUsed { get; set; }
+    }
+
+    public class ApplicationsRangeListResponse : ListCountResponse
+    {
+        public List<ApplicationsRange> Data { get; set; }
+    }
+
     public interface IApplicationsService
     {
         Task<Applications> Get(int id);
-        Task<ApplicationsListResponse> Get(TableSortingWithFilterRequest request);
-        Task<ApplicationsListResponse> Get(TableSortingRequest request);
+        Task<ApplicationsRangeListResponse> Get(TableSortingWithFilterRequest request);
+        Task<ApplicationsListResponse> Get(TableSortingRequest request, bool withSkipTake = true);
+        Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingRequest request);
+        Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request);
         Task<Applications> Post(Applications activityStaff);
         Task PutState(int id, StateEnum stateEnum);
         Task Delete(int id);

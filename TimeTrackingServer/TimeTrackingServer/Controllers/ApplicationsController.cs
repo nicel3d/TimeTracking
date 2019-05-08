@@ -6,7 +6,6 @@ using TimeTrackingServer.Constants;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Services;
 using TimeTrackingServer.Stores.Impl;
-using static TimeTrackingServer.Exceptions.ApiException;
 
 namespace TimeTrackingServer.Controllers
 {
@@ -23,9 +22,9 @@ namespace TimeTrackingServer.Controllers
             _applicationsService = applicationsService;
         }
 
-        [HttpPost(nameof(GetList))]
+        [HttpPost(nameof(GetRangeList))]
         [Produces("application/json")]
-        public async Task<ApplicationsListResponse> GetList([FromBody] TableSortingWithFilterRequest request)
+        public async Task<ApplicationsRangeListResponse> GetRangeList([FromBody] TableSortingWithFilterRequest request)
         {
             return await _applicationsService.Get(request);
         }
@@ -35,6 +34,18 @@ namespace TimeTrackingServer.Controllers
         public async Task<ApplicationsListResponse> GetListWithoutFilter([FromBody] TableSortingRequest request)
         {
             return await _applicationsService.Get(request);
+        }
+
+        [HttpPost(nameof(ImportXLSXGetListWithoutFilter))]
+        public async Task<ActionResult> ImportXLSXGetListWithoutFilter([FromBody] TableSortingRequest request)
+        {
+            return File(await _applicationsService.ImportXLSXGetListWithoutFilter(request), "application/ms-excel");
+        }
+
+        [HttpPost(nameof(ImportCSVGetListWithoutFilter))]
+        public async Task<ActionResult> ImportCSVGetListWithoutFilter([FromBody] TableSortingRequest request)
+        {
+            return File(await _applicationsService.ImportCSVGetListWithoutFilter(request), "text/csv");
         }
 
         [HttpGet("{id}")]

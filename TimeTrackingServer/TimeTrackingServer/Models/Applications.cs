@@ -15,7 +15,7 @@ namespace TimeTrackingServer.Models
 
         public int Id { get; set; }
         public string Caption { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public StateEnum State { get; set; }
 
         public virtual ICollection<ActivityStaff> ActivityStaff { get; set; }
