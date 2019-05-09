@@ -26,6 +26,8 @@ namespace TimeTrackingServer.Controllers
         [Produces("application/json")]
         public async Task<ApplicationsRangeListResponse> GetRangeList([FromBody] TableSortingWithFilterRequest request)
         {
+            request.Filter.BegDate = request.Filter.BegDate.ToLocalTime();
+            request.Filter.EndDate = request.Filter.EndDate.ToLocalTime();
             return await _applicationsService.Get(request);
         }
 

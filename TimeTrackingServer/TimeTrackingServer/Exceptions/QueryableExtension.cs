@@ -31,13 +31,7 @@ namespace TimeTrackingServer.Exceptions
         public static IQueryable<T> WhereDateFilter<T>(this IQueryable<T> source, IFilterRequest request)
             where T : ITWithUpdateAt
         {
-            return source.Where(x => x.UpdatedAt.Date.CompareTo(request.BegDate.Date) >= 0 && x.UpdatedAt.Date.CompareTo(request.EndDate.Date) <= 0)
-                         .Where(x => x.UpdatedAt.Hour >= request.BegHour && x.UpdatedAt.Hour <= request.EndHour);
-        }
-        public static IEnumerable<T> WhereDateFilter2<T>(this IEnumerable<T> source, IFilterRequest request)
-            where T : ITWithUpdateAt
-        {
-            return source.Where(x => x.UpdatedAt.Date.CompareTo(request.BegDate.Date) >= 0 && x.UpdatedAt.Date.CompareTo(request.EndDate.Date) <= 0)
+            return source.Where(x => x.UpdatedAt.Date >= request.BegDate.Date && x.UpdatedAt.Date <= request.EndDate.Date)
                          .Where(x => x.UpdatedAt.Hour >= request.BegHour && x.UpdatedAt.Hour <= request.EndHour);
         }
     }

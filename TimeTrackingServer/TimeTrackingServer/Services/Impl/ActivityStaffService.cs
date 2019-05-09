@@ -33,9 +33,9 @@ namespace TimeTrackingServer.Services.Impl
         public async Task<ActivityStaffListResponse> Get(TableSortingWithFilterRequest request)
         {
             IQueryable<ActivityStaff> data = _dbContext.Set<ActivityStaff>()
+                                .WhereDateFilter(request.Filter)
                                 .Include(x => x.Application)
-                                .Include(x => x.Staff)
-                                .WhereDateFilter(request.Filter);
+                                .Include(x => x.Staff);
 
             if (!String.IsNullOrEmpty(request.Search))
             {

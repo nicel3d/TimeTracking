@@ -25,6 +25,8 @@ namespace TimeTrackingServer.Controllers
         [Produces("application/json")]
         public async Task<ActivityStaffListResponse> GetList([FromBody] TableSortingWithFilterRequest request)
         {
+            request.Filter.BegDate = request.Filter.BegDate.ToLocalTime();
+            request.Filter.EndDate = request.Filter.EndDate.ToLocalTime();
             return await _activiryStaffService.Get(request);
         }
 

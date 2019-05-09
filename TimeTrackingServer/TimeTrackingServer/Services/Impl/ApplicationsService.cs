@@ -48,9 +48,9 @@ namespace TimeTrackingServer.Services.Impl
                                                 app,
                                                 act = f
                                                 //.WhereDateFilter2(request.Filter)
-                                                .Where(x => 
-                                                        x.UpdatedAt.Date.CompareTo(request.Filter.BegDate.Date) >= 0 &&
-                                                        x.UpdatedAt.Date.CompareTo(request.Filter.EndDate.Date) <= 0
+                                                .Where(x =>
+                                                        x.UpdatedAt.Date >= request.Filter.BegDate.Date &&
+                                                        x.UpdatedAt.Date <= request.Filter.EndDate.Date
                                                         )
                                                 .Where(x => 
                                                         x.UpdatedAt.Hour >= request.Filter.BegHour &&
