@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card>
     <v-card-title primary-title>
-      <h3 class="mb-0">Приложения</h3>
+      <h3 class="mb-0">Пользователи</h3>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -50,10 +50,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import {
-  Applications,
-  SortingRequest,
+  SortingRequest, Staff,
   StateEnum,
   TableSortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
@@ -62,17 +61,19 @@ import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
 
-const filename = 'application'
+const filename = 'staff'
 
 @Component
-export default class VApplicationsTableComponent extends Mixins(SkipTake) {
-  desserts: Applications[] = []
+export default class VStaffTableComponent extends Mixins(SkipTake) {
+  desserts: Staff[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
-    { text: 'Название приложения', value: 'Caption' },
-    { text: 'Состояние', value: 'State' }
+    { text: 'Пользователь', value: 'Caption' },
+    { text: 'Последнее подключение', value: 'ActivityFirst' },
+    { text: 'Продолжительность последнего сеанса', value: 'SessionDuration' },
+    { text: 'Последнее отключение', value: 'ActivityLast' }
   ]
 
   get dataRequest () {
@@ -99,20 +100,20 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
   }
 
   ImportXLSXApplicationList () {
-    this.$store.state.api.applications_ImportXLSXGetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.staff_ImportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
   ImportCSVApplicationList () {
-    this.$store.state.api.applications_ImportCSVGetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.staff_ImportCSVGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
   loadApplicationList () {
     this.loading = true
-    this.$store.state.api.applications_GetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.staff_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total

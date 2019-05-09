@@ -4,4 +4,5 @@ export enum RouterNameEnum {
   ActivityStaff = 'ActivityStaff',
   ApplicationsList = 'ApplicationsList',
   ApplicationsRange = 'ApplicationsRange',
+  Staff = 'Staff',
 }

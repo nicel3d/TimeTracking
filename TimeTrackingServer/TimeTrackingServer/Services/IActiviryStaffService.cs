@@ -16,6 +16,6 @@ namespace TimeTrackingServer.Services
         Task<ActivityStaff> Post(ActivityStaff activityStaff);
         Task Put(int id, ActivityStaff activityStaff);
         Task Delete(int id);
-        Task<ActivityStaffListResponse> Get(TableSortingWithFilterRequest paginationWithSkipTakeRequest);
+        Task<ActivityStaffListResponse> Get(TableSortingWithFilterRequest request);
     }
 }

@@ -597,6 +597,261 @@ export class WSApi {
     return Promise.resolve<Applications | null>(<any>null);
   }
 
+  staff_GetList(request: TableSortingRequest | null): Promise<StaffListResponse | null> {
+    let url_ = this.baseUrl + "/api/Staff/GetList";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_GetList(_response);
+    });
+  }
+
+  protected processStaff_GetList(response: Response): Promise<StaffListResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? StaffListResponse.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<StaffListResponse | null>(<any>null);
+  }
+
+  staff_ImportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Staff/ImportXLSXGetListWithoutFilter";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_ImportXLSXGetListWithoutFilter(_response);
+    });
+  }
+
+  protected processStaff_ImportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  staff_ImportCSVGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Staff/ImportCSVGetListWithoutFilter";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_ImportCSVGetListWithoutFilter(_response);
+    });
+  }
+
+  protected processStaff_ImportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  staff_Get(id: number): Promise<Staff | null> {
+    let url_ = this.baseUrl + "/api/Staff/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_Get(_response);
+    });
+  }
+
+  protected processStaff_Get(response: Response): Promise<Staff | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? Staff.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Staff | null>(<any>null);
+  }
+
+  staff_Put(id: number, staff: Staff | null): Promise<void> {
+    let url_ = this.baseUrl + "/api/Staff/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(staff);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_Put(_response);
+    });
+  }
+
+  protected processStaff_Put(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  staff_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/Staff/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_Delete(_response);
+    });
+  }
+
+  protected processStaff_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  staff_Post(staff: Staff | null): Promise<Staff | null> {
+    let url_ = this.baseUrl + "/api/Staff/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(staff);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_Post(_response);
+    });
+  }
+
+  protected processStaff_Post(response: Response): Promise<Staff | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? Staff.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Staff | null>(<any>null);
+  }
+
   values_GetAll(): Promise<string[] | null> {
     let url_ = this.baseUrl + "/api/Values";
     url_ = url_.replace(/[?&]$/, "");
@@ -1454,7 +1709,7 @@ export interface IStaffToGroup {
 
 export class Staff implements IStaff {
   id!: number;
-  updatedAt?: Date | undefined;
+  updatedAt!: Date;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
   activityLast?: Date | undefined;
@@ -1523,7 +1778,7 @@ export class Staff implements IStaff {
 
 export interface IStaff {
   id: number;
-  updatedAt?: Date | undefined;
+  updatedAt: Date;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
   activityLast?: Date | undefined;
@@ -1814,6 +2069,47 @@ export class ApplicationsListResponse extends ListCountResponse implements IAppl
 
 export interface IApplicationsListResponse extends IListCountResponse {
   data?: Applications[] | undefined;
+}
+
+export class StaffListResponse extends ListCountResponse implements IStaffListResponse {
+  data?: Staff[] | undefined;
+
+  constructor(data?: IStaffListResponse) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(Staff.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): StaffListResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new StaffListResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IStaffListResponse extends IListCountResponse {
+  data?: Staff[] | undefined;
 }
 
 export interface FileResponse {

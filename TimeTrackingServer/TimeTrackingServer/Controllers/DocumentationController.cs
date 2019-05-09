@@ -15,6 +15,7 @@ namespace TimeTrackingServer.Controllers
             typeof(UsersController),
             typeof(ActivityStaffController),
             typeof(ApplicationsController),
+            typeof(StaffController),
             typeof(ValuesController)
         };
 

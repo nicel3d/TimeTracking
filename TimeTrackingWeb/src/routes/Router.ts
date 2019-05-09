@@ -34,6 +34,14 @@ const router = new Router({
           }
         },
         {
+          path: 'staff',
+          name: RouterNameEnum.Staff,
+          component: () => import('../views/StaffView.vue'),
+          meta: {
+            breadcrumb: 'Пользователи'
+          }
+        },
+        {
           path: 'activity-staff',
           name: RouterNameEnum.ActivityStaff,
           component: () => import('../views/ActivityStaffView.vue'),
