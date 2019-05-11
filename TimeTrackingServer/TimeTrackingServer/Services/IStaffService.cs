@@ -10,6 +10,11 @@ namespace TimeTrackingServer.Services
         public List<Staff> Data { get; set; }
     }
 
+    public class TableSortingByGroupIdRequest : TableSortingRequest
+    {
+        public int GroupId { get; set; }
+    }
+
     public interface IStaffService
     {
         Task<Staff> Get(int id);
@@ -17,6 +22,7 @@ namespace TimeTrackingServer.Services
         Task Put(int id, Staff staff);
         Task Delete(int id);
         Task<StaffListResponse> Get(TableSortingRequest request, bool withSkipTake = true);
+        Task<List<Staff>> GetListByGropupId(TableSortingByGroupIdRequest request);
         Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingRequest request);
         Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request);
     }

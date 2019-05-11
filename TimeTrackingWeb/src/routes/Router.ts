@@ -42,6 +42,14 @@ const router = new Router({
           }
         },
         {
+          path: 'groups',
+          name: RouterNameEnum.Groups,
+          component: () => import('../views/GroupsView.vue'),
+          meta: {
+            breadcrumb: 'Группы'
+          }
+        },
+        {
           path: 'activity-staff',
           name: RouterNameEnum.ActivityStaff,
           component: () => import('../views/ActivityStaffView.vue'),

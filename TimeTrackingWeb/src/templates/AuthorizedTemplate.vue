@@ -158,12 +158,17 @@ export default class AuthorizedTemplate extends Vue {
       name: RouterNameEnum.Dashboard
     },
     {
-      icon: 'fas fa-user',
+      icon: 'fas fa-users',
       title: 'Пользователи',
       name: RouterNameEnum.Staff
     },
     {
-      icon: 'fas fa-users',
+      icon: 'fas fa-user-friends',
+      title: 'Группы',
+      name: RouterNameEnum.Groups
+    },
+    {
+      icon: 'fas fa-users-cog',
       title: 'Активность пользователей',
       name: RouterNameEnum.ActivityStaff
     },

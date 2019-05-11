@@ -9,6 +9,7 @@ using System.Linq.Dynamic;
 using TimeTrackingServer.Exceptions;
 using System.Text;
 using OfficeOpenXml;
+using System.Collections.Generic;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -42,8 +43,7 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<StaffListResponse> Get(TableSortingRequest request, bool withSkipTake = true)
         {
-            IQueryable<Staff> data = _dbContext.Set<Staff>()
-                                .Include(x => x.StaffToGroup);
+            IQueryable<Staff> data = _dbContext.Set<Staff>();
 
             if (!String.IsNullOrEmpty(request.Search))
             {
@@ -61,6 +61,16 @@ namespace TimeTrackingServer.Services.Impl
                 Total = await data.CountAsync()
             };
         }
+
+        public async Task<List<Staff>> GetListByGropupId(TableSortingByGroupIdRequest request)
+        {
+            return await _dbContext.StaffToGroup
+                                .Where(x => x.GroupId == request.GroupId)
+                                .Include(x => x.Staff)
+                                .Select(x => x.Staff)
+                                .ToListAsync();
+        }
+
         public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request)
         {
             var staff = await Get(request, false);

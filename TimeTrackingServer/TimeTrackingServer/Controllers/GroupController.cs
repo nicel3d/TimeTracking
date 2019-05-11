@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -13,65 +12,65 @@ namespace TimeTrackingServer.Controllers
     [ApiController]
     [EnableCors("cors")]
     [Route("api/[controller]")]
-    public class StaffController : Controller
+    public class GroupController : Controller
     {
-        private IStaffService _staffService;
+        private IGroupService _groupService;
 
-        public StaffController(IStaffService staffService)
+        public GroupController(IGroupService groupService)
         {
-            _staffService = staffService;
+            _groupService = groupService;
         }
 
         [HttpPost(nameof(GetList))]
         [Produces("application/json")]
-        public async Task<StaffListResponse> GetList([FromBody] TableSortingRequest request)
+        public async Task<GroupListResponse> GetList([FromBody] TableSortingRequest request)
         {
-            return await _staffService.Get(request);
+            return await _groupService.Get(request);
         }
 
-        [HttpPost(nameof(GetListByUserId))]
+        [HttpPost(nameof(GetListWithCountUsers))]
         [Produces("application/json")]
-        public async Task<List<Staff>> GetListByUserId([FromBody] TableSortingByGroupIdRequest request)
+        public async Task<GroupsListWithCountUsersResponse> GetListWithCountUsers([FromBody] TableSortingRequest request)
         {
-            return await _staffService.GetListByGropupId(request);
+            return await _groupService.GetListWithCountUsers(request);
         }
 
         [HttpPost(nameof(ImportXLSXGetListWithoutFilter))]
         public async Task<ActionResult> ImportXLSXGetListWithoutFilter([FromBody] TableSortingRequest request)
         {
-            return File(await _staffService.ImportXLSXGetListWithoutFilter(request), "application/ms-excel");
+            return File(await _groupService.ImportXLSXGetListWithoutFilter(request), "application/ms-excel");
         }
 
         [HttpPost(nameof(ImportCSVGetListWithoutFilter))]
         public async Task<ActionResult> ImportCSVGetListWithoutFilter([FromBody] TableSortingRequest request)
         {
-            return File(await _staffService.ImportCSVGetListWithoutFilter(request), "text/csv");
+            return File(await _groupService.ImportCSVGetListWithoutFilter(request), "text/csv");
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
-        public async Task<Staff> Get(int id)
+        public async Task<Groups> Get(int id)
         {
-            return await _staffService.Get(id);
+            return await _groupService.Get(id);
         }
 
         [HttpPost(nameof(Post))]
         [Produces("application/json")]
-        public async Task<Staff> Post([FromBody] Staff staff)
+        public async Task<Groups> Post([FromBody] Groups group)
         {
-            return await _staffService.Post(staff);
+            return await _groupService.Post(group);
         }
 
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Staff staff)
+        public async Task Put(int id, [FromBody] Groups group)
         {
-            await _staffService.Put(id, staff);
+            await _groupService.Put(id, group);
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            await _staffService.Delete(id);
+            await _groupService.Delete(id);
         }
     }
 }

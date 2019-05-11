@@ -15,7 +15,7 @@ namespace TimeTrackingServer.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public bool? Status { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public virtual ICollection<ApplicationTitleToGroup> ApplicationTitleToGroup { get; set; }
         public virtual ICollection<ApplicationToGroup> ApplicationToGroup { get; set; }
