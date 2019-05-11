@@ -1,23 +1,18 @@
 <template>
   <div>
-    <v-groups-table-component
-      ref="table"
-      :filter="filter"
-      @on-edit="$refs.dialog.onView($event)"/>
-<!--    <v-activity-details-component ref="dialog" @on-success="$refs.table.onPagination()"/>-->
+    <v-groups-table-component ref="table"/>
+    <v-groups-add-windows/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { FilterRequest } from '%/stores/api/SwaggerDocumentationTypescript'
-import { filterDefault } from '%/constants/FilterDefault'
-import VGroupsTableComponent from '%/components/VGroupsTableComponent.vue'
+import VGroupsTableComponent from '%/components/Groups/VGroupsTableComponent.vue'
+import VGroupsAddWindows from '%/components/Groups/VGroupsAddWindows.vue'
 
 @Component({
-  components: { VGroupsTableComponent }
+  components: { VGroupsAddWindows, VGroupsTableComponent }
 })
 export default class ActivityStaffView extends Vue {
-  filter: FilterRequest = filterDefault
 }
 </script>

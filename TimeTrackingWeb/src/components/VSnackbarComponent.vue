@@ -11,10 +11,7 @@
     :vertical="mode === 'vertical'"
   >
     {{ text }}
-    <v-btn
-      flat
-      @click="snackbar = false"
-    >
+    <v-btn flat @click="snackbar = false">
       Закрыть
     </v-btn>
   </v-snackbar>

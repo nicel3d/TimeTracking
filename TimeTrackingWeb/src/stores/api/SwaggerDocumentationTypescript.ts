@@ -1851,10 +1851,10 @@ export interface IApplicationTitleToGroup {
 }
 
 export class Groups implements IGroups {
-  id!: number;
-  name?: string | undefined;
+  id?: number | undefined;
+  name!: string;
   status?: boolean | undefined;
-  updatedAt!: Date;
+  updatedAt?: Date | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
   applicationToGroup?: ApplicationToGroup[] | undefined;
   staffToGroup?: StaffToGroup[] | undefined;
@@ -1925,10 +1925,10 @@ export class Groups implements IGroups {
 }
 
 export interface IGroups {
-  id: number;
-  name?: string | undefined;
+  id?: number | undefined;
+  name: string;
   status?: boolean | undefined;
-  updatedAt: Date;
+  updatedAt?: Date | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
   applicationToGroup?: ApplicationToGroup[] | undefined;
   staffToGroup?: StaffToGroup[] | undefined;

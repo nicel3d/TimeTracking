@@ -40,7 +40,9 @@
           {{ props.item.updatedAt.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'}) }}
         </td>
         <td>{{ props.item.caption }}</td>
-        <td>{{ getState(props.item.state) }}</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -93,10 +95,6 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
     if (!this.loading) {
       this.loadApplicationList()
     }
-  }
-
-  getState (state?: StateEnum) {
-    return oc(States.find(item => item.state === state)).text(States[1].text)
   }
 
   ImportXLSXApplicationList () {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeTrackingServer.Models
 {
@@ -12,10 +13,11 @@ namespace TimeTrackingServer.Models
             StaffToGroup = new HashSet<StaffToGroup>();
         }
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
+        [Required]
         public string Name { get; set; }
         public bool? Status { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public virtual ICollection<ApplicationTitleToGroup> ApplicationTitleToGroup { get; set; }
         public virtual ICollection<ApplicationToGroup> ApplicationToGroup { get; set; }

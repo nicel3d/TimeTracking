@@ -13,20 +13,21 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
+      <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить группу</v-btn>
       <v-btn color="primary" dark class="mb-2" @click="ImportXLSXApplicationList">Экспорт в xlsx</v-btn>
       <v-btn color="primary" dark class="mb-2" @click="ImportCSVApplicationList">Экспорт в csv</v-btn>
     </div>
     <v-data-table
+      class="linked"
       :headers="headers"
       :items="desserts"
       :loading="loading"
       :rows-per-page-items="rowsPerPageItems"
       :pagination.sync="pagination"
-      :total-items="totalDesserts"
-    >
+      :total-items="totalDesserts">
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <tr @click="loadUsersByGroupId(props)">
+        <tr @click.prevent="loadUsersByGroupId(props)" :class="['link', {'active': !!props.expanded}]">
           <td class="justify-center layout px-0 align-center">
             <v-icon
               small
@@ -81,6 +82,7 @@ import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
+import { GroupEmitEnum } from '%/constants/windows/GroupsWindows'
 
 const filename = 'groups'
 
@@ -117,6 +119,13 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
       this.loadGroupList()
     }
   }
+
+  mounted () {
+    this.loadGroupList()
+    this.$root.$on(GroupEmitEnum.ADD_GROUP_SUCCESS, this.loadGroupList)
+  }
+
+  onAdd = () => this.$root.$emit(GroupEmitEnum.ADD_GROUP)
 
   getState (state?: StateEnum) {
     return oc(States.find(item => item.state === state)).text(States[1].text)
@@ -159,12 +168,12 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
       .then(() => (this.loading = false))
   }
 
-  mounted () {
-    this.loadGroupList()
+  beforeDestroy () {
+    this.$root.$off(GroupEmitEnum.ADD_GROUP_SUCCESS, this.loadGroupList)
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import "../../assets/table";
 </style>

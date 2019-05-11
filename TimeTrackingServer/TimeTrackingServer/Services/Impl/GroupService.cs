@@ -96,7 +96,7 @@ namespace TimeTrackingServer.Services.Impl
             items.Data.ForEach(line =>
             {
                 csvStrung.AppendLine(string.Join(",", new string[] {
-                    line.UpdatedAt.ToString("g"),
+                    line.UpdatedAt.GetValueOrDefault().ToString("g"),
                     line.Name,
                     line.CountUsers.ToString()
                 }));
@@ -126,7 +126,7 @@ namespace TimeTrackingServer.Services.Impl
                 var data = await GetListWithCountUsers(request, false);
                 foreach (var staff in data.Data)
                 {
-                    worksheet.Cells["A" + j].Value = staff.UpdatedAt.ToString("g");
+                    worksheet.Cells["A" + j].Value = staff.UpdatedAt.GetValueOrDefault().ToString("g");
                     worksheet.Cells["B" + j].Value = staff.Name;
                     worksheet.Cells["C" + j].Value = staff.CountUsers.ToString();
                     j++;
@@ -142,7 +142,7 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<Groups> Post(Groups group)
         {
-            _dbContext.Groups.Update(group);
+            _dbContext.Groups.Add(group);
             await _dbContext.SaveChangesAsync();
             return group;
         }

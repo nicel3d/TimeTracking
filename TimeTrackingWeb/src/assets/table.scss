@@ -1,0 +1,14 @@
+.linked {
+  tr.link {
+    cursor: pointer;
+    background: #f5f5f5;
+
+    &.active {
+      background: white;
+    }
+
+    :hover {
+      opacity: 0.8;
+    }
+  }
+}
