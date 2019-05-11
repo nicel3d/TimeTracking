@@ -6,7 +6,9 @@
           <v-btn icon dark @click="$emit('input', false)">
             <v-icon>close</v-icon>
           </v-btn>
-          <v-toolbar-title>Детали активности</v-toolbar-title>
+          <v-toolbar-title>
+            <slot name="title"></slot>
+          </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items v-if="item">
             <v-btn dark flat @click="$emit('on-save')">Сохранить</v-btn>

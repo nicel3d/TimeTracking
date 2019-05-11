@@ -1,10 +1,10 @@
 <template>
   <v-dialog-full-window
-    @on-save="onEdit"
+    @on-save="onSave"
     :item="item"
     :loading="loading"
-    v-model="dialog"
-  >
+    v-model="dialog">
+    <span slot="title">Детали активности</span>
     <template v-if="item">
       <v-container grid-list-xl>
         <v-layout wrap justify-space-between>
@@ -111,13 +111,14 @@ export default class VActivityDetailsComponent extends SkipTake {
       .then(() => (this.loading = false))
   }
 
-  onEdit () {
+  onSave () {
     if (!this.item || !this.item.applicationId) return
 
     this.loading = true
     this.$store.state.api.applications_PutState(this.item.applicationId, this.state)
       .then(() => {
         this.$emit('on-success')
+        this.item = null
         this.dialog = false
       })
       .catch(res => this.$root.$emit('snackbar', res))

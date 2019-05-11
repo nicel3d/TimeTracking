@@ -1,17 +1,19 @@
 <template>
   <div>
     <v-groups-table-component ref="table"/>
-    <v-groups-add-windows/>
+    <v-groups-add-window/>
+    <v-groups-details-window/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import VGroupsTableComponent from '%/components/Groups/VGroupsTableComponent.vue'
-import VGroupsAddWindows from '%/components/Groups/VGroupsAddWindows.vue'
+import VGroupsAddWindow from '%/components/Groups/VGroupsAddWindow.vue'
+import VGroupsDetailsWindow from '%/components/Groups/VGroupsDetailsWindow.vue'
 
 @Component({
-  components: { VGroupsAddWindows, VGroupsTableComponent }
+  components: { VGroupsDetailsWindow, VGroupsAddWindow, VGroupsTableComponent }
 })
 export default class ActivityStaffView extends Vue {
 }

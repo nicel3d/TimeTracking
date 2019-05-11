@@ -21,5 +21,10 @@ namespace TimeTrackingServer.Exceptions
             public ApiBadRequest() : this(null) { }
             public ApiBadRequest(Exception innerException) : base(1, "Ошибка в отправляемых данных", innerException) { }
         }
+        public class ApiDontValidIdRequest : ApiException
+        {
+            public ApiDontValidIdRequest() : this(null) { }
+            public ApiDontValidIdRequest(Exception innerException) : base(2, "Id значение не совпадает с Id отправляемой модулью", innerException) { }
+        }
     }
 }

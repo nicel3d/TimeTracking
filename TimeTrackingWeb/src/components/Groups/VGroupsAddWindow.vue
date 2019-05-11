@@ -4,18 +4,18 @@
       <v-card-title>Добавление группу</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <v-form @submit.prevent="onAdd">
+        <v-form data-vv-scope="form-group-add" @submit.prevent="onAdd">
           <v-text-field
-            v-validate="'required'"
-            ref="name"
-            v-model="name"
-            :error-messages="errors.collect('group-name')"
-            data-vv-name="group-name"
+            type="text"
+            label="Название группы"
+            data-vv-as="Название группы"
+            data-vv-name="form-group-add.name"
             prepend-icon="fulcrum"
             name="group-name"
-            label="Название группы"
-            type="text"
-            required
+            ref="name"
+            v-model="name"
+            v-validate="'required'"
+            :error-messages="errors.collect('form-group-add.name')"
           />
         </v-form>
       </v-card-text>
@@ -43,7 +43,7 @@ import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
 import { GroupEmitEnum } from '%/constants/windows/GroupsWindows'
 
 @Component
-export default class VGroupsAddWindows extends Vue {
+export default class VGroupsAddWindow extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   dialog: boolean = false
@@ -65,12 +65,12 @@ export default class VGroupsAddWindows extends Vue {
   }
 
   onAdd () {
-    this.$validator.validateAll()
+    this.$validator.validateAll('form-group-add')
       .then((res) => {
         if (res) {
           this.$store.state.api.group_Post(new Groups({ name: this.name }))
             .then(() => {
-              this.$root.$emit(GroupEmitEnum.ADD_GROUP_SUCCESS)
+              this.$root.$emit(GroupEmitEnum.CHANGE_GROUP_SUCCESS)
               this.onReset()
             })
             .catch(res => this.$root.$emit('snackbar', res))

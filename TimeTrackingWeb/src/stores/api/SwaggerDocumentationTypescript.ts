@@ -1079,7 +1079,7 @@ export class WSApi {
     return Promise.resolve<Groups | null>(<any>null);
   }
 
-  group_Put(id: number, group: Groups | null): Promise<void> {
+  group_Put(id: number, group: Groups | null): Promise<FileResponse | null> {
     let url_ = this.baseUrl + "/api/Group/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
@@ -1093,6 +1093,7 @@ export class WSApi {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json"
       }
     };
 
@@ -1101,19 +1102,20 @@ export class WSApi {
     });
   }
 
-  protected processGroup_Put(response: Response): Promise<void> {
+  protected processGroup_Put(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-    if (status === 204) {
-      return response.text().then((_responseText) => {
-        return;
-      });
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
     } else if (status !== 200 && status !== 204) {
       return response.text().then((_responseText) => {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<void>(<any>null);
+    return Promise.resolve<FileResponse | null>(<any>null);
   }
 
   group_Delete(id: number): Promise<void> {

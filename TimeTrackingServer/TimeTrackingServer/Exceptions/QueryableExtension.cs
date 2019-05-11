@@ -4,12 +4,18 @@ using TimeTrackingServer.Stores;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using TimeTrackingServer.Data;
 
 namespace TimeTrackingServer.Exceptions
 {
     public interface ITWithUpdateAt
     {
         DateTime UpdatedAt { get; set; }
+    }
+    public interface IIdentifier
+    {
+        int? Id { get; set; }
     }
 
     public static class QueryableExtension
@@ -33,6 +39,20 @@ namespace TimeTrackingServer.Exceptions
         {
             return source.Where(x => x.UpdatedAt.Date >= request.BegDate.Date && x.UpdatedAt.Date <= request.EndDate.Date)
                          .Where(x => x.UpdatedAt.Hour >= request.BegHour && x.UpdatedAt.Hour <= request.EndHour);
+        }
+
+
+        public static void DetachLocal<T>(this ApplicationDbContext context, T t, int entryId) where T : class, IIdentifier
+        {
+            var local = context.Set<T>().Local
+                .FirstOrDefault(entry => entry.Id.Equals(entryId));
+
+            if (local != null)
+            {
+                context.Entry(local).State = EntityState.Detached;
+            }
+
+            context.Entry(t).State = EntityState.Modified;
         }
     }
 }

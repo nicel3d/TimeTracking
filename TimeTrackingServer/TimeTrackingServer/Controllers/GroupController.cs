@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Services;
 using TimeTrackingServer.Stores.Impl;
+using static TimeTrackingServer.Exceptions.ApiException;
 
 namespace TimeTrackingServer.Controllers
 {
@@ -62,9 +63,14 @@ namespace TimeTrackingServer.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Groups group)
+        public async Task<IActionResult> Put(int id, [FromBody] Groups group)
         {
+            if (id != group.Id)
+            {
+                throw new ApiDontValidIdRequest();
+            }
             await _groupService.Put(id, group);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

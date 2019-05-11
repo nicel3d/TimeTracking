@@ -27,22 +27,21 @@
       :total-items="totalDesserts">
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <tr @click.prevent="loadUsersByGroupId(props)" :class="['link', {'active': !!props.expanded}]">
+        <tr :class="['link', {'active': !!props.expanded}]">
           <td class="justify-center layout px-0 align-center">
             <v-icon
               small
               class="mr-2"
-              @click="$emit('on-edit', props.item.id)"
-            >
+              @click="onDetails(props.item.id)">
               edit
             </v-icon>
           </td>
-          <td>
+          <td @click.prevent="loadUsersByGroupId(props)">
             {{ props.item.updatedAt.toLocaleDateString() }}
             {{ props.item.updatedAt.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'}) }}
           </td>
-          <td>{{ props.item.name }}</td>
-          <td>{{ props.item.countUsers }}</td>
+          <td @click.prevent="loadUsersByGroupId(props)">{{ props.item.name }}</td>
+          <td @click.prevent="loadUsersByGroupId(props)">{{ props.item.countUsers }}</td>
         </tr>
       </template>
       <template v-slot:expand="props">
@@ -122,10 +121,11 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
 
   mounted () {
     this.loadGroupList()
-    this.$root.$on(GroupEmitEnum.ADD_GROUP_SUCCESS, this.loadGroupList)
+    this.$root.$on(GroupEmitEnum.CHANGE_GROUP_SUCCESS, this.loadGroupList)
   }
 
   onAdd = () => this.$root.$emit(GroupEmitEnum.ADD_GROUP)
+  onDetails = (id) => this.$root.$emit(GroupEmitEnum.EDIT_GROUP, id)
 
   getState (state?: StateEnum) {
     return oc(States.find(item => item.state === state)).text(States[1].text)
@@ -169,7 +169,7 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
   }
 
   beforeDestroy () {
-    this.$root.$off(GroupEmitEnum.ADD_GROUP_SUCCESS, this.loadGroupList)
+    this.$root.$off(GroupEmitEnum.CHANGE_GROUP_SUCCESS, this.loadGroupList)
   }
 }
 </script>

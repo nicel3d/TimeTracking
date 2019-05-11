@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TimeTrackingServer.Exceptions;
 
 namespace TimeTrackingServer.Models
 {
-    public partial class Groups
+    public partial class Groups : IIdentifier
     {
         public Groups()
         {

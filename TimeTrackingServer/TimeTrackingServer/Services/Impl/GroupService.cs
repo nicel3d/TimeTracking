@@ -149,11 +149,7 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task Put(int id, Groups group)
         {
-            var oldActivityStaff = await _dbContext.Groups.FindAsync(id);
-            if (oldActivityStaff != null)
-            {
-            }
-
+            _dbContext.DetachLocal(group, id);
             await _dbContext.SaveChangesAsync();
         }
     }
