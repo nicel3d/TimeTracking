@@ -14,8 +14,10 @@
     </v-card-title>
     <div class="mx-2">
       <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить группу</v-btn>
-      <v-btn color="primary" dark class="mb-2" @click="ImportXLSXApplicationList">Экспорт в xlsx</v-btn>
-      <v-btn color="primary" dark class="mb-2" @click="ImportCSVApplicationList">Экспорт в csv</v-btn>
+      <template v-if="desserts.length">
+        <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
+      </template>
     </div>
     <v-data-table
       class="linked"
@@ -37,8 +39,7 @@
             </v-icon>
           </td>
           <td @click.prevent="loadUsersByGroupId(props)">
-            {{ props.item.updatedAt.toLocaleDateString() }}
-            {{ props.item.updatedAt.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'}) }}
+            {{ GetUpdatedAt(props.item.updatedAt) }}
           </td>
           <td @click.prevent="loadUsersByGroupId(props)">{{ props.item.name }}</td>
           <td @click.prevent="loadUsersByGroupId(props)">{{ props.item.countUsers }}</td>
@@ -130,13 +131,13 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
     return oc(States.find(item => item.state === state)).text(States[1].text)
   }
 
-  ImportXLSXApplicationList () {
+  ImportXLSXList () {
     this.$store.state.api.group_ImportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  ImportCSVApplicationList () {
+  ImportCSVList () {
     this.$store.state.api.group_ImportCSVGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
       .catch(res => this.$root.$emit('snackbar', res))

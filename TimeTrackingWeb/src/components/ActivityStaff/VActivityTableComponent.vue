@@ -26,15 +26,11 @@
           <v-icon
             small
             class="mr-2"
-            @click="$emit('on-edit', props.item.id)"
-          >
+            @click="$emit('on-edit', props.item.id)">
             edit
           </v-icon>
         </td>
-        <td>
-          {{ props.item.updatedAt.toLocaleDateString() }}
-          {{ props.item.updatedAt.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'}) }}
-        </td>
+        <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
         <td>{{ props.item.application.caption }}</td>
         <td>{{ props.item.applicationTitle }}</td>
         <td>

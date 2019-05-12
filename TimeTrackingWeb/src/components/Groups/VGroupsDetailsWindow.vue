@@ -21,7 +21,7 @@
         <v-tabs-items v-model="tabs">
           <v-tab-item>
             <v-form data-vv-scope="form-group-edit">
-              <v-container fluid grid-list-md>
+              <v-container v-if="this.item" fluid grid-list-md>
                 <v-layout row wrap>
                   <v-flex xs12 md6>
                     <v-text-field
@@ -44,7 +44,7 @@
                       type="text"
                       readonly
                       label="Дата обновления"
-                      :value="updatedAt"
+                      :value="GetUpdatedAt(this.item.updatedAt)"
                     />
                   </v-flex>
                 </v-layout>
@@ -53,6 +53,9 @@
           </v-tab-item>
           <v-tab-item>
             <v-staff-table-component :group-id="item.id" v-if="item && item.id"/>
+          </v-tab-item>
+          <v-tab-item>
+            <v-application-group-table-component :group-id="item.id" v-if="item && item.id"/>
           </v-tab-item>
         </v-tabs-items>
       </div>
@@ -68,9 +71,10 @@ import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
 import { GroupEmitEnum } from '%/constants/windows/GroupsWindows'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 import VStaffTableComponent from '%/components/VStaffTableComponent.vue'
+import VApplicationGroupTableComponent from '%/components/VApplicationGroupTableComponent.vue'
 
 @Component({
-  components: { VStaffTableComponent, VDialogFullWindow }
+  components: { VApplicationGroupTableComponent, VStaffTableComponent, VDialogFullWindow }
 })
 export default class VGroupsDetailsWindow extends Vue {
   @Inject('$validator') public $validator!: Validator
@@ -88,18 +92,6 @@ export default class VGroupsDetailsWindow extends Vue {
     'Пользователи в группе',
     'Обработка программ'
   ]
-
-  get updatedAt () {
-    if (this.item && this.item.updatedAt) {
-      return this.item.updatedAt.toLocaleDateString() + ' ' +
-        this.item.updatedAt.toLocaleTimeString('ru', {
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-    }
-
-    return ''
-  }
 
   mounted () {
     this.$root.$on(GroupEmitEnum.EDIT_GROUP, this.onOpenWindow)
@@ -130,6 +122,7 @@ export default class VGroupsDetailsWindow extends Vue {
   }
 
   onSave () {
+    this.tabs = 0
     this.$validator.validateAll('form-group-edit')
       .then(res => {
         if (res) {
@@ -152,7 +145,6 @@ export default class VGroupsDetailsWindow extends Vue {
     this.$root.$off(GroupEmitEnum.EDIT_GROUP, this.onOpenWindow)
   }
 }
-
 </script>
 
 <style scoped>

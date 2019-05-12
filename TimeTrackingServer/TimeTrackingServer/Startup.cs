@@ -117,6 +117,7 @@ namespace TimeTrackingServer
             services.AddScoped<IApplicationsService, ApplicationsService>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<ITreatmentApplicationsService, TreatmentApplicationsService>();
             services.AddScoped<IStreamingDataService, StreamingDataService>();
             services.AddTransient<StreamingDataService>();
             // Register the Swagger services
@@ -153,7 +154,7 @@ namespace TimeTrackingServer
             app.UseSwaggerUi3();
 
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-            app.UseMiddleware<AsyncListenerSocketMiddleware>();
+            app.UseMiddleware<ListenerSocketMiddleware>();
 
             app.UseMvc(routes =>
             {

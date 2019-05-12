@@ -6,11 +6,13 @@ import store from './stores/store'
 import App from './App.vue'
 import './registerServiceWorker'
 import VuePictureSwipe from 'vue-picture-swipe'
+import FieldsExtension from '%/mixins/FieldsExtension'
 
 const moment: any = require('moment-timezone')
 const VueMoment: any = require('vue-moment')
 
 Vue.component('vue-picture-swipe', VuePictureSwipe)
+Vue.mixin(FieldsExtension)
 Vue.use(VueMoment, {
   moment
 })

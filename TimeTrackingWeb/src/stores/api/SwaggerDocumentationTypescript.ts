@@ -1189,6 +1189,263 @@ export class WSApi {
     return Promise.resolve<Groups | null>(<any>null);
   }
 
+  treatmentApplications_GetList(request: ApplicationGroupFilterRequest | null): Promise<VMApplicationGroupListResponse | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/GetList";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_GetList(_response);
+    });
+  }
+
+  protected processTreatmentApplications_GetList(response: Response): Promise<VMApplicationGroupListResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? VMApplicationGroupListResponse.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<VMApplicationGroupListResponse | null>(<any>null);
+  }
+
+  treatmentApplications_ImportXLSXGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/ImportXLSXGetListWithoutFilter";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_ImportXLSXGetListWithoutFilter(_response);
+    });
+  }
+
+  protected processTreatmentApplications_ImportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  treatmentApplications_ImportCSVGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/ImportCSVGetListWithoutFilter";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_ImportCSVGetListWithoutFilter(_response);
+    });
+  }
+
+  protected processTreatmentApplications_ImportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  treatmentApplications_Get(id: number): Promise<ApplicationToGroup | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_Get(_response);
+    });
+  }
+
+  protected processTreatmentApplications_Get(response: Response): Promise<ApplicationToGroup | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationToGroup.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationToGroup | null>(<any>null);
+  }
+
+  treatmentApplications_Put(id: number, request: ApplicationToGroup | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_Put(_response);
+    });
+  }
+
+  protected processTreatmentApplications_Put(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  treatmentApplications_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_Delete(_response);
+    });
+  }
+
+  protected processTreatmentApplications_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  treatmentApplications_Post(request: ApplicationToGroup | null): Promise<ApplicationToGroup | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processTreatmentApplications_Post(_response);
+    });
+  }
+
+  protected processTreatmentApplications_Post(response: Response): Promise<ApplicationToGroup | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationToGroup.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationToGroup | null>(<any>null);
+  }
+
   values_GetAll(): Promise<string[] | null> {
     let url_ = this.baseUrl + "/api/Values";
     url_ = url_.replace(/[?&]$/, "");
@@ -1729,10 +1986,10 @@ export enum StateEnum {
 }
 
 export class ApplicationTitles implements IApplicationTitles {
-  id!: number;
-  title?: string | undefined;
+  id?: number | undefined;
+  title!: string;
   updatedAt?: Date | undefined;
-  applicationId?: number | undefined;
+  applicationId!: number;
   application?: Applications | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
 
@@ -1784,10 +2041,10 @@ export class ApplicationTitles implements IApplicationTitles {
 }
 
 export interface IApplicationTitles {
-  id: number;
-  title?: string | undefined;
+  id?: number | undefined;
+  title: string;
   updatedAt?: Date | undefined;
-  applicationId?: number | undefined;
+  applicationId: number;
   application?: Applications | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
 }
@@ -1937,11 +2194,11 @@ export interface IGroups {
 }
 
 export class ApplicationToGroup implements IApplicationToGroup {
-  id!: number;
-  applicationId?: number | undefined;
-  groupId?: number | undefined;
+  id?: number | undefined;
+  applicationId!: number;
+  groupId!: number;
   updatedAt?: Date | undefined;
-  state?: string | undefined;
+  state!: string;
   application?: Applications | undefined;
   group?: Groups | undefined;
 
@@ -1987,11 +2244,11 @@ export class ApplicationToGroup implements IApplicationToGroup {
 }
 
 export interface IApplicationToGroup {
-  id: number;
-  applicationId?: number | undefined;
-  groupId?: number | undefined;
+  id?: number | undefined;
+  applicationId: number;
+  groupId: number;
   updatedAt?: Date | undefined;
-  state?: string | undefined;
+  state: string;
   application?: Applications | undefined;
   group?: Groups | undefined;
 }
@@ -2595,6 +2852,113 @@ export class GroupsWithCountUsers extends Groups implements IGroupsWithCountUser
 
 export interface IGroupsWithCountUsers extends IGroups {
   countUsers: number;
+}
+
+export class VMApplicationGroupListResponse extends ListCountResponse implements IVMApplicationGroupListResponse {
+  data?: VMApplicationGroup[] | undefined;
+
+  constructor(data?: IVMApplicationGroupListResponse) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(VMApplicationGroup.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): VMApplicationGroupListResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new VMApplicationGroupListResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IVMApplicationGroupListResponse extends IListCountResponse {
+  data?: VMApplicationGroup[] | undefined;
+}
+
+export class VMApplicationGroup extends ApplicationToGroup implements IVMApplicationGroup {
+  applicationTitle?: string | undefined;
+
+  constructor(data?: IVMApplicationGroup) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.applicationTitle = data["ApplicationTitle"];
+    }
+  }
+
+  static fromJS(data: any): VMApplicationGroup {
+    data = typeof data === 'object' ? data : {};
+    let result = new VMApplicationGroup();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["ApplicationTitle"] = this.applicationTitle;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IVMApplicationGroup extends IApplicationToGroup {
+  applicationTitle?: string | undefined;
+}
+
+export class ApplicationGroupFilterRequest extends TableSortingRequest implements IApplicationGroupFilterRequest {
+  groupId!: number;
+
+  constructor(data?: IApplicationGroupFilterRequest) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.groupId = data["GroupId"];
+    }
+  }
+
+  static fromJS(data: any): ApplicationGroupFilterRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationGroupFilterRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["GroupId"] = this.groupId;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IApplicationGroupFilterRequest extends ITableSortingRequest {
+  groupId: number;
 }
 
 export interface FileResponse {

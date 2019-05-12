@@ -13,8 +13,10 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
-      <v-btn color="primary" dark class="mb-2" @click="ImportXLSXApplicationList">Экспорт в xlsx</v-btn>
-      <v-btn color="primary" dark class="mb-2" @click="ImportCSVApplicationList">Экспорт в csv</v-btn>
+      <template v-if="desserts.length">
+        <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
+      </template>
     </div>
     <v-data-table
       :headers="headers"
@@ -35,12 +37,9 @@
             edit
           </v-icon>
         </td>
-        <td>
-          {{ props.item.updatedAt.toLocaleDateString() }}
-          {{ props.item.updatedAt.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'}) }}
-        </td>
+        <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
         <td>{{ props.item.caption }}</td>
-        <td>{{ getState(props.item.state) }}</td>
+        <td>{{ GetCurrentState(props.item.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -50,16 +49,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import {
-  Applications,
-  SortingRequest,
-  StateEnum,
-  TableSortingRequest
+  Applications, SortingRequest, TableSortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
-import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
-import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
 
 const filename = 'application'
@@ -94,17 +88,13 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
     }
   }
 
-  getState (state?: StateEnum) {
-    return oc(States.find(item => item.state === state)).text(States[1].text)
-  }
-
-  ImportXLSXApplicationList () {
+  ImportXLSXList () {
     this.$store.state.api.applications_ImportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  ImportCSVApplicationList () {
+  ImportCSVList () {
     this.$store.state.api.applications_ImportCSVGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
       .catch(res => this.$root.$emit('snackbar', res))

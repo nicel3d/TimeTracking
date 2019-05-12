@@ -16,7 +16,8 @@ namespace TimeTrackingServer.Services.Impl
     public class StaffService : IStaffService
     {
         ApplicationDbContext _dbContext;
-        public string[] comlumHeadrs = new string[]
+        private string _worksheetTitle = "Пользователи";
+        private string[] _comlumHeadrs = new string[]
         {
                 "Обновлено",
                 "Пользователь",
@@ -106,7 +107,7 @@ namespace TimeTrackingServer.Services.Impl
                 }));
             });
 
-            return Encoding.UTF8.GetBytes($"{string.Join(",", comlumHeadrs)}\r\n{csvStrung.ToString()}");
+            return Encoding.UTF8.GetBytes($"{string.Join(",", _comlumHeadrs)}\r\n{csvStrung.ToString()}");
         }
 
         public async Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingByGroupIdRequest request)
@@ -115,15 +116,15 @@ namespace TimeTrackingServer.Services.Impl
 
             using (var package = new ExcelPackage())
             {
-                var worksheet = package.Workbook.Worksheets.Add("Пользователи");
+                var worksheet = package.Workbook.Worksheets.Add(_worksheetTitle);
                 using (var cells = worksheet.Cells[1, 1, 1, 3])
                 {
                     cells.Style.Font.Bold = true;
                 }
 
-                for (var i = 0; i < comlumHeadrs.Count(); i++)
+                for (var i = 0; i < _comlumHeadrs.Count(); i++)
                 {
-                    worksheet.Cells[1, i + 1].Value = comlumHeadrs[i];
+                    worksheet.Cells[1, i + 1].Value = _comlumHeadrs[i];
                 }
 
                 var j = 2;

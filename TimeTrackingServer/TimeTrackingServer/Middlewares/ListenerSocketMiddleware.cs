@@ -25,7 +25,7 @@ namespace TimeTrackingServer.Middlewares
         public StringBuilder sb = new StringBuilder();
     }
 
-    public class AsyncListenerSocketMiddleware
+    public class ListenerSocketMiddleware
     {
         // Thread signal.
         public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -34,7 +34,7 @@ namespace TimeTrackingServer.Middlewares
         private readonly RequestDelegate _next;
         private static StreamingDataService _streamingDataService;
 
-        public AsyncListenerSocketMiddleware(RequestDelegate next, StreamingDataService streamingDataService)
+        public ListenerSocketMiddleware(RequestDelegate next, StreamingDataService streamingDataService)
         {
             _next = next;
             _streamingDataService = streamingDataService;
