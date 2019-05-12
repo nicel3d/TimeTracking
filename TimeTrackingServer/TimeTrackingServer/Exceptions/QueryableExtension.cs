@@ -26,7 +26,7 @@ namespace TimeTrackingServer.Exceptions
         }
         public static IQueryable<T> Sort<T>(this IQueryable<T> source, ISortingRequest request)
         {
-            if (request.SortBy != null && request.Descending != null)
+            if (request != null && request.SortBy != null && request.Descending != null)
             {
                 var order = request.Descending != true ? "DESC" : "ASC";
                 return source.AsQueryable().OrderBy($"{request.SortBy} {order}");

@@ -68,10 +68,10 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
 import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
-import { GroupEmitEnum } from '%/constants/windows/GroupsWindows'
+import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 import VStaffTableComponent from '%/components/VStaffTableComponent.vue'
-import VApplicationGroupTableComponent from '%/components/VApplicationGroupTableComponent.vue'
+import VApplicationGroupTableComponent from '%/components/ApplicationGroup/VApplicationGroupTableComponent.vue'
 
 @Component({
   components: { VApplicationGroupTableComponent, VStaffTableComponent, VDialogFullWindow }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -22,20 +23,27 @@ namespace TimeTrackingServer.Controllers
             _applicationsService = applicationsService;
         }
 
-        [HttpPost(nameof(GetRangeList))]
+        [HttpPost(nameof(GetListWithRange))]
         [Produces("application/json")]
-        public async Task<ApplicationsRangeListResponse> GetRangeList([FromBody] TableSortingWithFilterRequest request)
+        public async Task<ApplicationsRangeListResponse> GetListWithRange([FromBody] TableSortingWithFilterRequest request)
         {
             request.Filter.BegDate = request.Filter.BegDate.ToLocalTime();
             request.Filter.EndDate = request.Filter.EndDate.ToLocalTime();
             return await _applicationsService.Get(request);
         }
 
-        [HttpPost(nameof(GetListWithoutFilter))]
+        [HttpPost(nameof(GetList))]
         [Produces("application/json")]
-        public async Task<ApplicationsListResponse> GetListWithoutFilter([FromBody] TableSortingRequest request)
+        public async Task<ApplicationsListResponse> GetList([FromBody] TableSortingRequest request)
         {
             return await _applicationsService.Get(request);
+        }
+
+        [HttpPost(nameof(GetListFull))]
+        [Produces("application/json")]
+        public async Task<List<Applications>> GetListFull([FromBody] TableSortingByGroupIdRequest request)
+        {
+            return (await _applicationsService.Get(request, false)).Data;
         }
 
         [HttpPost(nameof(ImportXLSXGetListWithoutFilter))]

@@ -48,7 +48,7 @@ namespace TimeTrackingServer.Services.Impl
 
             if (!String.IsNullOrEmpty(request.Search))
             {
-                data = data.AsQueryable().Where(x =>
+                data = data.Where(x =>
                             x.Caption.Contains(request.Search) ||
                             x.UpdatedAt.ToString().Contains(request.Search)
                         );
@@ -69,15 +69,17 @@ namespace TimeTrackingServer.Services.Impl
                              Id = x.Id,
                              ActivityFirst = x.ActivityFirst,
                              ActivityLast = x.ActivityLast,
+                             StaffToGroup = null,
                              Caption = x.Caption,
                              UpdatedAt = x.UpdatedAt,
                              Status = x.Status
-                         });
+                         })
+                         ;
             }
 
             return new StaffListResponse
             {
-                Data = await data.Sort(request.Sorting).AddSkipTake(request).ToListAsync(),
+                Data = await (withSkipTake ? data.AddSkipTake(request) : data).Sort(request.Sorting).ToListAsync(),
                 Total = await data.CountAsync()
             };
         }
@@ -98,7 +100,7 @@ namespace TimeTrackingServer.Services.Impl
             staff.Data.ForEach(line =>
             {
                 csvStrung.AppendLine(string.Join(",", new string[] {
-                    line.UpdatedAt.ToString("g"),
+                    line.UpdatedAt.GetValueOrDefault().ToString("g"),
                     line.Caption,
                     line.ActivityFirst?.ToString(),
                     line.ActivityFirst != null && line.ActivityLast != null ?
@@ -131,7 +133,7 @@ namespace TimeTrackingServer.Services.Impl
                 var data = await Get(request, false);
                 foreach (var staff in data.Data)
                 {
-                    worksheet.Cells["A" + j].Value = staff.UpdatedAt.ToString("g");
+                    worksheet.Cells["A" + j].Value = staff.UpdatedAt.GetValueOrDefault().ToString("g");
                     worksheet.Cells["B" + j].Value = staff.Caption;
                     worksheet.Cells["C" + j].Value = staff.ActivityFirst?.ToString("g");
                     worksheet.Cells["D" + j].Value = staff.ActivityFirst != null && staff.ActivityLast != null ?

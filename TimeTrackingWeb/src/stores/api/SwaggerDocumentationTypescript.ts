@@ -304,8 +304,8 @@ export class WSApi {
     return Promise.resolve<ActivityStaff | null>(<any>null);
   }
 
-  applications_GetRangeList(request: TableSortingWithFilterRequest | null): Promise<ApplicationsRangeListResponse | null> {
-    let url_ = this.baseUrl + "/api/Applications/GetRangeList";
+  applications_GetListWithRange(request: TableSortingWithFilterRequest | null): Promise<ApplicationsRangeListResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/GetListWithRange";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -320,11 +320,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processApplications_GetRangeList(_response);
+      return this.processApplications_GetListWithRange(_response);
     });
   }
 
-  protected processApplications_GetRangeList(response: Response): Promise<ApplicationsRangeListResponse | null> {
+  protected processApplications_GetListWithRange(response: Response): Promise<ApplicationsRangeListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -342,8 +342,8 @@ export class WSApi {
     return Promise.resolve<ApplicationsRangeListResponse | null>(<any>null);
   }
 
-  applications_GetListWithoutFilter(request: TableSortingRequest | null): Promise<ApplicationsListResponse | null> {
-    let url_ = this.baseUrl + "/api/Applications/GetListWithoutFilter";
+  applications_GetList(request: TableSortingRequest | null): Promise<ApplicationsListResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -358,11 +358,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processApplications_GetListWithoutFilter(_response);
+      return this.processApplications_GetList(_response);
     });
   }
 
-  protected processApplications_GetListWithoutFilter(response: Response): Promise<ApplicationsListResponse | null> {
+  protected processApplications_GetList(response: Response): Promise<ApplicationsListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -378,6 +378,48 @@ export class WSApi {
       });
     }
     return Promise.resolve<ApplicationsListResponse | null>(<any>null);
+  }
+
+  applications_GetListFull(request: TableSortingByGroupIdRequest | null): Promise<Applications[] | null> {
+    let url_ = this.baseUrl + "/api/Applications/GetListFull";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplications_GetListFull(_response);
+    });
+  }
+
+  protected processApplications_GetListFull(response: Response): Promise<Applications[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(Applications.fromJS(item));
+        }
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Applications[] | null>(<any>null);
   }
 
   applications_ImportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
@@ -633,6 +675,48 @@ export class WSApi {
       });
     }
     return Promise.resolve<StaffListResponse | null>(<any>null);
+  }
+
+  staff_GetListFull(request: TableSortingByGroupIdRequest | null): Promise<Staff[] | null> {
+    let url_ = this.baseUrl + "/api/Staff/GetListFull";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processStaff_GetListFull(_response);
+    });
+  }
+
+  protected processStaff_GetListFull(response: Response): Promise<Staff[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(Staff.fromJS(item));
+        }
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Staff[] | null>(<any>null);
   }
 
   staff_GetListOnlyByGropupId(groupId: number): Promise<Staff[] | null> {
@@ -2050,11 +2134,11 @@ export interface IApplicationTitles {
 }
 
 export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
-  id!: number;
+  id?: number | undefined;
   applicationTitleId?: number | undefined;
   groupId?: number | undefined;
   updatedAt?: Date | undefined;
-  state?: string | undefined;
+  state!: StateEnum;
   applicationTitle?: ApplicationTitles | undefined;
   group?: Groups | undefined;
 
@@ -2100,11 +2184,11 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
 }
 
 export interface IApplicationTitleToGroup {
-  id: number;
+  id?: number | undefined;
   applicationTitleId?: number | undefined;
   groupId?: number | undefined;
   updatedAt?: Date | undefined;
-  state?: string | undefined;
+  state: StateEnum;
   applicationTitle?: ApplicationTitles | undefined;
   group?: Groups | undefined;
 }
@@ -2198,7 +2282,7 @@ export class ApplicationToGroup implements IApplicationToGroup {
   applicationId!: number;
   groupId!: number;
   updatedAt?: Date | undefined;
-  state!: string;
+  state!: StateEnum;
   application?: Applications | undefined;
   group?: Groups | undefined;
 
@@ -2248,7 +2332,7 @@ export interface IApplicationToGroup {
   applicationId: number;
   groupId: number;
   updatedAt?: Date | undefined;
-  state: string;
+  state: StateEnum;
   application?: Applications | undefined;
   group?: Groups | undefined;
 }
@@ -2303,7 +2387,7 @@ export interface IStaffToGroup {
 
 export class Staff implements IStaff {
   id!: number;
-  updatedAt!: Date;
+  updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
   activityLast?: Date | undefined;
@@ -2372,7 +2456,7 @@ export class Staff implements IStaff {
 
 export interface IStaff {
   id: number;
-  updatedAt: Date;
+  updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
   activityLast?: Date | undefined;
@@ -2665,6 +2749,39 @@ export interface IApplicationsListResponse extends IListCountResponse {
   data?: Applications[] | undefined;
 }
 
+export class TableSortingByGroupIdRequest extends TableSortingRequest implements ITableSortingByGroupIdRequest {
+  groupId?: number | undefined;
+
+  constructor(data?: ITableSortingByGroupIdRequest) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.groupId = data["GroupId"];
+    }
+  }
+
+  static fromJS(data: any): TableSortingByGroupIdRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new TableSortingByGroupIdRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["GroupId"] = this.groupId;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface ITableSortingByGroupIdRequest extends ITableSortingRequest {
+  groupId?: number | undefined;
+}
+
 export class StaffListResponse extends ListCountResponse implements IStaffListResponse {
   data?: Staff[] | undefined;
 
@@ -2704,39 +2821,6 @@ export class StaffListResponse extends ListCountResponse implements IStaffListRe
 
 export interface IStaffListResponse extends IListCountResponse {
   data?: Staff[] | undefined;
-}
-
-export class TableSortingByGroupIdRequest extends TableSortingRequest implements ITableSortingByGroupIdRequest {
-  groupId?: number | undefined;
-
-  constructor(data?: ITableSortingByGroupIdRequest) {
-    super(data);
-  }
-
-  init(data?: any) {
-    super.init(data);
-    if (data) {
-      this.groupId = data["GroupId"];
-    }
-  }
-
-  static fromJS(data: any): TableSortingByGroupIdRequest {
-    data = typeof data === 'object' ? data : {};
-    let result = new TableSortingByGroupIdRequest();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["GroupId"] = this.groupId;
-    super.toJSON(data);
-    return data;
-  }
-}
-
-export interface ITableSortingByGroupIdRequest extends ITableSortingRequest {
-  groupId?: number | undefined;
 }
 
 export class GroupListResponse extends ListCountResponse implements IGroupListResponse {

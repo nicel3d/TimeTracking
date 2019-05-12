@@ -5,7 +5,6 @@ import { States } from '%/constants/States'
 
 @Component
 export default class FieldsExtension extends Vue {
-
   GetUpdatedAt (dateString?: Date) {
     if (dateString) {
       return dateString.toLocaleDateString() + ' ' +

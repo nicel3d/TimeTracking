@@ -82,5 +82,15 @@ namespace TimeTrackingServer.Services.Impl
                 await _dbContext.SaveChangesAsync();
             }
         }
+        //    public async Task AddApplicationTitle(int applicationId, string applicationTitle)
+        //    {
+        //        ApplicationTitles applicationTitles = new ApplicationTitles()
+        //        {
+        //            ApplicationId = applicationId,
+        //            Title = applicationTitle
+        //        };
+        //        _dbContext.ApplicationTitles.Add(applicationTitles);
+        //        await _dbContext.SaveChangesAsync();
+        //    }
     }
 }

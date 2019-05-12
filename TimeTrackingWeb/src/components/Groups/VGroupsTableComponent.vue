@@ -81,7 +81,7 @@ import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
-import { GroupEmitEnum } from '%/constants/windows/GroupsWindows'
+import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 
 const filename = 'groups'
 

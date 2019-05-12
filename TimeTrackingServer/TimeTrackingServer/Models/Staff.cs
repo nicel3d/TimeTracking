@@ -12,7 +12,7 @@ namespace TimeTrackingServer.Models
         }
 
         public int Id { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public bool? Status { get; set; }
         public DateTime? ActivityFirst { get; set; }
         public DateTime? ActivityLast { get; set; }

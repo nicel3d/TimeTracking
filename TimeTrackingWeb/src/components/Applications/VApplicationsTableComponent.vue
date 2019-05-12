@@ -102,7 +102,7 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
 
   loadApplicationList () {
     this.loading = true
-    this.$store.state.api.applications_GetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.applications_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total

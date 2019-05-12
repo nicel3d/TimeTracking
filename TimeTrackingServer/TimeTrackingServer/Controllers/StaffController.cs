@@ -29,6 +29,13 @@ namespace TimeTrackingServer.Controllers
             return await _staffService.Get(request);
         }
 
+        [HttpPost(nameof(GetListFull))]
+        [Produces("application/json")]
+        public async Task<List<Staff>> GetListFull([FromBody] TableSortingByGroupIdRequest request)
+        {
+            return (await _staffService.Get(request, false)).Data;
+        }
+
         [HttpPost(nameof(GetListOnlyByGropupId))]
         [Produces("application/json")]
         public async Task<List<Staff>> GetListOnlyByGropupId([FromBody] int groupId)

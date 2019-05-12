@@ -62,7 +62,7 @@
               single-line
               persistent-hint
               label="Статус"
-            ></v-select>
+            />
           </v-flex>
         </v-layout>
       </v-container>

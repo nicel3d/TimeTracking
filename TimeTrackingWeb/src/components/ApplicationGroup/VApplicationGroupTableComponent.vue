@@ -13,6 +13,7 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
+      <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить обработчик</v-btn>
       <template v-if="desserts.length">
         <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
         <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
@@ -32,13 +33,13 @@
           <v-icon
             small
             class="mr-2"
-            @click="$emit('on-edit', props.item.id)">
+            @click="onEdit(props.item)">
             edit
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
         <td>{{ props.item.applicationTitle }}</td>
-        <td>{{ GetCurrentState(props.item.state) }}</td>1
+        <td>{{ GetCurrentState(props.item.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -55,6 +56,7 @@ import {
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
+import { ApplicationGroupEmitEnum, ApplicationsIdsAndGroupId } from '%/constants/WindowsEmmit'
 
 const filename = 'program_restrictions'
 
@@ -91,6 +93,25 @@ export default class VApplicationGroupTableComponent extends Mixins(SkipTake) {
     }
   }
 
+  mounted () {
+    this.$root.$on(
+      ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS,
+      this.loadTreatmentApplications
+    )
+    this.loadTreatmentApplications()
+  }
+
+  onAdd () {
+    this.$root.$emit(
+      ApplicationGroupEmitEnum.ADD_APPLICATION_GROUP,
+      new ApplicationsIdsAndGroupId({
+        groupId: this.groupId,
+        applicationsIds: this.desserts.map(x => Number(x.applicationId))
+      })
+    )
+  }
+  onEdit = item => this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
+
   ImportXLSXList () {
     this.$store.state.api.treatmentApplications_ImportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
@@ -114,8 +135,11 @@ export default class VApplicationGroupTableComponent extends Mixins(SkipTake) {
       .then(() => (this.loading = false))
   }
 
-  mounted () {
-    this.loadTreatmentApplications()
+  beforeDestroy () {
+    this.$root.$off(
+      ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS,
+      this.loadTreatmentApplications
+    )
   }
 }
 </script>

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using TimeTrackingServer.Constants;
 using TimeTrackingServer.Exceptions;
 
 namespace TimeTrackingServer.Models
@@ -11,8 +10,7 @@ namespace TimeTrackingServer.Models
         public int ApplicationId { get; set; }
         public int GroupId { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        [Required]
-        public string State { get; set; }
+        public StateEnum State { get; set; }
 
         public virtual Applications Application { get; set; }
         public virtual Groups Group { get; set; }

@@ -1,6 +1,0 @@
-export enum GroupEmitEnum {
-  ADD_GROUP = 'ADD_GROUP',
-  EDIT_GROUP = 'EDIT_GROUP',
-
-  CHANGE_GROUP_SUCCESS = 'CHANGE_GROUP_SUCCESS',
-}

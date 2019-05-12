@@ -40,7 +40,7 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
 import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
-import { GroupEmitEnum } from '%/constants/windows/GroupsWindows'
+import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 
 @Component
 export default class VGroupsAddWindow extends Vue {

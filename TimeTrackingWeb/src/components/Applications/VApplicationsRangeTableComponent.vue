@@ -86,7 +86,7 @@ export default class VApplicationsRangeTableComponent extends Mixins(SkipTake) {
       skip,
       take
     })
-    this.$store.state.api.applications_GetRangeList(data)
+    this.$store.state.api.applications_GetListWithRange(data)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total
