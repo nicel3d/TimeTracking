@@ -597,7 +597,7 @@ export class WSApi {
     return Promise.resolve<Applications | null>(<any>null);
   }
 
-  staff_GetList(request: TableSortingRequest | null): Promise<StaffListResponse | null> {
+  staff_GetList(request: TableSortingByGroupIdRequest | null): Promise<StaffListResponse | null> {
     let url_ = this.baseUrl + "/api/Staff/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -635,11 +635,11 @@ export class WSApi {
     return Promise.resolve<StaffListResponse | null>(<any>null);
   }
 
-  staff_GetListByUserId(request: TableSortingByGroupIdRequest | null): Promise<Staff[] | null> {
-    let url_ = this.baseUrl + "/api/Staff/GetListByUserId";
+  staff_GetListOnlyByGropupId(groupId: number): Promise<Staff[] | null> {
+    let url_ = this.baseUrl + "/api/Staff/GetListOnlyByGropupId";
     url_ = url_.replace(/[?&]$/, "");
 
-    const content_ = JSON.stringify(request);
+    const content_ = JSON.stringify(groupId);
 
     let options_ = <RequestInit>{
       body: content_,
@@ -651,11 +651,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processStaff_GetListByUserId(_response);
+      return this.processStaff_GetListOnlyByGropupId(_response);
     });
   }
 
-  protected processStaff_GetListByUserId(response: Response): Promise<Staff[] | null> {
+  protected processStaff_GetListOnlyByGropupId(response: Response): Promise<Staff[] | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -677,7 +677,7 @@ export class WSApi {
     return Promise.resolve<Staff[] | null>(<any>null);
   }
 
-  staff_ImportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+  staff_ImportXLSXGetListWithoutFilter(request: TableSortingByGroupIdRequest | null): Promise<FileResponse | null> {
     let url_ = this.baseUrl + "/api/Staff/ImportXLSXGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -713,7 +713,7 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  staff_ImportCSVGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+  staff_ImportCSVGetListWithoutFilter(request: TableSortingByGroupIdRequest | null): Promise<FileResponse | null> {
     let url_ = this.baseUrl + "/api/Staff/ImportCSVGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -2450,7 +2450,7 @@ export interface IStaffListResponse extends IListCountResponse {
 }
 
 export class TableSortingByGroupIdRequest extends TableSortingRequest implements ITableSortingByGroupIdRequest {
-  groupId!: number;
+  groupId?: number | undefined;
 
   constructor(data?: ITableSortingByGroupIdRequest) {
     super(data);
@@ -2479,7 +2479,7 @@ export class TableSortingByGroupIdRequest extends TableSortingRequest implements
 }
 
 export interface ITableSortingByGroupIdRequest extends ITableSortingRequest {
-  groupId: number;
+  groupId?: number | undefined;
 }
 
 export class GroupListResponse extends ListCountResponse implements IGroupListResponse {

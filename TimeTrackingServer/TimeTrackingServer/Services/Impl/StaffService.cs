@@ -41,7 +41,7 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.Staff.FindAsync(id);
         }
 
-        public async Task<StaffListResponse> Get(TableSortingRequest request, bool withSkipTake = true)
+        public async Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true)
         {
             IQueryable<Staff> data = _dbContext.Set<Staff>();
 
@@ -53,25 +53,44 @@ namespace TimeTrackingServer.Services.Impl
                         );
             }
 
+            if (request.GroupId != null)
+            {
+                data = data.Include(x => x.StaffToGroup)
+                         .Select(x => new
+                         {
+                             p = x,
+                             r = x.StaffToGroup.Where(f => f.GroupId == request.GroupId)
+                         })
+                         .Where(x => x.r.Count() > 0)
+                         .Select(x => x.p)
+                         .Select(x => new Staff()
+                         {
+                             Id = x.Id,
+                             ActivityFirst = x.ActivityFirst,
+                             ActivityLast = x.ActivityLast,
+                             Caption = x.Caption,
+                             UpdatedAt = x.UpdatedAt,
+                             Status = x.Status
+                         });
+            }
+
             return new StaffListResponse
             {
-                Data = await data.Sort(request.Sorting)
-                                .AddSkipTake(request)
-                                .ToListAsync(),
+                Data = await data.Sort(request.Sorting).AddSkipTake(request).ToListAsync(),
                 Total = await data.CountAsync()
             };
         }
 
-        public async Task<List<Staff>> GetListByGropupId(TableSortingByGroupIdRequest request)
+        public async Task<List<Staff>> GetListOnlyByGropupId(int groupId)
         {
             return await _dbContext.StaffToGroup
-                                .Where(x => x.GroupId == request.GroupId)
+                                .Where(x => x.GroupId == groupId)
                                 .Include(x => x.Staff)
                                 .Select(x => x.Staff)
                                 .ToListAsync();
         }
 
-        public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request)
+        public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request)
         {
             var staff = await Get(request, false);
             var csvStrung = new StringBuilder();
@@ -86,11 +105,11 @@ namespace TimeTrackingServer.Services.Impl
                     line.ActivityLast?.ToString("g")
                 }));
             });
-            
+
             return Encoding.UTF8.GetBytes($"{string.Join(",", comlumHeadrs)}\r\n{csvStrung.ToString()}");
         }
 
-        public async Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingRequest request)
+        public async Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingByGroupIdRequest request)
         {
             byte[] result;
 

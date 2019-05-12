@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-layout row justify-center>
     <v-dialog :value="value" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card>
@@ -13,6 +13,9 @@
           <v-toolbar-items v-if="item">
             <v-btn dark flat @click="$emit('on-save')">Сохранить</v-btn>
           </v-toolbar-items>
+          <template v-if="$slots.extension" v-slot:extension>
+            <slot name="extension"></slot>
+          </template>
         </v-toolbar>
         <v-progress-linear v-if="loading" color="blue" indeterminate></v-progress-linear>
         <slot v-else-if="item"></slot>

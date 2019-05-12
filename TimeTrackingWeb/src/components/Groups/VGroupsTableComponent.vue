@@ -73,8 +73,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator'
 import {
   GroupsWithCountUsers,
-  SortingRequest,
-  StateEnum, TableSortingByGroupIdRequest,
+  SortingRequest, StateEnum,
   TableSortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
@@ -150,8 +149,7 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
     }
     props.expanded = true
     this.loading = true
-    const data = new TableSortingByGroupIdRequest({ groupId: props.item.id })
-    this.$store.state.api.staff_GetListByUserId(data)
+    this.$store.state.api.staff_GetListOnlyByGropupId(props.item.id)
       .then(res => (props.item.childrenDesserts = res))
       .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))

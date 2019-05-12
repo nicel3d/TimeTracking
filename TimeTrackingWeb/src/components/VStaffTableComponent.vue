@@ -52,13 +52,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
   SortingRequest, Staff,
-  StateEnum,
+  TableSortingByGroupIdRequest,
   TableSortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
-import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
@@ -67,6 +66,8 @@ const filename = 'staff'
 
 @Component
 export default class VStaffTableComponent extends Mixins(SkipTake) {
+  @Prop({ default: null }) groupId
+
   desserts: Staff[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
@@ -79,11 +80,12 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
   ]
 
   get dataRequest () {
-    return new TableSortingRequest({
+    return new TableSortingByGroupIdRequest({
       sorting: new SortingRequest({
         descending: this.pagination.descending,
         sortBy: this.pagination.sortBy
       }),
+      groupId: this.groupId || undefined,
       search: this.search,
       skip: this.skip,
       take: this.take
