@@ -33,7 +33,8 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task Delete(int id)
         {
-            _dbContext.Remove(Get(id));
+            var item = await Get(id);
+            _dbContext.Remove(item);
             await _dbContext.SaveChangesAsync();
         }
 

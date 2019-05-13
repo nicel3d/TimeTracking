@@ -30,12 +30,12 @@
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
         <tr>
-          <td class="layout px-0 align-center">
-            <v-icon
-              small
-              class="ml-4 mr-2"
-              @click="onEdit(props.item.id)">
+          <td class="ml-4 layout px-0 align-center">
+            <v-icon small @click="onEdit(props.item.id)">
               edit
+            </v-icon>
+            <v-icon class="ml-4" small @click="onDelete(props.item.id)">
+              delete
             </v-icon>
           </td>
           <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
@@ -116,6 +116,12 @@ export default class VTableGroupsByUser extends Mixins(SkipTake) {
 
   onAdd = () => this.$root.$emit(GroupEmitEnum.ADD_GROUP)
   onEdit = (id) => this.$root.$emit(GroupEmitEnum.EDIT_GROUP, id)
+
+  onDelete (id: number) {
+    this.$store.state.api.group_Delete(id)
+      .then(this.onPagination)
+      .catch(res => this.$root.$emit('snackbar', res))
+  }
 
   onChangeStatus (groupId: number) {
     const staffToGroup = this.groupIds.length && this.groupIds

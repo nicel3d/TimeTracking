@@ -22,12 +22,12 @@
     >
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <td class="justify-center layout px-0 align-center">
-          <v-icon
-            small
-            class="mr-2"
-            @click="$emit('on-edit', props.item.id)">
+        <td class="ml-4 layout px-0 align-center">
+          <v-icon small @click="$emit('on-edit', props.item.id)">
             edit
+          </v-icon>
+          <v-icon class="ml-4" small @click="onDelete(props.item.id)">
+            delete
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
@@ -39,7 +39,7 @@
           </div>
         </td>
         <td>{{ props.item.staff.caption }}</td>
-        <td>{{ getState(props.item.application.state) }}</td>
+        <td>{{ GetCurrentState(props.item.application.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -81,8 +81,10 @@ export default class VTableActivityStaff extends Mixins(SkipTake) {
     }
   }
 
-  getState (state?: StateEnum) {
-    return oc(States.find(item => item.state === state)).text(States[1].text)
+  onDelete (id: number) {
+    this.$store.state.api.activityStaff_Delete(id)
+      .then(this.onPagination)
+      .catch(res => this.$root.$emit('snackbar', res))
   }
 
   loadActivityStaffList (skip = this.skip, take = this.take) {

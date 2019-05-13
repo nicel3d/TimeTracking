@@ -1,8 +1,12 @@
 export enum GroupEmitEnum {
   ADD_GROUP = 'ADD_GROUP',
   EDIT_GROUP = 'EDIT_GROUP',
-
   CHANGE_GROUP_SUCCESS = 'CHANGE_GROUP_SUCCESS',
+}
+
+export enum ApplicationEmitEnum {
+  EDIT_APPLICATION = 'EDIT_APPLICATION',
+  CHANGE_APPLICATION_SUCCESS = 'CHANGE_APPLICATION_SUCCESS',
 }
 
 export enum ApplicationGroupEmitEnum {

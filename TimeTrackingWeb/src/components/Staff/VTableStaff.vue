@@ -29,10 +29,9 @@
     >
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <td class="justify-center layout px-0 align-center">
+        <td class="ml-4 layout px-0 align-center">
           <v-icon
             small
-            class="mr-2"
             @click="groupId ? onDelete(props.item.id, groupId) : onEdit(props.item.id)">
             {{ groupId ? 'delete' : 'edit' }}
           </v-icon>

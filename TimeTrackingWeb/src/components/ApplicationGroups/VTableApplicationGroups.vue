@@ -29,12 +29,12 @@
     >
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <td class="justify-center layout px-0 align-center">
-          <v-icon
-            small
-            class="mr-2"
-            @click="onEdit(props.item)">
+        <td class="ml-4 layout px-0 align-center">
+          <v-icon small @click="onEdit(props.item)">
             edit
+          </v-icon>
+          <v-icon class="ml-4" small @click="onDelete(props.item.id)">
+            delete
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
@@ -112,7 +112,14 @@ export default class VTableApplicationGroups extends Mixins(SkipTake) {
     )
   }
 
-  onEdit = item => this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
+  onEdit = (item: VMApplicationGroup) =>
+    this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
+
+  onDelete (id: number) {
+    this.$store.state.api.treatmentApplications_Delete(id)
+      .then(this.onPagination)
+      .catch(res => this.$root.$emit('snackbar', res))
+  }
 
   ImportXLSXList () {
     this.$store.state.api.treatmentApplications_ImportXLSXGetListWithoutFilter(this.dataRequest)

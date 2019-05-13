@@ -28,13 +28,12 @@
     >
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <td class="justify-center layout px-0 align-center">
-          <v-icon
-            small
-            class="mr-2"
-            @click="$emit('on-edit', props.item.id)"
-          >
+        <td class="ml-4 layout px-0 align-center">
+          <v-icon small @click="onEdit(props.item.id)">
             edit
+          </v-icon>
+          <v-icon class="ml-4" small @click="onDelete(props.item.id)">
+            delete
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
@@ -55,6 +54,7 @@ import {
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
+import { ApplicationEmitEnum } from '%/constants/WindowsEmmit'
 
 const filename = 'application'
 
@@ -88,6 +88,21 @@ export default class VTableApplications extends Mixins(SkipTake) {
     }
   }
 
+  mounted () {
+    this.$root.$on(ApplicationEmitEnum.CHANGE_APPLICATION_SUCCESS, this.loadApplicationList)
+    this.loadApplicationList()
+  }
+
+  onEdit (item: Applications) {
+    this.$root.$emit(ApplicationEmitEnum.EDIT_APPLICATION, item)
+  }
+
+  onDelete (id: number) {
+    this.$store.state.api.applications_Delete(id)
+      .then(this.onPagination)
+      .catch(res => this.$root.$emit('snackbar', res))
+  }
+
   ImportXLSXList () {
     this.$store.state.api.applications_ImportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
@@ -111,8 +126,8 @@ export default class VTableApplications extends Mixins(SkipTake) {
       .then(() => (this.loading = false))
   }
 
-  mounted () {
-    this.loadApplicationList()
+  beforeDestroy () {
+    this.$root.$off(ApplicationEmitEnum.CHANGE_APPLICATION_SUCCESS, this.loadApplicationList)
   }
 }
 </script>

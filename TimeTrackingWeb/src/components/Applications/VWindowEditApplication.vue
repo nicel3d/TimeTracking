@@ -1,14 +1,14 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
-      <v-card-title>Обновление ограничения по программе</v-card-title>
+      <v-card-title>Обновление ограничений по программе</v-card-title>
       <v-divider></v-divider>
       <v-card-text v-if="item">
         <v-form :data-vv-scope="formId" @submit.prevent="onEdit">
           <v-flex>
             <v-text-field
               type="text"
-              :value="item.applicationTitle"
+              :value="item.caption"
               label="Приложение"
               readonly
             />
@@ -48,18 +48,16 @@
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
-import {
-  ApplicationToGroup, StateEnum, VMApplicationGroup
-} from '%/stores/api/SwaggerDocumentationTypescript'
-import { ApplicationGroupEmitEnum } from '%/constants/WindowsEmmit'
+import { Applications, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
+import { ApplicationEmitEnum } from '%/constants/WindowsEmmit'
 import { States } from '%/constants/States'
 
 @Component
-export default class VWindowEditApplicationGroup extends Vue {
+export default class VWindowEditApplication extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   id!: number
-  item: VMApplicationGroup | null = null
+  item: Applications | null = null
   dialog: boolean = false
   $refs: any
   $options: any
@@ -74,10 +72,10 @@ export default class VWindowEditApplicationGroup extends Vue {
   }
 
   mounted () {
-    this.$root.$on(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, this.onOpenWindow)
+    this.$root.$on(ApplicationEmitEnum.EDIT_APPLICATION, this.onOpenWindow)
   }
 
-  onOpenWindow (item: VMApplicationGroup) {
+  onOpenWindow (item: Applications) {
     this.item = item
     this.id = item.id || 0
     this.state = item.state
@@ -89,13 +87,9 @@ export default class VWindowEditApplicationGroup extends Vue {
     this.$validator.validateAll(this.formId)
       .then((res) => {
         if (res && this.item) {
-          const data = new ApplicationToGroup({
-            ...this.item,
-            state: this.state
-          })
-          this.$store.state.api.treatmentApplications_Put(this.id, data)
+          this.$store.state.api.applications_PutState(this.id, this.state)
             .then(() => {
-              this.$root.$emit(ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS)
+              this.$root.$emit(ApplicationEmitEnum.CHANGE_APPLICATION_SUCCESS)
               this.onReset()
             })
             .catch(res => this.$root.$emit('snackbar', res))
@@ -104,7 +98,7 @@ export default class VWindowEditApplicationGroup extends Vue {
   }
 
   beforeDestroy () {
-    this.$root.$off(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, this.onOpenWindow)
+    this.$root.$off(ApplicationEmitEnum.EDIT_APPLICATION, this.onOpenWindow)
   }
 }
 
