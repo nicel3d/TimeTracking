@@ -70,7 +70,7 @@ import { Validator } from 'vee-validate'
 import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
 import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
-import VStaffTableComponent from '%/components/VStaffTableComponent.vue'
+import VStaffTableComponent from '%/components/Staff/VStaffTableComponent.vue'
 import VApplicationGroupTableComponent from '%/components/ApplicationGroup/VApplicationGroupTableComponent.vue'
 
 @Component({

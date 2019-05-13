@@ -32,9 +32,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class VDialogFullWindow extends Vue {
-  @Prop() value: boolean = false
+  @Prop({ default: false }) value!: boolean
   @Prop() item: any = null
-  @Prop() loading: boolean = true
+  @Prop({ default: false }) loading!: boolean
 }
 </script>
 

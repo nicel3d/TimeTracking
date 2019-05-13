@@ -30,16 +30,15 @@
           <v-icon
             small
             class="mr-2"
-            @click="$emit('on-edit', props.item.id)"
-          >
+            @click="onEdit(props.item.id)">
             edit
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
         <td>{{ props.item.caption }}</td>
+        <td>{{ GetUpdatedAt(props.item.activityFirst) }}</td>
         <td>-</td>
-        <td>-</td>
-        <td>-</td>
+        <td>{{ GetUpdatedAt(props.item.activityLast) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -58,6 +57,7 @@ import {
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
+import { StaffEmitEnum } from '%/constants/WindowsEmmit'
 
 const filename = 'staff'
 
@@ -92,9 +92,16 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
   @Watch('pagination')
   onPagination () {
     if (!this.loading) {
-      this.loadApplicationList()
+      this.loadStaffList()
     }
   }
+
+  mounted () {
+    this.loadStaffList()
+    this.$root.$on(StaffEmitEnum.CHANGE_STAFF_SUCCESS, this.loadStaffList)
+  }
+
+  onEdit = id => this.$root.$emit(StaffEmitEnum.EDIT_STAFF, id)
 
   ImportXLSXList () {
     this.$store.state.api.staff_ImportXLSXGetListWithoutFilter(this.dataRequest)
@@ -108,7 +115,7 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  loadApplicationList () {
+  loadStaffList () {
     this.loading = true
     this.$store.state.api.staff_GetList(this.dataRequest)
       .then(res => {
@@ -119,8 +126,8 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
       .then(() => (this.loading = false))
   }
 
-  mounted () {
-    this.loadApplicationList()
+  beforeDestroy () {
+    this.$root.$off(StaffEmitEnum.CHANGE_STAFF_SUCCESS, this.loadStaffList)
   }
 }
 </script>
