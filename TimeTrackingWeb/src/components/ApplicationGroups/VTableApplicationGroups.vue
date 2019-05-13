@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card>
     <v-card-title primary-title>
-      <h3 class="mb-0">Приложения</h3>
+      <h3 class="mb-0">Ограничения по программам</h3>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -13,6 +13,7 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
+      <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить обработчик</v-btn>
       <template v-if="desserts.length">
         <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
         <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
@@ -32,13 +33,12 @@
           <v-icon
             small
             class="mr-2"
-            @click="$emit('on-edit', props.item.id)"
-          >
+            @click="onEdit(props.item)">
             edit
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
-        <td>{{ props.item.caption }}</td>
+        <td>{{ props.item.applicationTitle }}</td>
         <td>{{ GetCurrentState(props.item.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
@@ -49,32 +49,37 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  Applications, SortingRequest, TableSortingRequest
+  ApplicationGroupFilterRequest,
+  SortingRequest, VMApplicationGroup
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
+import { ApplicationGroupEmitEnum, ApplicationsIdsAndGroupId } from '%/constants/WindowsEmmit'
 
-const filename = 'application'
+const filename = 'program_restrictions'
 
 @Component
-export default class VApplicationsTableComponent extends Mixins(SkipTake) {
-  desserts: Applications[] = []
+export default class VTableApplicationGroups extends Mixins(SkipTake) {
+  @Prop({ default: null }) groupId!: number
+
+  desserts: VMApplicationGroup[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
-    { text: 'Название приложения', value: 'Caption' },
+    { text: 'Программа', value: 'ApplicationTitle' },
     { text: 'Состояние', value: 'State' }
   ]
 
   get dataRequest () {
-    return new TableSortingRequest({
+    return new ApplicationGroupFilterRequest({
       sorting: new SortingRequest({
         descending: this.pagination.descending,
         sortBy: this.pagination.sortBy
       }),
+      groupId: this.groupId,
       search: this.search,
       skip: this.skip,
       take: this.take
@@ -84,25 +89,46 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
   @Watch('pagination')
   onPagination () {
     if (!this.loading) {
-      this.loadApplicationList()
+      this.loadTreatmentApplications()
     }
   }
 
+  mounted () {
+    this.$root.$on(
+      ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS,
+      this.loadTreatmentApplications
+    )
+    this.loadTreatmentApplications()
+  }
+
+  onAdd () {
+    this.$root.$emit(
+      ApplicationGroupEmitEnum.ADD_APPLICATION_GROUP,
+      new ApplicationsIdsAndGroupId({
+        groupId: this.groupId,
+        applicationsIds: this.desserts.length
+          ? this.desserts.map(x => Number(x.applicationId)) : []
+      })
+    )
+  }
+
+  onEdit = item => this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
+
   ImportXLSXList () {
-    this.$store.state.api.applications_ImportXLSXGetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.treatmentApplications_ImportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
   ImportCSVList () {
-    this.$store.state.api.applications_ImportCSVGetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.treatmentApplications_ImportCSVGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  loadApplicationList () {
+  loadTreatmentApplications () {
     this.loading = true
-    this.$store.state.api.applications_GetList(this.dataRequest)
+    this.$store.state.api.treatmentApplications_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total
@@ -111,8 +137,11 @@ export default class VApplicationsTableComponent extends Mixins(SkipTake) {
       .then(() => (this.loading = false))
   }
 
-  mounted () {
-    this.loadApplicationList()
+  beforeDestroy () {
+    this.$root.$off(
+      ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS,
+      this.loadTreatmentApplications
+    )
   }
 }
 </script>

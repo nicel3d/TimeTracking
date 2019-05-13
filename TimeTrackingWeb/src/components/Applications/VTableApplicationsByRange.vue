@@ -50,7 +50,7 @@ import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 
 @Component
-export default class VApplicationsRangeTableComponent extends Mixins(SkipTake) {
+export default class VTableApplicationsByRange extends Mixins(SkipTake) {
   @Prop() filter!: FilterRequest
 
   desserts: ApplicationsRange[] = []

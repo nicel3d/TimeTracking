@@ -82,7 +82,7 @@ import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 @Component({
   components: { VDialogFullWindow }
 })
-export default class VActivityDetailsComponent extends SkipTake {
+export default class VWindowEditActivityStaff extends SkipTake {
   item: ActivityStaff | null = null
   dialog: boolean = false
   loading: boolean = true

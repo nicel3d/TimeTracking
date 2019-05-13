@@ -1,15 +1,15 @@
 <template>
   <div>
-    <v-applications-table-component/>
+    <v-table-applications/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import VApplicationsTableComponent from '%/components/Applications/VApplicationsTableComponent.vue'
+import VTableApplications from '%/components/Applications/VTableApplications.vue'
 
 @Component({
-  components: { VApplicationsTableComponent }
+  components: { VTableApplications }
 })
 export default class ApplicationsView extends Vue {
 }

@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card>
     <v-card-title primary-title>
-      <h3 class="mb-0">Фильтр по активности</h3>
+      <h3 class="mb-0">Фильтр по периоду</h3>
     </v-card-title>
 
     <v-container>
@@ -51,7 +51,7 @@ import { FilterRequest } from '%/stores/api/SwaggerDocumentationTypescript'
 @Component({
   components: { DatePicker }
 })
-export default class VActivityFilterComponent extends Vue {
+export default class VFilterByRangeComponent extends Vue {
   @Prop() readonly value!: FilterRequest
 
   hours: number[] = []

@@ -65,7 +65,7 @@ import { StaffEmitEnum, StaffIdsAndGroupId } from '%/constants/WindowsEmmit'
 const filename = 'staff'
 
 @Component
-export default class VStaffTableComponent extends Mixins(SkipTake) {
+export default class VTableStaff extends Mixins(SkipTake) {
   @Prop({ default: null }) groupId
 
   desserts: Staff[] = []

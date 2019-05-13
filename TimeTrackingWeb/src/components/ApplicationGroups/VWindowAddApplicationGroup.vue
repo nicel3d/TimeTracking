@@ -63,7 +63,7 @@ import { ApplicationGroupEmitEnum, ApplicationsIdsAndGroupId } from '%/constants
 import { States } from '%/constants/States'
 
 @Component
-export default class VGroupsAddWindow extends Vue {
+export default class VWindowAddApplicationGroup extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   dialog: boolean = false

@@ -69,13 +69,13 @@ import { Validator } from 'vee-validate'
 import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
 import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
-import VStaffTableComponent from '%/components/Staff/VStaffTableComponent.vue'
-import VApplicationGroupTableComponent from '%/components/ApplicationGroup/VApplicationGroupTableComponent.vue'
+import VStaffTableComponent from '%/components/Staff/VTableStaff.vue'
+import VApplicationGroupTableComponent from '%/components/ApplicationGroups/VTableApplicationGroups.vue'
 
 @Component({
   components: { VApplicationGroupTableComponent, VStaffTableComponent, VDialogFullWindow }
 })
-export default class VGroupsDetailsWindow extends Vue {
+export default class VWindowEditGroup extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   item: Groups | null = null

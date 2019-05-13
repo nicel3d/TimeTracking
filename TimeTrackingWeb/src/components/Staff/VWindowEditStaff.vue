@@ -62,7 +62,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Staff } from '%/stores/api/SwaggerDocumentationTypescript'
 import { StaffEmitEnum } from '%/constants/WindowsEmmit'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
-import VGroupsTableByUser from '%/components/Groups/VGroupsTableByUser.vue'
+import VGroupsTableByUser from '%/components/Groups/VTableGroupsByUser.vue'
 
 @Component({
   components: { VGroupsTableByUser, VDialogFullWindow }

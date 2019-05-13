@@ -1,27 +1,27 @@
 <template>
   <div>
-    <v-activity-filter-component
+    <v-filter-by-range-component
       class="mb-5"
       v-model="filter"
     />
-    <v-activity-table-component
+    <v-table-activity-staff
       ref="table"
       :filter="filter"
       @on-edit="$refs.dialog.onView($event)"/>
-    <v-activity-details-component ref="dialog" @on-success="$refs.table.onPagination()"/>
+    <v-window-edit-activity-staff ref="dialog" @on-success="$refs.table.onPagination()"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import VActivityTableComponent from '%/components/ActivityStaff/VActivityTableComponent.vue'
-import VActivityDetailsComponent from '%/components/ActivityStaff/VActivityDetailsComponent.vue'
-import VActivityFilterComponent from '%/components/ActivityStaff/VActivityFilterComponent.vue'
 import { FilterRequest } from '%/stores/api/SwaggerDocumentationTypescript'
 import { filterDefault } from '%/constants/FilterDefault'
+import VTableActivityStaff from '%/components/ActivityStaff/VTableActivityStaff.vue'
+import VWindowEditActivityStaff from '%/components/ActivityStaff/VWindowEditActivityStaff.vue'
+import VFilterByRangeComponent from '%/components/VFilterByRangeComponent.vue'
 
 @Component({
-  components: { VActivityFilterComponent, VActivityDetailsComponent, VActivityTableComponent }
+  components: { VFilterByRangeComponent, VWindowEditActivityStaff, VTableActivityStaff }
 })
 export default class ActivityStaffView extends Vue {
   filter: FilterRequest = filterDefault

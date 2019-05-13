@@ -55,7 +55,7 @@ import { ApplicationGroupEmitEnum } from '%/constants/WindowsEmmit'
 import { States } from '%/constants/States'
 
 @Component
-export default class VGroupsAddWindow extends Vue {
+export default class VWindowEditApplicationGroup extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   id!: number

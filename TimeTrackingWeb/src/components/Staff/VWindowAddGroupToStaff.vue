@@ -44,7 +44,7 @@ import { StaffToGroup, TableSortingByGroupIdRequest } from '%/stores/api/Swagger
 import { StaffEmitEnum, StaffIdsAndGroupId } from '%/constants/WindowsEmmit'
 
 @Component
-export default class VStaffAddGroupWindow extends Vue {
+export default class VWindowAddGroupToStaff extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   dialog: boolean = false

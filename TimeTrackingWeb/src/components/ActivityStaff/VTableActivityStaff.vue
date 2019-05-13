@@ -58,7 +58,7 @@ import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 
 @Component
-export default class VActivityTableComponent extends Mixins(SkipTake) {
+export default class VTableActivityStaff extends Mixins(SkipTake) {
   @Prop() filter!: FilterRequest
 
   desserts: ActivityStaffThumb[] = []

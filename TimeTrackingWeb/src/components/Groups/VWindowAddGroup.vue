@@ -44,7 +44,7 @@ import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
 import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 
 @Component
-export default class VGroupsAddWindow extends Vue {
+export default class VWindowAddGroup extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   dialog: boolean = false
@@ -63,7 +63,6 @@ export default class VGroupsAddWindow extends Vue {
 
   onOpenWindow () {
     this.dialog = true
-    setTimeout(() => this.$refs.name.focus(), 100)
   }
 
   onAdd () {

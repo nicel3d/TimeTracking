@@ -1,19 +1,19 @@
 <template>
   <div>
-    <v-staff-table-component/>
+    <v-table-staff/>
     <v-window-edit-staff/>
-    <v-groups-add-window/>
+    <v-window-add-group/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import VStaffTableComponent from '%/components/Staff/VStaffTableComponent.vue'
-import VGroupsAddWindow from '%/components/Groups/VGroupsAddWindow.vue'
+import VTableStaff from '%/components/Staff/VTableStaff.vue'
 import VWindowEditStaff from '%/components/Staff/VWindowEditStaff.vue'
+import VWindowAddGroup from '%/components/Groups/VWindowAddGroup.vue'
 
 @Component({
-  components: { VWindowEditStaff, VGroupsAddWindow, VStaffTableComponent }
+  components: { VWindowAddGroup, VWindowEditStaff, VTableStaff }
 })
 export default class ActivityStaffView extends Vue {
 }
