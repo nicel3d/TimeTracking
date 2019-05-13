@@ -39,7 +39,10 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<Staff> Get(int id)
         {
-            return await _dbContext.Staff.FindAsync(id);
+            return await _dbContext.Staff
+                .Include(x => x.StaffToGroup)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true)

@@ -16,10 +16,12 @@ namespace TimeTrackingServer.Controllers
     public class GroupController : Controller
     {
         private IGroupService _groupService;
+        private IStaffToGroupService _staffToGroup;
 
-        public GroupController(IGroupService groupService)
+        public GroupController(IGroupService groupService, IStaffToGroupService staffToGroup)
         {
             _groupService = groupService;
+            _staffToGroup = staffToGroup;
         }
 
         [HttpPost(nameof(GetList))]
@@ -60,6 +62,19 @@ namespace TimeTrackingServer.Controllers
         public async Task<Groups> Post([FromBody] Groups group)
         {
             return await _groupService.Post(group);
+        }
+
+        [HttpPost(nameof(PostStaffToGroup))]
+        [Produces("application/json")]
+        public async Task<StaffToGroup> PostStaffToGroup([FromBody] StaffToGroup staffToGroup)
+        {
+            return await _staffToGroup.Post(staffToGroup);
+        }
+
+        [HttpDelete(nameof(DeleteStaffToGroup))]
+        public async Task DeleteStaffToGroup(StaffToGroup staffToGroup)
+        {
+            await _staffToGroup.Delete(staffToGroup);
         }
 
         [HttpPut("{id}")]

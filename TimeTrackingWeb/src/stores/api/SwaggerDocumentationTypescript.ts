@@ -1236,6 +1236,78 @@ export class WSApi {
     return Promise.resolve<Groups | null>(<any>null);
   }
 
+  group_PostStaffToGroup(staffToGroup: StaffToGroup | null): Promise<StaffToGroup | null> {
+    let url_ = this.baseUrl + "/api/Group/PostStaffToGroup";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(staffToGroup);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroup_PostStaffToGroup(_response);
+    });
+  }
+
+  protected processGroup_PostStaffToGroup(response: Response): Promise<StaffToGroup | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? StaffToGroup.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<StaffToGroup | null>(<any>null);
+  }
+
+  group_DeleteStaffToGroup(staffToGroup: StaffToGroup | null): Promise<void> {
+    let url_ = this.baseUrl + "/api/Group/DeleteStaffToGroup";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(staffToGroup);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroup_DeleteStaffToGroup(_response);
+    });
+  }
+
+  protected processGroup_DeleteStaffToGroup(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
   treatmentApplications_GetList(request: ApplicationGroupFilterRequest | null): Promise<VMApplicationGroupListResponse | null> {
     let url_ = this.baseUrl + "/api/TreatmentApplications/GetList";
     url_ = url_.replace(/[?&]$/, "");

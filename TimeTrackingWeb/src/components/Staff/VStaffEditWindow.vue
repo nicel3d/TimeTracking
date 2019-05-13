@@ -48,6 +48,11 @@
           </v-flex>
         </v-layout>
       </v-container>
+      <v-groups-table-by-user
+        v-if="this.item"
+        :staff-id="item.id"
+        :group-ids.sync="groupIds"
+      />
     </v-form>
   </v-dialog-full-window>
 </template>
@@ -57,9 +62,10 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Staff } from '%/stores/api/SwaggerDocumentationTypescript'
 import { StaffEmitEnum } from '%/constants/WindowsEmmit'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
+import VGroupsTableByUser from '%/components/Groups/VGroupsTableByUser.vue'
 
 @Component({
-  components: { VDialogFullWindow }
+  components: { VGroupsTableByUser, VDialogFullWindow }
 })
 export default class VStaffEditWindow extends Vue {
   item: Staff | null = null
@@ -67,6 +73,7 @@ export default class VStaffEditWindow extends Vue {
   $refs: any
   $options: any
   loading: boolean = true
+  groupIds: number[] = []
   id!: number
 
   onReset () {
@@ -86,7 +93,10 @@ export default class VStaffEditWindow extends Vue {
   loadStaff () {
     this.loading = true
     this.$store.state.api.staff_Get(this.id)
-      .then(res => (this.item = res))
+      .then(res => {
+        this.item = res
+        this.groupIds = res.staffToGroup || []
+      })
       .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))
   }
