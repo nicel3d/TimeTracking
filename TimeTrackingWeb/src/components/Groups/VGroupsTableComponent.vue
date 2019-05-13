@@ -122,7 +122,7 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
   }
 
   onAdd = () => this.$root.$emit(GroupEmitEnum.ADD_GROUP)
-  onEdit = (id) => this.$root.$emit(GroupEmitEnum.EDIT_GROUP, id)
+  onEdit = id => this.$root.$emit(GroupEmitEnum.EDIT_GROUP, id)
 
   ImportXLSXList () {
     this.$store.state.api.group_ImportXLSXGetListWithoutFilter(this.dataRequest)

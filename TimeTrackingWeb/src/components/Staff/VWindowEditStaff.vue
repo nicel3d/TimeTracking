@@ -67,7 +67,7 @@ import VGroupsTableByUser from '%/components/Groups/VGroupsTableByUser.vue'
 @Component({
   components: { VGroupsTableByUser, VDialogFullWindow }
 })
-export default class VStaffEditWindow extends Vue {
+export default class VWindowEditStaff extends Vue {
   item: Staff | null = null
   dialog: boolean = false
   $refs: any

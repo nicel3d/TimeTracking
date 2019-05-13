@@ -1,21 +1,22 @@
 <template>
   <v-dialog v-model="dialog" max-width="300px">
     <v-card>
-      <v-card-title>Добавление группу</v-card-title>
+      <v-card-title>Добавление группы</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <v-form data-vv-scope="form-group-add" @submit.prevent="onAdd">
+        <v-form :data-vv-scope="formId" @submit.prevent="onAdd">
           <v-text-field
+            v-if="dialog"
             type="text"
             label="Название группы"
             data-vv-as="Название группы"
-            data-vv-name="form-group-add.name"
+            :data-vv-name="`${formId}.name`"
             prepend-icon="fulcrum"
             name="group-name"
-            ref="name"
+            autofocus
             v-model="name"
             v-validate="'required'"
-            :error-messages="errors.collect('form-group-add.name')"
+            :error-messages="errors.collect(`${formId}.name`)"
           />
         </v-form>
       </v-card-text>
@@ -48,6 +49,7 @@ export default class VGroupsAddWindow extends Vue {
 
   dialog: boolean = false
   name: string = ''
+  formId: string = 'form-group-add'
   $refs: any
   $options: any
 
@@ -65,7 +67,7 @@ export default class VGroupsAddWindow extends Vue {
   }
 
   onAdd () {
-    this.$validator.validateAll('form-group-add')
+    this.$validator.validateAll(this.formId)
       .then((res) => {
         if (res) {
           this.$store.state.api.group_Post(new Groups({ name: this.name }))

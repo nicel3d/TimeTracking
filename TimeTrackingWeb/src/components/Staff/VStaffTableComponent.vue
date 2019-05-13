@@ -13,8 +13,11 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
-      <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
-      <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
+      <v-btn color="primary" v-if="groupId" dark class="mb-2" @click="onAdd">Добавить в группу</v-btn>
+      <template v-if="desserts.length">
+        <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
+      </template>
     </div>
     <v-data-table
       :headers="headers"
@@ -30,8 +33,8 @@
           <v-icon
             small
             class="mr-2"
-            @click="onEdit(props.item.id)">
-            edit
+            @click="groupId ? onDelete(props.item.id, groupId) : onEdit(props.item.id)">
+            {{ groupId ? 'delete' : 'edit' }}
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
@@ -50,14 +53,14 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  SortingRequest, Staff,
+  SortingRequest, Staff, StaffToGroup,
   TableSortingByGroupIdRequest,
   TableSortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
 import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
-import { StaffEmitEnum } from '%/constants/WindowsEmmit'
+import { StaffEmitEnum, StaffIdsAndGroupId } from '%/constants/WindowsEmmit'
 
 const filename = 'staff'
 
@@ -101,7 +104,24 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
     this.$root.$on(StaffEmitEnum.CHANGE_STAFF_SUCCESS, this.loadStaffList)
   }
 
+  onAdd () {
+    this.$root.$emit(
+      StaffEmitEnum.ADD_STAFF_TO_GROUP,
+      new StaffIdsAndGroupId({
+        groupId: this.groupId,
+        staffIds: this.desserts.length ? this.desserts.map(x => Number(x.id)) : []
+      })
+    )
+  }
+
   onEdit = id => this.$root.$emit(StaffEmitEnum.EDIT_STAFF, id)
+
+  onDelete (staffId: number, groupId: number) {
+    const data = new StaffToGroup({ staffId, groupId })
+    this.$store.state.api.group_DeleteStaffToGroup(data)
+      .then(this.onPagination)
+      .catch(res => this.$root.$emit('snackbar', res))
+  }
 
   ImportXLSXList () {
     this.$store.state.api.staff_ImportXLSXGetListWithoutFilter(this.dataRequest)

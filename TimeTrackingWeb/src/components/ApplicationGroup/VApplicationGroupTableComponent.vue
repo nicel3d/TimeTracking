@@ -106,10 +106,12 @@ export default class VApplicationGroupTableComponent extends Mixins(SkipTake) {
       ApplicationGroupEmitEnum.ADD_APPLICATION_GROUP,
       new ApplicationsIdsAndGroupId({
         groupId: this.groupId,
-        applicationsIds: this.desserts.map(x => Number(x.applicationId))
+        applicationsIds: this.desserts.length
+          ? this.desserts.map(x => Number(x.applicationId)) : []
       })
     )
   }
+
   onEdit = item => this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
 
   ImportXLSXList () {

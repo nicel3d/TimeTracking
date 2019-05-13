@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>Добавление ограничения по программам</v-card-title>
       <v-divider></v-divider>
-      <v-card-text>
+      <v-card-text v-if="dialog">
         <v-form :data-vv-scope="formId" @submit.prevent="onAdd">
           <v-flex>
             <v-autocomplete
@@ -15,7 +15,7 @@
               item-text="value"
               item-value="name"
               persistent-hint
-              ref="program"
+              :loading="loading"
               v-validate="'required'"
               :error-messages="errors.collect(`${formId}.program`)"
             />
@@ -91,7 +91,6 @@ export default class VGroupsAddWindow extends Vue {
     this.dialog = true
     this.groupId = groupId
     this.applicationsIds = applicationsIds
-    setTimeout(() => this.$refs.program.focus(), 200)
     this.loadApplications()
   }
 

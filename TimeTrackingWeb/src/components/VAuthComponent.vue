@@ -22,6 +22,7 @@
             :error-messages="errors.collect('email')"
             data-vv-name="email"
             prepend-icon="user"
+            autofocus
             name="login"
             label="Email"
             type="text"

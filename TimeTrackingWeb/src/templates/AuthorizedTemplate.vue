@@ -128,9 +128,7 @@
       </v-flex>
     </v-footer>
 
-    <v-logout-confirm-dialog
-      :dialog.sync="dialog"
-    />
+    <v-logout-confirm-dialog :dialog.sync="dialog"/>
   </v-app>
 </template>
 

@@ -12,6 +12,7 @@ export enum ApplicationGroupEmitEnum {
 }
 
 export enum StaffEmitEnum {
+  ADD_STAFF_TO_GROUP = 'ADD_STAFF_TO_GROUP',
   EDIT_STAFF = 'EDIT_STAFF',
   CHANGE_STAFF_SUCCESS = 'CHANGE_STAFF_SUCCESS',
 }
@@ -28,5 +29,20 @@ export class ApplicationsIdsAndGroupId implements IApplicationsIdsAndGroupId {
   constructor (data: IApplicationsIdsAndGroupId) {
     this.groupId = data.groupId
     this.applicationsIds = data.applicationsIds
+  }
+}
+
+export interface IStaffIdsAndGroupId {
+  groupId: number;
+  staffIds: number[];
+}
+
+export class StaffIdsAndGroupId implements IStaffIdsAndGroupId {
+  groupId: number;
+  staffIds: number[];
+
+  constructor (data: IStaffIdsAndGroupId) {
+    this.groupId = data.groupId
+    this.staffIds = data.staffIds
   }
 }

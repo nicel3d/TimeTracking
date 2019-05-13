@@ -20,7 +20,7 @@
       <div>
         <v-tabs-items v-model="tabs">
           <v-tab-item>
-            <v-form data-vv-scope="form-group-edit">
+            <v-form :data-vv-scope="formId">
               <v-container v-if="this.item" fluid grid-list-md>
                 <v-layout row wrap>
                   <v-flex xs12 md6>
@@ -28,14 +28,13 @@
                       type="text"
                       label="Название группы"
                       data-vv-as="Название группы"
-                      data-vv-name="form-group-edit.name"
+                      :data-vv-name="`${formId}.name`"
                       prepend-icon="fulcrum"
                       name="group-name"
-                      ref="name"
                       @keyup.enter="onSave"
                       v-model="name"
                       v-validate="'required'"
-                      :error-messages="errors.collect('form-group-edit.name')"
+                      :error-messages="errors.collect(`${formId}.name`)"
                     />
                   </v-flex>
 
@@ -83,6 +82,7 @@ export default class VGroupsDetailsWindow extends Vue {
   dialog: boolean = false
   loading: boolean = true
   name: string = ''
+  formId: string = 'form-group-edit'
   $refs: any
   $options: any
   id: number = 0
@@ -115,7 +115,6 @@ export default class VGroupsDetailsWindow extends Vue {
       .then(res => {
         this.item = res
         this.name = res.name
-        setTimeout(() => this.$refs.name.focus(), 100)
       })
       .catch(res => this.$root.$emit('snackbar', res))
       .then(() => (this.loading = false))
@@ -123,7 +122,7 @@ export default class VGroupsDetailsWindow extends Vue {
 
   onSave () {
     this.tabs = 0
-    this.$validator.validateAll('form-group-edit')
+    this.$validator.validateAll(this.formId)
       .then(res => {
         if (res) {
           const data = new Groups({
