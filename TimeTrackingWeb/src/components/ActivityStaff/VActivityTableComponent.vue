@@ -51,7 +51,7 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  ActivityStaff, FilterRequest, SortingRequest, StateEnum, TableSortingWithFilterRequest
+  ActivityStaffThumb, FilterRequest, SortingRequest, StateEnum, TableSortingWithFilterRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
@@ -61,7 +61,7 @@ import { States } from '%/constants/States'
 export default class VActivityTableComponent extends Mixins(SkipTake) {
   @Prop() filter!: FilterRequest
 
-  desserts: ActivityStaff[] = []
+  desserts: ActivityStaffThumb[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },

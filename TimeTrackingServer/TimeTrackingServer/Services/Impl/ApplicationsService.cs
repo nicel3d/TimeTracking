@@ -154,6 +154,27 @@ namespace TimeTrackingServer.Services.Impl
             return Encoding.UTF8.GetBytes($"{string.Join(",", _comlumHeadrs)}\r\n{csvStrung.ToString()}");
         }
 
+        public async Task<Applications> GetOrAddApplicationByAlias(string applicationAlias)
+        {
+            Applications application = await _dbContext.Applications
+                .Where(x => x.Caption == applicationAlias)
+                .FirstOrDefaultAsync();
+
+            if (application == null)
+            {
+                application = new Applications()
+                {
+                    Caption = applicationAlias,
+                    State = StateEnum.Neutral
+                };
+
+                _dbContext.Applications.Add(application);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return application;
+        }
+
         public async Task<Applications> Post(Applications applications)
         {
             _dbContext.Applications.Add(applications);

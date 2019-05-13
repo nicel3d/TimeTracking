@@ -7,7 +7,12 @@ namespace TimeTrackingServer.Services
 {
     public class ActivityStaffListResponse : ListCountResponse
     {
-        public List<ActivityStaff> Data { get; set; }
+        public List<ActivityStaffThumb> Data { get; set; }
+    }
+
+    public class ActivityStaffThumb : ActivityStaff
+    {
+        public new string ImageThumb { get; set; }
     }
 
     public interface IActivityStaffService

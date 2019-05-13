@@ -870,43 +870,6 @@ export class WSApi {
     return Promise.resolve<Staff | null>(<any>null);
   }
 
-  staff_Put(id: number, staff: Staff | null): Promise<void> {
-    let url_ = this.baseUrl + "/api/Staff/{id}";
-    if (id === undefined || id === null)
-      throw new Error("The parameter 'id' must be defined.");
-    url_ = url_.replace("{id}", encodeURIComponent("" + id));
-    url_ = url_.replace(/[?&]$/, "");
-
-    const content_ = JSON.stringify(staff);
-
-    let options_ = <RequestInit>{
-      body: content_,
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      }
-    };
-
-    return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processStaff_Put(_response);
-    });
-  }
-
-  protected processStaff_Put(response: Response): Promise<void> {
-    const status = response.status;
-    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-    if (status === 204) {
-      return response.text().then((_responseText) => {
-        return;
-      });
-    } else if (status !== 200 && status !== 204) {
-      return response.text().then((_responseText) => {
-        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-      });
-    }
-    return Promise.resolve<void>(<any>null);
-  }
-
   staff_Delete(id: number): Promise<void> {
     let url_ = this.baseUrl + "/api/Staff/{id}";
     if (id === undefined || id === null)
@@ -1871,7 +1834,7 @@ export interface IListCountResponse {
 }
 
 export class ActivityStaffListResponse extends ListCountResponse implements IActivityStaffListResponse {
-  data?: ActivityStaff[] | undefined;
+  data?: ActivityStaffThumb[] | undefined;
 
   constructor(data?: IActivityStaffListResponse) {
     super(data);
@@ -1883,7 +1846,7 @@ export class ActivityStaffListResponse extends ListCountResponse implements IAct
       if (data["Data"] && data["Data"].constructor === Array) {
         this.data = [] as any;
         for (let item of data["Data"])
-          this.data!.push(ActivityStaff.fromJS(item));
+          this.data!.push(ActivityStaffThumb.fromJS(item));
       }
     }
   }
@@ -1908,7 +1871,7 @@ export class ActivityStaffListResponse extends ListCountResponse implements IAct
 }
 
 export interface IActivityStaffListResponse extends IListCountResponse {
-  data?: ActivityStaff[] | undefined;
+  data?: ActivityStaffThumb[] | undefined;
 }
 
 export class ActivityStaff implements IActivityStaff {
@@ -1977,6 +1940,39 @@ export interface IActivityStaff {
   applicationId?: number | undefined;
   application?: Applications | undefined;
   staff?: Staff | undefined;
+}
+
+export class ActivityStaffThumb extends ActivityStaff implements IActivityStaffThumb {
+  imageThumb?: string | undefined;
+
+  constructor(data?: IActivityStaffThumb) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.imageThumb = data["ImageThumb"];
+    }
+  }
+
+  static fromJS(data: any): ActivityStaffThumb {
+    data = typeof data === 'object' ? data : {};
+    let result = new ActivityStaffThumb();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["ImageThumb"] = this.imageThumb;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IActivityStaffThumb extends IActivityStaff {
+  imageThumb?: string | undefined;
 }
 
 export class Applications implements IApplications {

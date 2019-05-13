@@ -69,12 +69,6 @@ namespace TimeTrackingServer.Controllers
             return await _staffService.Post(staff);
         }
 
-        [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Staff staff)
-        {
-            await _staffService.Put(id, staff);
-        }
-
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {

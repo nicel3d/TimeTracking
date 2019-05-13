@@ -14,57 +14,26 @@ namespace TimeTrackingServer.Services.Impl
     public class StreamingDataService : IStreamingDataService
     {
         ApplicationDbContext _dbContext;
+        private IStaffService _staffService;
+        private IApplicationsService _applicationsService;
+        private IActivityStaffService _activityStaffService;
 
-        public StreamingDataService(ApplicationDbContext dbContext)
+        public StreamingDataService(
+            ApplicationDbContext dbContext,
+            IStaffService staffService,
+            IApplicationsService applicationsService,
+            IActivityStaffService activityStaffService)
         {
             _dbContext = dbContext;
-        }
-
-        public async Task<Applications> AddAndGetApplication(string applicationAlias)
-        {
-            Applications application = await _dbContext.Applications
-                .Where(x => x.Caption == applicationAlias)
-                .FirstOrDefaultAsync();
-
-            if (application == null)
-            {
-                application = new Applications()
-                {
-                    Caption = applicationAlias,
-                    State = StateEnum.Neutral
-                };
-
-                _dbContext.Applications.Add(application);
-                await _dbContext.SaveChangesAsync();
-            }
-
-            return application;
-        }
-
-        public async Task<Staff> AddAndGetStaff(string staffAlias)
-        {
-            Staff staff = await _dbContext.Staff
-                .Where(x => x.Caption == staffAlias)
-                .FirstOrDefaultAsync();
-
-            if (staff == null)
-            {
-                staff = new Staff()
-                {
-                    Caption = staffAlias,
-                    Status = true
-                };
-                _dbContext.Staff.Add(staff);
-                await _dbContext.SaveChangesAsync();
-            }
-
-            return staff;
+            _staffService = staffService;
+            _applicationsService = applicationsService;
+            _activityStaffService = activityStaffService;
         }
 
         public async Task AddActivity(StreamingDataRequest streamingDataRequest)
         {
-            var staff = await AddAndGetStaff(streamingDataRequest.StaffAlias);
-            var application = await AddAndGetApplication(streamingDataRequest.ApplicationAlias);
+            var staff = await _staffService.GetOrAddStaffByAlias(streamingDataRequest.StaffAlias);
+            var application = await _applicationsService.GetOrAddApplicationByAlias(streamingDataRequest.ApplicationAlias);
 
             if (staff != null && application != null)
             {
@@ -78,19 +47,8 @@ namespace TimeTrackingServer.Services.Impl
                     UpdatedAt = DateTimeHelper.UnixTimeStampToDateTime(streamingDataRequest.ActivityTime)
                 };
 
-                _dbContext.ActivityStaff.Add(activityStaff);
-                await _dbContext.SaveChangesAsync();
+                await _activityStaffService.Post(activityStaff);
             }
         }
-        //    public async Task AddApplicationTitle(int applicationId, string applicationTitle)
-        //    {
-        //        ApplicationTitles applicationTitles = new ApplicationTitles()
-        //        {
-        //            ApplicationId = applicationId,
-        //            Title = applicationTitle
-        //        };
-        //        _dbContext.ApplicationTitles.Add(applicationTitles);
-        //        await _dbContext.SaveChangesAsync();
-        //    }
     }
 }

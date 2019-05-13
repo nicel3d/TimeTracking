@@ -19,7 +19,7 @@ namespace TimeTrackingServer.Services
     {
         Task<Staff> Get(int id);
         Task<Staff> Post(Staff staff);
-        Task Put(int id, Staff staff);
+        Task<Staff> GetOrAddStaffByAlias(string staffAlias);
         Task Delete(int id);
         Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true);
         Task<List<Staff>> GetListOnlyByGropupId(int groupId);

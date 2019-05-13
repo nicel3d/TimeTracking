@@ -7,6 +7,7 @@ using TimeTrackingServer.Models;
 using TimeTrackingServer.Stores.Impl;
 using System.Linq.Dynamic;
 using TimeTrackingServer.Exceptions;
+using System.Text;
 
 namespace TimeTrackingServer.Services.Impl
 {
@@ -39,7 +40,7 @@ namespace TimeTrackingServer.Services.Impl
 
             if (!String.IsNullOrEmpty(request.Search))
             {
-                data = data.AsQueryable().Where(x =>
+                data = data.Where(x =>
                             x.Application.Caption.Contains(request.Search) ||
                             x.Staff.Caption.Contains(request.Search) ||
                             x.ApplicationTitle.Contains(request.Search) ||
@@ -52,11 +53,12 @@ namespace TimeTrackingServer.Services.Impl
                 Data = await data.Sort(request.Sorting)
                                 .AddSkipTake(request)
                                 .Select(x =>
-                                new ActivityStaff
+                                new ActivityStaffThumb
                                 {
                                     Id = x.Id,
                                     Staff = x.Staff,
-                                    ImageThumb = x.ImageThumb,
+                                    ImageThumb = Convert.ToBase64String(x.ImageThumb),
+                                    ImageOrigin = null,
                                     UpdatedAt = x.UpdatedAt,
                                     Application = x.Application,
                                     ApplicationTitle = x.ApplicationTitle,
@@ -69,8 +71,7 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<ActivityStaff> Post(ActivityStaff activityStaff)
         {
-
-            _dbContext.ActivityStaff.Update(activityStaff);
+            _dbContext.ActivityStaff.Add(activityStaff);
             await _dbContext.SaveChangesAsync();
             return activityStaff;
         }

@@ -20,7 +20,7 @@ namespace TimeTrackingClient.Services
             var encoder = GetEncoderInfo("image/jpeg");
 
             var parameters = new EncoderParameters(2);
-            var quality = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 10L);
+            var quality = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 70L);
             var compression = new EncoderParameter(System.Drawing.Imaging.Encoder.Compression, (long)EncoderValue.CompressionLZW);
             parameters.Param[0] = quality;
             parameters.Param[1] = compression;

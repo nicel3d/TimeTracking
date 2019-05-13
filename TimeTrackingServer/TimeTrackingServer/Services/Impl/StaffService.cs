@@ -73,8 +73,7 @@ namespace TimeTrackingServer.Services.Impl
                              Caption = x.Caption,
                              UpdatedAt = x.UpdatedAt,
                              Status = x.Status
-                         })
-                         ;
+                         });
             }
 
             return new StaffListResponse
@@ -150,21 +149,31 @@ namespace TimeTrackingServer.Services.Impl
             return result;
         }
 
-        public async Task<Staff> Post(Staff staff)
+        public async Task<Staff> GetOrAddStaffByAlias(string staffAlias)
         {
-            _dbContext.Staff.Update(staff);
-            await _dbContext.SaveChangesAsync();
+            Staff staff = await _dbContext.Staff
+                .Where(x => x.Caption == staffAlias)
+                .FirstOrDefaultAsync();
+
+            if (staff == null)
+            {
+                staff = new Staff()
+                {
+                    Caption = staffAlias,
+                    Status = true
+                };
+                _dbContext.Staff.Add(staff);
+                await _dbContext.SaveChangesAsync();
+            }
+
             return staff;
         }
 
-        public async Task Put(int id, Staff staff)
+        public async Task<Staff> Post(Staff staff)
         {
-            var oldActivityStaff = await _dbContext.ActivityStaff.FindAsync(id);
-            if (oldActivityStaff != null)
-            {
-            }
-
+            _dbContext.Staff.Add(staff);
             await _dbContext.SaveChangesAsync();
+            return staff;
         }
     }
 }

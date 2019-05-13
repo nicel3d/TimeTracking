@@ -14,10 +14,10 @@
     </v-card-title>
     <div class="mx-2">
       <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить группу</v-btn>
-      <template v-if="desserts.length">
-        <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
-        <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
-      </template>
+<!--      <template v-if="desserts.length">-->
+<!--        <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>-->
+<!--        <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>-->
+<!--      </template>-->
     </div>
     <v-data-table
       class="linked"
@@ -29,7 +29,7 @@
       :total-items="totalDesserts">
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
-        <tr :class="['link', {'active': !!props.expanded}]">
+        <tr>
           <td class="justify-center layout px-0 align-center">
             <v-icon
               small
@@ -38,27 +38,10 @@
               edit
             </v-icon>
           </td>
-          <td @click.prevent="loadUsersByGroupId(props)">
-            {{ GetUpdatedAt(props.item.updatedAt) }}
-          </td>
-          <td @click.prevent="loadUsersByGroupId(props)">{{ props.item.name }}</td>
-          <td @click.prevent="loadUsersByGroupId(props)">{{ props.item.countUsers }}</td>
+          <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
+          <td>{{ props.item.name }}</td>
+          <td>{{ props.item.countUsers }}</td>
         </tr>
-      </template>
-      <template v-slot:expand="props">
-        <v-card flat>
-          <v-card-title>Пользователи</v-card-title>
-          <v-data-table
-            style="max-width: 600px"
-            :hide-actions="true"
-            :headers="childrenHeaders"
-            :items="props.item.childrenDesserts">
-            <template v-slot:items="props">
-              <td> {{ GetUpdatedAt(props.item.updatedAt) }}</td>
-              <td>{{ props.item.caption }}</td>
-            </template>
-          </v-data-table>
-        </v-card>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
         По запросу "{{search}}" ничего не найдено.
@@ -124,34 +107,21 @@ export default class VStaffTableComponent extends Mixins(SkipTake) {
   onAdd = () => this.$root.$emit(GroupEmitEnum.ADD_GROUP)
   onEdit = (id) => this.$root.$emit(GroupEmitEnum.EDIT_GROUP, id)
 
-  ImportXLSXList () {
-    this.$store.state.api.group_ImportXLSXGetListWithoutFilter(this.dataRequest)
-      .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
-      .catch(res => this.$root.$emit('snackbar', res))
-  }
-
-  ImportCSVList () {
-    this.$store.state.api.group_ImportCSVGetListWithoutFilter(this.dataRequest)
-      .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
-      .catch(res => this.$root.$emit('snackbar', res))
-  }
-
-  loadUsersByGroupId (props: any) {
-    if (props.expanded) {
-      props.expanded = false
-      return
-    }
-    props.expanded = true
-    this.loading = true
-    this.$store.state.api.staff_GetListOnlyByGropupId(props.item.id)
-      .then(res => (props.item.childrenDesserts = res))
-      .catch(res => this.$root.$emit('snackbar', res))
-      .then(() => (this.loading = false))
-  }
+  // ImportXLSXList () {
+  //   this.$store.state.api.group_ImportXLSXGetListWithoutFilter(this.dataRequest)
+  //     .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
+  //     .catch(res => this.$root.$emit('snackbar', res))
+  // }
+  //
+  // ImportCSVList () {
+  //   this.$store.state.api.group_ImportCSVGetListWithoutFilter(this.dataRequest)
+  //     .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
+  //     .catch(res => this.$root.$emit('snackbar', res))
+  // }
 
   loadGroupList () {
     this.loading = true
-    this.$store.state.api.group_GetListWithCountUsers(this.dataRequest)
+    this.$store.state.api.group_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total

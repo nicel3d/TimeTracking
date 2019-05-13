@@ -17,8 +17,6 @@ namespace TimeTrackingServer.Services
 
     public interface IStreamingDataService
     {
-        Task<Staff> AddAndGetStaff(string staffAlias);
-        Task<Applications> AddAndGetApplication(string applicationAlias);
         Task AddActivity(StreamingDataRequest editActivityStaffRequest);
     }
 }
