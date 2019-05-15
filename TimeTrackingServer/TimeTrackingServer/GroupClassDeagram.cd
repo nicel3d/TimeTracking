@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TimeTrackingServer.Controllers.GroupController">
+    <Position X="1" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAACBABIAAAAgACAEAAAAAAAAAABAAABo=</HashCode>
+      <FileName>Controllers\GroupController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_groupService" />
+      <Field Name="_staffToGroup" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TimeTrackingServer.Models.Groups">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAGAAAACAAAAAAAAAQAAAAABAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Models\Groups.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TimeTrackingServer.Services.Impl.GroupService">
+    <Position X="1.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAABABAAAAAAQCAEAAAAEAAAAABAAABg=</HashCode>
+      <FileName>Services\Impl\GroupService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TimeTrackingServer.Data.ApplicationDbContext">
+    <Position X="6" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\ApplicationDbContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeTrackingServer.Models.DistributedSystemDevContext">
+    <Position X="7.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAECCCFAAAAAAAAAAAAAAECAABAAACAAAAAAgEAA=</HashCode>
+      <FileName>Models\DistributedSystemDevContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TimeTrackingServer.Services.Impl.StaffToGroupService">
+    <Position X="3.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAACAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Impl\StaffToGroupService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_dbContext" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TimeTrackingServer.Models.StaffToGroup">
+    <Position X="6" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEAAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\StaffToGroup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TimeTrackingServer.Services.IStaffToGroupService">
+    <Position X="4.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAACAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\IStaffToGrpupService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeTrackingServer.Services.IGroupService">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABABAAAAAAACAEAAAAAAAAAABAAABg=</HashCode>
+      <FileName>Services\IGrpupService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TimeTrackingServer.Exceptions.IIdentifier">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\QueryableExtension.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
