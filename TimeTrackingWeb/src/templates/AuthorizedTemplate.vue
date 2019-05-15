@@ -185,6 +185,11 @@ export default class AuthorizedTemplate extends Vue {
           name: RouterNameEnum.ApplicationsRange
         }
       ]
+    },
+    {
+      icon: 'fas fa-cog',
+      title: 'Настройки',
+      name: RouterNameEnum.Settings
     }
   ]
   miniVariant = false

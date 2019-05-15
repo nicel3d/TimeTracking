@@ -120,6 +120,7 @@ namespace TimeTrackingServer
             services.AddScoped<ITreatmentApplicationsService, TreatmentApplicationsService>();
             services.AddScoped<IStaffToGroupService, StaffToGroupService>();
             services.AddScoped<IStreamingDataService, StreamingDataService>();
+            services.AddScoped<ISettingsService, SettingsService>();
             services.AddTransient<StreamingDataService>();
             // Register the Swagger services
             services.AddSwaggerDocument();

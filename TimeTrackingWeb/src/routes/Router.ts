@@ -58,6 +58,14 @@ const router = new Router({
           }
         },
         {
+          path: 'settings',
+          name: RouterNameEnum.Settings,
+          component: () => import('../views/SettingsView.vue'),
+          meta: {
+            breadcrumb: 'Настройки для клиентских модулей'
+          }
+        },
+        {
           path: 'applications',
           name: RouterNameEnum.ApplicationsList,
           component: () => import('../views/ApplicationsView.vue'),
