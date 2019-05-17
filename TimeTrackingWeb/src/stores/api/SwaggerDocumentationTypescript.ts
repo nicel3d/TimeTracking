@@ -1565,6 +1565,86 @@ export class WSApi {
     return Promise.resolve<ApplicationToGroup | null>(<any>null);
   }
 
+  settings_GetList(): Promise<Settings[] | null> {
+    let url_ = this.baseUrl + "/api/Settings/GetList";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "POST",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processSettings_GetList(_response);
+    });
+  }
+
+  protected processSettings_GetList(response: Response): Promise<Settings[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(Settings.fromJS(item));
+        }
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Settings[] | null>(<any>null);
+  }
+
+  settings_Post(settings: Settings[] | null): Promise<Settings[] | null> {
+    let url_ = this.baseUrl + "/api/Settings/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(settings);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processSettings_Post(_response);
+    });
+  }
+
+  protected processSettings_Post(response: Response): Promise<Settings[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(Settings.fromJS(item));
+        }
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<Settings[] | null>(<any>null);
+  }
+
   values_GetAll(): Promise<string[] | null> {
     let url_ = this.baseUrl + "/api/Values";
     url_ = url_.replace(/[?&]$/, "");
@@ -3111,6 +3191,70 @@ export class ApplicationGroupFilterRequest extends TableSortingRequest implement
 
 export interface IApplicationGroupFilterRequest extends ITableSortingRequest {
   groupId: number;
+}
+
+export class Settings implements ISettings {
+  id!: number;
+  timeBreakFrom?: string | undefined;
+  timeBreakTo?: string | undefined;
+  timeTheadMiliseconds?: number | undefined;
+  timeWorkingFrom?: string | undefined;
+  timeWorkingTo?: string | undefined;
+  updatedAt?: Date | undefined;
+  status?: boolean | undefined;
+
+  constructor(data?: ISettings) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.timeBreakFrom = data["TimeBreakFrom"];
+      this.timeBreakTo = data["TimeBreakTo"];
+      this.timeTheadMiliseconds = data["TimeTheadMiliseconds"];
+      this.timeWorkingFrom = data["TimeWorkingFrom"];
+      this.timeWorkingTo = data["TimeWorkingTo"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.status = data["Status"];
+    }
+  }
+
+  static fromJS(data: any): Settings {
+    data = typeof data === 'object' ? data : {};
+    let result = new Settings();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["TimeBreakFrom"] = this.timeBreakFrom;
+    data["TimeBreakTo"] = this.timeBreakTo;
+    data["TimeTheadMiliseconds"] = this.timeTheadMiliseconds;
+    data["TimeWorkingFrom"] = this.timeWorkingFrom;
+    data["TimeWorkingTo"] = this.timeWorkingTo;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["Status"] = this.status;
+    return data;
+  }
+}
+
+export interface ISettings {
+  id: number;
+  timeBreakFrom?: string | undefined;
+  timeBreakTo?: string | undefined;
+  timeTheadMiliseconds?: number | undefined;
+  timeWorkingFrom?: string | undefined;
+  timeWorkingTo?: string | undefined;
+  updatedAt?: Date | undefined;
+  status?: boolean | undefined;
 }
 
 export interface FileResponse {

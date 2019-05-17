@@ -26,9 +26,7 @@ namespace TimeTrackingServer.Models
         public virtual DbSet<ApplicationTitles> ApplicationTitles { get; set; }
         public virtual DbSet<ApplicationToGroup> ApplicationToGroup { get; set; }
         public virtual DbSet<Applications> Applications { get; set; }
-        public virtual DbSet<ConfigDayOfWeek> ConfigDayOfWeek { get; set; }
-        public virtual DbSet<ConfigToDayOfWeek> ConfigToDayOfWeek { get; set; }
-        public virtual DbSet<Configs> Configs { get; set; }
+        public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<Groups> Groups { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<StaffToGroup> StaffToGroup { get; set; }
@@ -211,56 +209,11 @@ namespace TimeTrackingServer.Models
                     .HasDefaultValueSql("now()");
             });
 
-            modelBuilder.Entity<ConfigDayOfWeek>(entity =>
+            modelBuilder.Entity<Settings>(entity =>
             {
-                entity.ToTable("config_day_of_week");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .HasDefaultValueSql("nextval('day_of_week_id_seq'::regclass)");
-
-                entity.Property(e => e.DayNumber).HasColumnName("day_number");
-
-                entity.Property(e => e.Status)
-                    .HasColumnName("status")
-                    .HasDefaultValueSql("false");
-
-                entity.Property(e => e.UpdatedAt)
-                    .HasColumnName("updated_at")
-                    .HasDefaultValueSql("now()");
-            });
-
-            modelBuilder.Entity<ConfigToDayOfWeek>(entity =>
-            {
-                entity.HasKey(e => new { e.ConfigId, e.DayOfWeekId })
-                    .HasName("config_to_day_of_week_config_id_day_of_week_id_pk");
-
-                entity.ToTable("config_to_day_of_week");
-
-                entity.Property(e => e.ConfigId).HasColumnName("config_id");
-
-                entity.Property(e => e.DayOfWeekId).HasColumnName("day_of_week_id");
-
-                entity.HasOne(d => d.Config)
-                    .WithMany(p => p.ConfigToDayOfWeek)
-                    .HasForeignKey(d => d.ConfigId)
-                    .HasConstraintName("config_to_day_of_week_configs_id_fk");
-
-                entity.HasOne(d => d.DayOfWeek)
-                    .WithMany(p => p.ConfigToDayOfWeek)
-                    .HasForeignKey(d => d.DayOfWeekId)
-                    .HasConstraintName("config_to_day_of_week_day_of_week_id_fk");
-            });
-
-            modelBuilder.Entity<Configs>(entity =>
-            {
-                entity.ToTable("configs");
+                entity.ToTable("settings");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Status)
-                    .HasColumnName("status")
-                    .HasDefaultValueSql("false");
 
                 entity.Property(e => e.TimeBreakFrom)
                     .HasColumnName("time_break_from")
@@ -283,6 +236,10 @@ namespace TimeTrackingServer.Models
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
+
+                entity.Property(e => e.Status)
+                    .HasColumnName("status")
+                    .HasDefaultValueSql("false");
             });
 
             modelBuilder.Entity<Groups>(entity =>

@@ -1,4 +1,5 @@
 export enum RouterNameEnum {
+  Settings = 'Settings',
   Dashboard = 'Dashboard',
   Authorization = 'Authorization',
   ActivityStaff = 'ActivityStaff',

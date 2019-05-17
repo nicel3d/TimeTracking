@@ -41,6 +41,13 @@ export default class VSnackbarComponent extends Vue {
         this.text = error.message
       }
 
+      this.color = 'error'
+      this.snackbar = true
+    })
+
+    this.$root.$on('snackbar-success', (text: string) => {
+      this.color = 'success'
+      this.text = text
       this.snackbar = true
     })
   }
