@@ -29,8 +29,12 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<List<Settings>> Post(List<Settings> settings)
         {
-            await _dbContext.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE Settings");
+            //await _dbContext.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE Settings");
+            var settingsDelete = await _dbContext.Settings.ToListAsync();
+            settingsDelete.ForEach(x => _dbContext.Remove(x));
+            await _dbContext.SaveChangesAsync();
             await _dbContext.Settings.AddRangeAsync(settings);
+            await _dbContext.SaveChangesAsync();
             return await Get();
         }
     }
