@@ -26,7 +26,7 @@ namespace TimeTrackingServer.Services
         Task Put(int id, ApplicationToGroup group);
         Task Delete(int id);
         Task<VMApplicationGroupListResponse> Get(ApplicationGroupFilterRequest request, bool withSkipTake = true);
-        Task<byte[]> ImportXLSXGetListWithoutFilter(ApplicationGroupFilterRequest request);
-        Task<byte[]> ImportCSVGetListWithoutFilter(ApplicationGroupFilterRequest request);
+        Task<byte[]> ExportXLSXGetListWithoutFilter(ApplicationGroupFilterRequest request);
+        Task<byte[]> ExportCSVGetListWithoutFilter(ApplicationGroupFilterRequest request);
     }
 }

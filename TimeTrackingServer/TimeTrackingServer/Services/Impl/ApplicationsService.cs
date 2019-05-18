@@ -104,7 +104,7 @@ namespace TimeTrackingServer.Services.Impl
             };
         }
 
-        public async Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingRequest request)
+        public async Task<byte[]> ExportXLSXGetListWithoutFilter(TableSortingRequest request)
         {
             byte[] result;
 
@@ -138,7 +138,7 @@ namespace TimeTrackingServer.Services.Impl
 
             return result;
         }
-        public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request)
+        public async Task<byte[]> ExportCSVGetListWithoutFilter(TableSortingRequest request)
         {
             var applications = await Get(request, false);
             var csvStrung = new StringBuilder();

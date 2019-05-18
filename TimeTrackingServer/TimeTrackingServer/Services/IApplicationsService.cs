@@ -27,8 +27,8 @@ namespace TimeTrackingServer.Services
         Task<ApplicationsRangeListResponse> Get(TableSortingWithFilterRequest request);
         Task<ApplicationsListResponse> Get(TableSortingRequest request, bool withSkipTake = true);
         Task<Applications> GetOrAddApplicationByAlias(string applicationAlias);
-        Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingRequest request);
-        Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request);
+        Task<byte[]> ExportXLSXGetListWithoutFilter(TableSortingRequest request);
+        Task<byte[]> ExportCSVGetListWithoutFilter(TableSortingRequest request);
         Task<Applications> Post(Applications activityStaff);
         Task PutState(int id, StateEnum stateEnum);
         Task Delete(int id);

@@ -23,8 +23,8 @@ namespace TimeTrackingServer.Services
         Task Delete(int id);
         Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true);
         Task<List<Staff>> GetListOnlyByGropupId(int groupId);
-        Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingByGroupIdRequest request);
-        Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request);
+        Task<byte[]> ExportXLSXGetListWithoutFilter(TableSortingByGroupIdRequest request);
+        Task<byte[]> ExportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request);
         Task SetTimeConnectingStaffByStaffAlias(string staffAlias);
         Task SetTimeDisconectingStaffByStaffAlias(string staffAlias);
     }

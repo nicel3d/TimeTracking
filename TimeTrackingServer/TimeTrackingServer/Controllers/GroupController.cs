@@ -38,16 +38,16 @@ namespace TimeTrackingServer.Controllers
             return await _groupService.GetListWithCountUsers(request);
         }
 
-        [HttpPost(nameof(ImportXLSXGetListWithoutFilter))]
-        public async Task<ActionResult> ImportXLSXGetListWithoutFilter([FromBody] TableSortingRequest request)
+        [HttpPost(nameof(ExportXLSXGetListWithoutFilter))]
+        public async Task<ActionResult> ExportXLSXGetListWithoutFilter([FromBody] TableSortingRequest request)
         {
-            return File(await _groupService.ImportXLSXGetListWithoutFilter(request), "application/ms-excel");
+            return File(await _groupService.ExportXLSXGetListWithoutFilter(request), "application/ms-excel");
         }
 
-        [HttpPost(nameof(ImportCSVGetListWithoutFilter))]
-        public async Task<ActionResult> ImportCSVGetListWithoutFilter([FromBody] TableSortingRequest request)
+        [HttpPost(nameof(ExportCSVGetListWithoutFilter))]
+        public async Task<ActionResult> ExportCSVGetListWithoutFilter([FromBody] TableSortingRequest request)
         {
-            return File(await _groupService.ImportCSVGetListWithoutFilter(request), "text/csv");
+            return File(await _groupService.ExportCSVGetListWithoutFilter(request), "text/csv");
         }
 
         [HttpGet("{id}")]

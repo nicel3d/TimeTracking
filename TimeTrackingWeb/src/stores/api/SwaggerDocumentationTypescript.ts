@@ -422,8 +422,8 @@ export class WSApi {
     return Promise.resolve<Applications[] | null>(<any>null);
   }
 
-  applications_ImportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/Applications/ImportXLSXGetListWithoutFilter";
+  applications_ExportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/ExportXLSXGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -438,11 +438,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processApplications_ImportXLSXGetListWithoutFilter(_response);
+      return this.processApplications_ExportXLSXGetListWithoutFilter(_response);
     });
   }
 
-  protected processApplications_ImportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processApplications_ExportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -458,8 +458,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  applications_ImportCSVGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/Applications/ImportCSVGetListWithoutFilter";
+  applications_ExportCSVGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Applications/ExportCSVGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -474,11 +474,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processApplications_ImportCSVGetListWithoutFilter(_response);
+      return this.processApplications_ExportCSVGetListWithoutFilter(_response);
     });
   }
 
-  protected processApplications_ImportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processApplications_ExportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -761,8 +761,8 @@ export class WSApi {
     return Promise.resolve<Staff[] | null>(<any>null);
   }
 
-  staff_ImportXLSXGetListWithoutFilter(request: TableSortingByGroupIdRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/Staff/ImportXLSXGetListWithoutFilter";
+  staff_ExportXLSXGetListWithoutFilter(request: TableSortingByGroupIdRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Staff/ExportXLSXGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -777,11 +777,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processStaff_ImportXLSXGetListWithoutFilter(_response);
+      return this.processStaff_ExportXLSXGetListWithoutFilter(_response);
     });
   }
 
-  protected processStaff_ImportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processStaff_ExportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -797,8 +797,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  staff_ImportCSVGetListWithoutFilter(request: TableSortingByGroupIdRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/Staff/ImportCSVGetListWithoutFilter";
+  staff_ExportCSVGetListWithoutFilter(request: TableSortingByGroupIdRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Staff/ExportCSVGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -813,11 +813,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processStaff_ImportCSVGetListWithoutFilter(_response);
+      return this.processStaff_ExportCSVGetListWithoutFilter(_response);
     });
   }
 
-  protected processStaff_ImportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processStaff_ExportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1017,8 +1017,8 @@ export class WSApi {
     return Promise.resolve<GroupsListWithCountUsersResponse | null>(<any>null);
   }
 
-  group_ImportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/Group/ImportXLSXGetListWithoutFilter";
+  group_ExportXLSXGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Group/ExportXLSXGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1033,11 +1033,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processGroup_ImportXLSXGetListWithoutFilter(_response);
+      return this.processGroup_ExportXLSXGetListWithoutFilter(_response);
     });
   }
 
-  protected processGroup_ImportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processGroup_ExportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1053,8 +1053,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  group_ImportCSVGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/Group/ImportCSVGetListWithoutFilter";
+  group_ExportCSVGetListWithoutFilter(request: TableSortingRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/Group/ExportCSVGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1069,11 +1069,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processGroup_ImportCSVGetListWithoutFilter(_response);
+      return this.processGroup_ExportCSVGetListWithoutFilter(_response);
     });
   }
 
-  protected processGroup_ImportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processGroup_ExportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1346,8 +1346,8 @@ export class WSApi {
     return Promise.resolve<VMApplicationGroupListResponse | null>(<any>null);
   }
 
-  treatmentApplications_ImportXLSXGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/ImportXLSXGetListWithoutFilter";
+  treatmentApplications_ExportXLSXGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/ExportXLSXGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1362,11 +1362,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_ImportXLSXGetListWithoutFilter(_response);
+      return this.processTreatmentApplications_ExportXLSXGetListWithoutFilter(_response);
     });
   }
 
-  protected processTreatmentApplications_ImportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processTreatmentApplications_ExportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1382,8 +1382,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  treatmentApplications_ImportCSVGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/ImportCSVGetListWithoutFilter";
+  treatmentApplications_ExportCSVGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/TreatmentApplications/ExportCSVGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1398,11 +1398,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_ImportCSVGetListWithoutFilter(_response);
+      return this.processTreatmentApplications_ExportCSVGetListWithoutFilter(_response);
     });
   }
 
-  protected processTreatmentApplications_ImportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processTreatmentApplications_ExportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {

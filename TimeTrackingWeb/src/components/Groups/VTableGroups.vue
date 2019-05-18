@@ -15,8 +15,8 @@
     <div class="mx-2">
       <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить группу</v-btn>
       <template v-if="desserts.length">
-        <v-btn color="primary" dark class="mb-2" @click="ImportXLSXList">Экспорт в xlsx</v-btn>
-        <v-btn color="primary" dark class="mb-2" @click="ImportCSVList">Экспорт в csv</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="ExportXLSXList">Экспорт в xlsx</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="ExportCSVList">Экспорт в csv</v-btn>
       </template>
     </div>
     <v-data-table
@@ -130,14 +130,14 @@ export default class VTableGroups extends Mixins(SkipTake) {
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  ImportXLSXList () {
-    this.$store.state.api.group_ImportXLSXGetListWithoutFilter(this.dataRequest)
+  ExportXLSXList () {
+    this.$store.state.api.group_ExportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  ImportCSVList () {
-    this.$store.state.api.group_ImportCSVGetListWithoutFilter(this.dataRequest)
+  ExportCSVList () {
+    this.$store.state.api.group_ExportCSVGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
       .catch(res => this.$root.$emit('snackbar', res))
   }

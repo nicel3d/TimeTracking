@@ -75,7 +75,7 @@ namespace TimeTrackingServer.Services.Impl
                 Total = await data.CountAsync()
             };
         }
-        public async Task<byte[]> ImportCSVGetListWithoutFilter(ApplicationGroupFilterRequest request)
+        public async Task<byte[]> ExportCSVGetListWithoutFilter(ApplicationGroupFilterRequest request)
         {
             var items = await Get(request, false);
             var csvStrung = new StringBuilder();
@@ -91,7 +91,7 @@ namespace TimeTrackingServer.Services.Impl
             return Encoding.UTF8.GetBytes($"{string.Join(",", _comlumHeadrs)}\r\n{csvStrung.ToString()}");
         }
 
-        public async Task<byte[]> ImportXLSXGetListWithoutFilter(ApplicationGroupFilterRequest request)
+        public async Task<byte[]> ExportXLSXGetListWithoutFilter(ApplicationGroupFilterRequest request)
         {
             byte[] result;
 

@@ -112,7 +112,7 @@ namespace TimeTrackingServer.Services.Impl
                                 .ToListAsync();
         }
 
-        public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request)
+        public async Task<byte[]> ExportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request)
         {
             var staff = await Get(request, false);
             var csvStrung = new StringBuilder();
@@ -130,7 +130,7 @@ namespace TimeTrackingServer.Services.Impl
             return Encoding.UTF8.GetBytes($"{string.Join(",", _comlumHeadrs)}\r\n{csvStrung.ToString()}");
         }
 
-        public async Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingByGroupIdRequest request)
+        public async Task<byte[]> ExportXLSXGetListWithoutFilter(TableSortingByGroupIdRequest request)
         {
             byte[] result;
 
@@ -155,7 +155,7 @@ namespace TimeTrackingServer.Services.Impl
                     worksheet.Cells["B" + j].Value = staff.Caption;
                     worksheet.Cells["C" + j].Value = staff.ActivityFirst?.ToString("g");
                     worksheet.Cells["D" + j].Value = staff.RangeLastActivityTime;
-                    worksheet.Cells["F" + j].Value = staff.ActivityLast?.ToString("g");
+                    worksheet.Cells["I" + j].Value = staff.ActivityLast?.ToString("g");
                     j++;
                 }
 

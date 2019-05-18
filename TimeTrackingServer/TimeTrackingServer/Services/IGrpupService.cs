@@ -32,7 +32,7 @@ namespace TimeTrackingServer.Services
         Task<GroupListResponse> Get(TableSortingRequest request, bool withSkipTake = true);
         Task<GroupsListWithCountUsersResponse> GetListWithCountUsers(TableSortingRequest request, bool withSkipTake = true);
         //Task<GroupListResponse> GetByUserId(TableSortingByIdRequest request, bool withSkipTake = true);
-        Task<byte[]> ImportXLSXGetListWithoutFilter(TableSortingRequest request);
-        Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingRequest request);
+        Task<byte[]> ExportXLSXGetListWithoutFilter(TableSortingRequest request);
+        Task<byte[]> ExportCSVGetListWithoutFilter(TableSortingRequest request);
     }
 }
