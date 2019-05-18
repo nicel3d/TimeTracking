@@ -9,7 +9,7 @@ namespace TimeTrackingClient
 
         static void Main(string[] args)
         {
-            _socketService.LoopConnectServerAndSendMessage();
+            _socketService.LoopConnectWithSendMessage();
             Console.Read();
         }
     }
