@@ -24,16 +24,16 @@ namespace TimeTrackingServer.Controllers
 
         [HttpPost(nameof(GetList))]
         [Produces("application/json")]
-        public async Task<StaffListResponse> GetList([FromBody] TableSortingByGroupIdRequest request)
+        public async Task<StaffWithTimeActivityListResponse> GetList([FromBody] TableSortingByGroupIdRequest request)
         {
-            return await _staffService.Get(request);
+            return await _staffService.GetListWithTimeActivity(request);
         }
 
         [HttpPost(nameof(GetListFull))]
         [Produces("application/json")]
-        public async Task<List<Staff>> GetListFull([FromBody] TableSortingByGroupIdRequest request)
+        public async Task<List<StaffWithTimeActivity>> GetListFull([FromBody] TableSortingByGroupIdRequest request)
         {
-            return (await _staffService.Get(request, false)).Data;
+            return (await _staffService.GetListWithTimeActivity(request, false)).Data;
         }
 
         [HttpPost(nameof(GetListOnlyByGropupId))]

@@ -46,7 +46,19 @@ namespace TimeTrackingServer.Services.Impl
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true)
+        public async Task SetTimeConnectingStaffByStaffAlias(string staffAlias)
+        {
+            var staff = await GetOrAddStaffByAlias(staffAlias);
+            staff.ActivityFirst = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task SetTimeDisconectingStaffByStaffAlias(string staffAlias)
+        {
+            var staff = await GetOrAddStaffByAlias(staffAlias);
+            staff.ActivityLast = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task<StaffWithTimeActivityListResponse> GetListWithTimeActivity(TableSortingByGroupIdRequest request, bool withSkipTake = true)
         {
             IQueryable<Staff> data = _dbContext.Set<Staff>();
 
@@ -67,24 +79,58 @@ namespace TimeTrackingServer.Services.Impl
                              r = x.StaffToGroup.Where(f => f.GroupId == request.GroupId)
                          })
                          .Where(x => x.r.Count() > 0)
-                         .Select(x => x.p)
-                         .Select(x => new Staff()
+                         .Select(x => x.p);
+            }
+
+            IQueryable<StaffWithTimeActivity> dataNew = data
+                         .Select(x => new StaffWithTimeActivity()
                          {
                              Id = x.Id,
                              ActivityFirst = x.ActivityFirst,
                              ActivityLast = x.ActivityLast,
                              StaffToGroup = null,
+                             TimeActivity = ConvertSeccondsToHoursAndMinutes(x),
                              Caption = x.Caption,
                              UpdatedAt = x.UpdatedAt,
                              Status = x.Status
                          });
-            }
 
-            return new StaffListResponse
+            return new StaffWithTimeActivityListResponse
             {
-                Data = await (withSkipTake ? data.AddSkipTake(request) : data).Sort(request.Sorting).ToListAsync(),
+                Data = await (withSkipTake ? dataNew.AddSkipTake(request) : dataNew).Sort(request.Sorting).ToListAsync(),
                 Total = await data.CountAsync()
             };
+        }
+
+        private Int32 GetDifferenceBetweenDates(Staff staff)
+        {
+            if (staff.ActivityLast > staff.ActivityFirst)
+            {
+                TimeSpan diff = staff.ActivityLast.GetValueOrDefault().Subtract(staff.ActivityFirst.GetValueOrDefault());
+                return Convert.ToInt32(diff.TotalSeconds);
+            }
+
+            return 0;
+        }
+
+        private string FormatTwoDigits(Int32 i)
+        {
+            string functionReturnValue = null;
+            if (10 > i)
+            {
+                functionReturnValue = "0" + i.ToString();
+            }
+            else
+            {
+                functionReturnValue = i.ToString();
+            }
+            return functionReturnValue;
+        }
+
+        private string ConvertSeccondsToHoursAndMinutes(Staff staff)
+        {
+            Int32 diff = GetDifferenceBetweenDates(staff);
+            return FormatTwoDigits(diff / 120) + ":" + FormatTwoDigits(diff / 60) + ":" + FormatTwoDigits(diff % 60);
         }
 
         public async Task<List<Staff>> GetListOnlyByGropupId(int groupId)
@@ -98,16 +144,15 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request)
         {
-            var staff = await Get(request, false);
+            var staff = await GetListWithTimeActivity(request, false);
             var csvStrung = new StringBuilder();
             staff.Data.ForEach(line =>
             {
                 csvStrung.AppendLine(string.Join(",", new string[] {
                     line.UpdatedAt.GetValueOrDefault().ToString("g"),
                     line.Caption,
-                    line.ActivityFirst?.ToString(),
-                    line.ActivityFirst != null && line.ActivityLast != null ?
-                        (line.ActivityFirst - line.ActivityLast).ToString() : "0:00",
+                    line.ActivityFirst?.ToString("g"),
+                    ConvertSeccondsToHoursAndMinutes(line),
                     line.ActivityLast?.ToString("g")
                 }));
             });
@@ -133,14 +178,13 @@ namespace TimeTrackingServer.Services.Impl
                 }
 
                 var j = 2;
-                var data = await Get(request, false);
+                var data = await GetListWithTimeActivity(request, false);
                 foreach (var staff in data.Data)
                 {
                     worksheet.Cells["A" + j].Value = staff.UpdatedAt.GetValueOrDefault().ToString("g");
                     worksheet.Cells["B" + j].Value = staff.Caption;
                     worksheet.Cells["C" + j].Value = staff.ActivityFirst?.ToString("g");
-                    worksheet.Cells["D" + j].Value = staff.ActivityFirst != null && staff.ActivityLast != null ?
-                        (staff.ActivityFirst - staff.ActivityLast).ToString() : "0:00";
+                    worksheet.Cells["D" + j].Value = ConvertSeccondsToHoursAndMinutes(staff);
                     worksheet.Cells["F" + j].Value = staff.ActivityLast?.ToString("g");
                     j++;
                 }

@@ -38,15 +38,16 @@ namespace TimeTrackingServer.Middlewares
         public const int port = 8005;
         public IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
         private readonly RequestDelegate _next;
-        private static StreamingDataService _streamingDataService;
+        private static IStreamingDataService _streamingDataService;
+        private IStaffService _staffService;
         private static List<StaffActive> _staffActives = new List<StaffActive>();
 
-        public ListenerSocketMiddleware(RequestDelegate next, StreamingDataService streamingDataService)
+        public ListenerSocketMiddleware(RequestDelegate next, IStreamingDataService streamingDataService, IStaffService staffService)
         {
             _next = next;
             _streamingDataService = streamingDataService;
-            Thread server = new Thread(SetupServer);
-            server.Start();
+            _staffService = staffService;
+            (new Thread(SetupServer)).Start();
         }
         public async Task Invoke(HttpContext context)
         {
@@ -128,6 +129,7 @@ namespace TimeTrackingServer.Middlewares
                             StaffAlias = connectionMessage.StaffAlias,
                             Endpoint = handler.LocalEndPoint as IPEndPoint
                         });
+                        await _staffService.SetTimeConnectingStaffByStaffAlias(connectionMessage.StaffAlias);
                     }
                     else
                     {
@@ -140,7 +142,14 @@ namespace TimeTrackingServer.Middlewares
             catch (Exception ex)
             {
                 IPEndPoint endpoint = handler.LocalEndPoint as IPEndPoint;
-                _staffActives.RemoveAll(x => x.Endpoint.Port.Equals(endpoint.Port) && x.Endpoint.Address.Equals(endpoint.Address));
+                _staffActives.ForEach(async x =>
+                {
+                    if (x.Endpoint.Port.Equals(endpoint.Port) && x.Endpoint.Address.Equals(endpoint.Address))
+                    {
+                        await _staffService.SetTimeDisconectingStaffByStaffAlias(x.StaffAlias);
+                        _staffActives.Remove(x);
+                    }
+                });
                 Console.WriteLine(ex.Message);
             }
         }
