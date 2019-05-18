@@ -15,6 +15,7 @@ namespace TimeTrackingServer.Models
         public DateTime? UpdatedAt { get; set; }
         public bool? Status { get; set; }
         public DateTime? ActivityFirst { get; set; }
+        public string RangeLastActivityTime { get; set; }
         public DateTime? ActivityLast { get; set; }
         public string Caption { get; set; }
 

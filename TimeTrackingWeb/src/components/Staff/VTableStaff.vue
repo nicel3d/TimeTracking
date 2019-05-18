@@ -39,7 +39,7 @@
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
         <td>{{ props.item.caption }}</td>
         <td>{{ GetUpdatedAt(props.item.activityFirst) }}</td>
-        <td>{{ props.item.timeActivity }}</td>
+        <td>{{ props.item.rangeLastActivityTime }}</td>
         <td>{{ GetUpdatedAt(props.item.activityLast) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
@@ -52,12 +52,10 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  SortingRequest, Staff, StaffToGroup, StaffWithTimeActivity,
-  TableSortingByGroupIdRequest,
-  TableSortingRequest
+  SortingRequest, Staff, StaffToGroup,
+  TableSortingByGroupIdRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
-import { States } from '%/constants/States'
 import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
 import { StaffEmitEnum, StaffIdsAndGroupId } from '%/constants/WindowsEmmit'
 
@@ -67,14 +65,14 @@ const filename = 'staff'
 export default class VTableStaff extends Mixins(SkipTake) {
   @Prop({ default: null }) groupId
 
-  desserts: StaffWithTimeActivity[] = []
+  desserts: Staff[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
     { text: 'Пользователь', value: 'Caption' },
     { text: 'Последнее подключение', value: 'ActivityFirst' },
-    { text: 'Продолжительность последнего сеанса', value: 'TimeActivity' },
+    { text: 'Продолжительность последнего сеанса', value: 'RangeLastActivityTime' },
     { text: 'Последнее отключение', value: 'ActivityLast' }
   ]
 

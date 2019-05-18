@@ -639,7 +639,7 @@ export class WSApi {
     return Promise.resolve<Applications | null>(<any>null);
   }
 
-  staff_GetList(request: TableSortingByGroupIdRequest | null): Promise<StaffWithTimeActivityListResponse | null> {
+  staff_GetList(request: TableSortingByGroupIdRequest | null): Promise<StaffListResponse | null> {
     let url_ = this.baseUrl + "/api/Staff/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -659,14 +659,14 @@ export class WSApi {
     });
   }
 
-  protected processStaff_GetList(response: Response): Promise<StaffWithTimeActivityListResponse | null> {
+  protected processStaff_GetList(response: Response): Promise<StaffListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
       return response.text().then((_responseText) => {
         let result200: any = null;
         let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        result200 = resultData200 ? StaffWithTimeActivityListResponse.fromJS(resultData200) : <any>null;
+        result200 = resultData200 ? StaffListResponse.fromJS(resultData200) : <any>null;
         return result200;
       });
     } else if (status !== 200 && status !== 204) {
@@ -674,10 +674,10 @@ export class WSApi {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<StaffWithTimeActivityListResponse | null>(<any>null);
+    return Promise.resolve<StaffListResponse | null>(<any>null);
   }
 
-  staff_GetListFull(request: TableSortingByGroupIdRequest | null): Promise<StaffWithTimeActivity[] | null> {
+  staff_GetListFull(request: TableSortingByGroupIdRequest | null): Promise<Staff[] | null> {
     let url_ = this.baseUrl + "/api/Staff/GetListFull";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -697,7 +697,7 @@ export class WSApi {
     });
   }
 
-  protected processStaff_GetListFull(response: Response): Promise<StaffWithTimeActivity[] | null> {
+  protected processStaff_GetListFull(response: Response): Promise<Staff[] | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -707,7 +707,7 @@ export class WSApi {
         if (resultData200 && resultData200.constructor === Array) {
           result200 = [] as any;
           for (let item of resultData200)
-            result200!.push(StaffWithTimeActivity.fromJS(item));
+            result200!.push(Staff.fromJS(item));
         }
         return result200;
       });
@@ -716,7 +716,7 @@ export class WSApi {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<StaffWithTimeActivity[] | null>(<any>null);
+    return Promise.resolve<Staff[] | null>(<any>null);
   }
 
   staff_GetListOnlyByGropupId(groupId: number): Promise<Staff[] | null> {
@@ -2538,6 +2538,7 @@ export class Staff implements IStaff {
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
+  rangeLastActivityTime?: string | undefined;
   activityLast?: Date | undefined;
   caption?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
@@ -2558,6 +2559,7 @@ export class Staff implements IStaff {
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.status = data["Status"];
       this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
+      this.rangeLastActivityTime = data["RangeLastActivityTime"];
       this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
       this.caption = data["Caption"];
       if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
@@ -2586,6 +2588,7 @@ export class Staff implements IStaff {
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["Status"] = this.status;
     data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
+    data["RangeLastActivityTime"] = this.rangeLastActivityTime;
     data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
     data["Caption"] = this.caption;
     if (this.activityStaff && this.activityStaff.constructor === Array) {
@@ -2607,6 +2610,7 @@ export interface IStaff {
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
+  rangeLastActivityTime?: string | undefined;
   activityLast?: Date | undefined;
   caption?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
@@ -2930,10 +2934,10 @@ export interface ITableSortingByGroupIdRequest extends ITableSortingRequest {
   groupId?: number | undefined;
 }
 
-export class StaffWithTimeActivityListResponse extends ListCountResponse implements IStaffWithTimeActivityListResponse {
-  data?: StaffWithTimeActivity[] | undefined;
+export class StaffListResponse extends ListCountResponse implements IStaffListResponse {
+  data?: Staff[] | undefined;
 
-  constructor(data?: IStaffWithTimeActivityListResponse) {
+  constructor(data?: IStaffListResponse) {
     super(data);
   }
 
@@ -2943,14 +2947,14 @@ export class StaffWithTimeActivityListResponse extends ListCountResponse impleme
       if (data["Data"] && data["Data"].constructor === Array) {
         this.data = [] as any;
         for (let item of data["Data"])
-          this.data!.push(StaffWithTimeActivity.fromJS(item));
+          this.data!.push(Staff.fromJS(item));
       }
     }
   }
 
-  static fromJS(data: any): StaffWithTimeActivityListResponse {
+  static fromJS(data: any): StaffListResponse {
     data = typeof data === 'object' ? data : {};
-    let result = new StaffWithTimeActivityListResponse();
+    let result = new StaffListResponse();
     result.init(data);
     return result;
   }
@@ -2967,41 +2971,8 @@ export class StaffWithTimeActivityListResponse extends ListCountResponse impleme
   }
 }
 
-export interface IStaffWithTimeActivityListResponse extends IListCountResponse {
-  data?: StaffWithTimeActivity[] | undefined;
-}
-
-export class StaffWithTimeActivity extends Staff implements IStaffWithTimeActivity {
-  timeActivity?: string | undefined;
-
-  constructor(data?: IStaffWithTimeActivity) {
-    super(data);
-  }
-
-  init(data?: any) {
-    super.init(data);
-    if (data) {
-      this.timeActivity = data["TimeActivity"];
-    }
-  }
-
-  static fromJS(data: any): StaffWithTimeActivity {
-    data = typeof data === 'object' ? data : {};
-    let result = new StaffWithTimeActivity();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["TimeActivity"] = this.timeActivity;
-    super.toJSON(data);
-    return data;
-  }
-}
-
-export interface IStaffWithTimeActivity extends IStaff {
-  timeActivity?: string | undefined;
+export interface IStaffListResponse extends IListCountResponse {
+  data?: Staff[] | undefined;
 }
 
 export class GroupListResponse extends ListCountResponse implements IGroupListResponse {

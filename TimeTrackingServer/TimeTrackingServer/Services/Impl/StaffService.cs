@@ -55,10 +55,13 @@ namespace TimeTrackingServer.Services.Impl
         public async Task SetTimeDisconectingStaffByStaffAlias(string staffAlias)
         {
             var staff = await GetOrAddStaffByAlias(staffAlias);
-            staff.ActivityLast = DateTime.Now;
+            var newDate = DateTime.Now;
+
+            staff.ActivityLast = newDate;
+            staff.RangeLastActivityTime = CreateRangeBeetwenFirstAndLastActivityTime(staff.ActivityFirst.GetValueOrDefault(), newDate);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task<StaffWithTimeActivityListResponse> GetListWithTimeActivity(TableSortingByGroupIdRequest request, bool withSkipTake = true)
+        public async Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true)
         {
             IQueryable<Staff> data = _dbContext.Set<Staff>();
 
@@ -79,58 +82,25 @@ namespace TimeTrackingServer.Services.Impl
                              r = x.StaffToGroup.Where(f => f.GroupId == request.GroupId)
                          })
                          .Where(x => x.r.Count() > 0)
-                         .Select(x => x.p);
-            }
-
-            IQueryable<StaffWithTimeActivity> dataNew = data
-                         .Select(x => new StaffWithTimeActivity()
+                         .Select(x => x.p)
+                         .Select(x => new Staff()
                          {
                              Id = x.Id,
                              ActivityFirst = x.ActivityFirst,
                              ActivityLast = x.ActivityLast,
                              StaffToGroup = null,
-                             TimeActivity = ConvertSeccondsToHoursAndMinutes(x),
+                             RangeLastActivityTime = x.RangeLastActivityTime,
                              Caption = x.Caption,
                              UpdatedAt = x.UpdatedAt,
                              Status = x.Status
                          });
+            }
 
-            return new StaffWithTimeActivityListResponse
+            return new StaffListResponse
             {
-                Data = await (withSkipTake ? dataNew.AddSkipTake(request) : dataNew).Sort(request.Sorting).ToListAsync(),
+                Data = await (withSkipTake ? data.AddSkipTake(request) : data).Sort(request.Sorting).ToListAsync(),
                 Total = await data.CountAsync()
             };
-        }
-
-        private Int32 GetDifferenceBetweenDates(Staff staff)
-        {
-            if (staff.ActivityLast > staff.ActivityFirst)
-            {
-                TimeSpan diff = staff.ActivityLast.GetValueOrDefault().Subtract(staff.ActivityFirst.GetValueOrDefault());
-                return Convert.ToInt32(diff.TotalSeconds);
-            }
-
-            return 0;
-        }
-
-        private string FormatTwoDigits(Int32 i)
-        {
-            string functionReturnValue = null;
-            if (10 > i)
-            {
-                functionReturnValue = "0" + i.ToString();
-            }
-            else
-            {
-                functionReturnValue = i.ToString();
-            }
-            return functionReturnValue;
-        }
-
-        private string ConvertSeccondsToHoursAndMinutes(Staff staff)
-        {
-            Int32 diff = GetDifferenceBetweenDates(staff);
-            return FormatTwoDigits(diff / 120) + ":" + FormatTwoDigits(diff / 60) + ":" + FormatTwoDigits(diff % 60);
         }
 
         public async Task<List<Staff>> GetListOnlyByGropupId(int groupId)
@@ -144,7 +114,7 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<byte[]> ImportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request)
         {
-            var staff = await GetListWithTimeActivity(request, false);
+            var staff = await Get(request, false);
             var csvStrung = new StringBuilder();
             staff.Data.ForEach(line =>
             {
@@ -152,7 +122,7 @@ namespace TimeTrackingServer.Services.Impl
                     line.UpdatedAt.GetValueOrDefault().ToString("g"),
                     line.Caption,
                     line.ActivityFirst?.ToString("g"),
-                    ConvertSeccondsToHoursAndMinutes(line),
+                    line.RangeLastActivityTime,
                     line.ActivityLast?.ToString("g")
                 }));
             });
@@ -178,13 +148,13 @@ namespace TimeTrackingServer.Services.Impl
                 }
 
                 var j = 2;
-                var data = await GetListWithTimeActivity(request, false);
+                var data = await Get(request, false);
                 foreach (var staff in data.Data)
                 {
                     worksheet.Cells["A" + j].Value = staff.UpdatedAt.GetValueOrDefault().ToString("g");
                     worksheet.Cells["B" + j].Value = staff.Caption;
                     worksheet.Cells["C" + j].Value = staff.ActivityFirst?.ToString("g");
-                    worksheet.Cells["D" + j].Value = ConvertSeccondsToHoursAndMinutes(staff);
+                    worksheet.Cells["D" + j].Value = staff.RangeLastActivityTime;
                     worksheet.Cells["F" + j].Value = staff.ActivityLast?.ToString("g");
                     j++;
                 }
@@ -222,6 +192,34 @@ namespace TimeTrackingServer.Services.Impl
             _dbContext.Staff.Add(staff);
             await _dbContext.SaveChangesAsync();
             return staff;
+        }
+
+
+
+        private string FormatTwoDigits(Int32 i)
+        {
+            string functionReturnValue = null;
+            if (10 > i)
+            {
+                functionReturnValue = "0" + i.ToString();
+            }
+            else
+            {
+                functionReturnValue = i.ToString();
+            }
+            return functionReturnValue;
+        }
+        private string CreateRangeBeetwenFirstAndLastActivityTime(DateTime dateTimeFirst, DateTime dateTimeLast)
+        {
+            TimeSpan diff = dateTimeLast.Subtract(dateTimeFirst);
+            Int32 diff32 = Convert.ToInt32(diff.TotalSeconds);
+
+            if (diff32 > 0)
+            {
+                return FormatTwoDigits(diff32 / 120) + ":" + FormatTwoDigits(diff32 / 60) + ":" + FormatTwoDigits(diff32 % 60);
+            }
+
+            return "00:00:00";
         }
     }
 }
