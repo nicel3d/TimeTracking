@@ -290,6 +290,10 @@ namespace TimeTrackingServer.Models
                     .HasColumnName("caption")
                     .HasMaxLength(100);
 
+                entity.Property(e => e.RangeLastActivityTime)
+                    .HasColumnName("range_last_activity_time")
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.Status)
                     .HasColumnName("status")
                     .HasDefaultValueSql("true");

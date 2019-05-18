@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TimeTrackingClient.Constants
 {
+    public class StaffConnection
+    {
+        public string StaffAlias { get; set; }
+        public bool Connection { get; set; }
+    }
+
     class StreamingData : ApplicationStreamingData
     {
         public string StaffAlias { get; set; }

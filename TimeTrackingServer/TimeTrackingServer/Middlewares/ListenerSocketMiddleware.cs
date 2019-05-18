@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -25,6 +25,12 @@ namespace TimeTrackingServer.Middlewares
         public StringBuilder sb = new StringBuilder();
     }
 
+    public class StaffActive
+    {
+        public string StaffAlias { get; set; }
+        public IPEndPoint Endpoint { get; set; }
+    }
+
     public class ListenerSocketMiddleware
     {
         // Thread signal.
@@ -32,14 +38,16 @@ namespace TimeTrackingServer.Middlewares
         public const int port = 8005;
         public IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
         private readonly RequestDelegate _next;
-        private static StreamingDataService _streamingDataService;
+        private static IStreamingDataService _streamingDataService;
+        private IStaffService _staffService;
+        private static List<StaffActive> _staffActives = new List<StaffActive>();
 
-        public ListenerSocketMiddleware(RequestDelegate next, StreamingDataService streamingDataService)
+        public ListenerSocketMiddleware(RequestDelegate next, IStreamingDataService streamingDataService, IStaffService staffService)
         {
             _next = next;
             _streamingDataService = streamingDataService;
-            Thread server = new Thread(SetupServer);
-            server.Start();
+            _staffService = staffService;
+            (new Thread(SetupServer)).Start();
         }
         public async Task Invoke(HttpContext context)
         {
@@ -55,13 +63,17 @@ namespace TimeTrackingServer.Middlewares
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
-                // Set the event to nonsignaled state.
-                allDone.Reset();
-                // Start an asynchronous socket to listen for connections.
-                Console.WriteLine("Waiting for a connection...");
-                listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
-                // Wait until a connection is made before continuing.
-                allDone.WaitOne();
+
+                while (true)
+                {
+                    // Set the event to nonsignaled state.
+                    allDone.Reset();
+                    // Start an asynchronous socket to listen for connections.
+                    Console.WriteLine("Waiting for a connection...");
+                    listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
+                    // Wait until a connection is made before continuing.
+                    allDone.WaitOne();
+                }
             }
             catch (Exception e)
             {
@@ -108,14 +120,36 @@ namespace TimeTrackingServer.Middlewares
                     StringBuilder builder = new StringBuilder();
                     builder.Append(Encoding.Unicode.GetString(state.buffer, 0, bytesRead));
 
-                    StreamingDataRequest editActivityStaffRequest = JsonConvert.DeserializeObject<StreamingDataRequest>(builder.ToString());
-                    await _streamingDataService.AddActivity(editActivityStaffRequest);
+                    var message = builder.ToString();
+                    if (message.Contains("Connection"))
+                    {
+                        var connectionMessage = JsonConvert.DeserializeObject<StaffWithSocketStatus>(message);
+                        _staffActives.Add(new StaffActive()
+                        {
+                            StaffAlias = connectionMessage.StaffAlias,
+                            Endpoint = handler.LocalEndPoint as IPEndPoint
+                        });
+                        await _staffService.SetTimeConnectingStaffByStaffAlias(connectionMessage.StaffAlias);
+                    }
+                    else
+                    {
+                        await _streamingDataService.AddActivity(JsonConvert.DeserializeObject<StreamingDataRequest>(message));
+                    }
                 }
 
                 handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
             }
             catch (Exception ex)
             {
+                IPEndPoint endpoint = handler.LocalEndPoint as IPEndPoint;
+                _staffActives.ForEach(async x =>
+                {
+                    if (x.Endpoint.Port.Equals(endpoint.Port) && x.Endpoint.Address.Equals(endpoint.Address))
+                    {
+                        await _staffService.SetTimeDisconectingStaffByStaffAlias(x.StaffAlias);
+                        _staffActives.Remove(x);
+                    }
+                });
                 Console.WriteLine(ex.Message);
             }
         }
@@ -128,8 +162,7 @@ namespace TimeTrackingServer.Middlewares
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
             // Begin sending the data to the remote device.
-            handler.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), handler);
+            handler.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), handler);
         }
 
         private static void SendCallback(IAsyncResult ar)

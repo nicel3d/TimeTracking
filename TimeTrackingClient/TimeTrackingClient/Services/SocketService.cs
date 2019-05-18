@@ -1,12 +1,10 @@
 ﻿using TimeTrackingClient.Constants;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Collections.Concurrent;
 
@@ -30,20 +28,25 @@ namespace TimeTrackingClient.Services
 
         public SocketService()
         {
-            (new Thread(delegate ()
-            {
-                Task.Run(StartListeningTemporaryStorageForWrite);
-            })).Start();
+            //(new Thread(delegate ()
+            //{
+            //    Task.Run(StartListeningTemporaryStorageForWrite);
+            //})).Start();
 
-
-            (new Thread(delegate ()
+            (new Thread(ListeningStorageForWrite)).Start();
+            (new Thread(ListeningRecord)).Start();
+        }
+        public void OnSocketConnect()
+        {
+            var data = new StaffConnection()
             {
-                Task.Run(StartListeningGetTemporaryStorage);
-            })).Start();
+                StaffAlias = Environment.UserName,
+                Connection = true
+            };
+            _socket.Send(Encoding.Unicode.GetBytes(new JavaScriptSerializer().Serialize(data)));
         }
 
-
-        private Task StartListeningGetTemporaryStorage()
+        private void ListeningRecord()
         {
             while (true)
             {
@@ -81,7 +84,7 @@ namespace TimeTrackingClient.Services
             }
         }
 
-        private Task StartListeningTemporaryStorageForWrite()
+        private void ListeningStorageForWrite()
         {
             int expect = 0;
 
@@ -121,6 +124,7 @@ namespace TimeTrackingClient.Services
                 {
                     attempts++;
                     _socket.Connect(_ipPoint);
+                    OnSocketConnect();
                 }
                 catch (SocketException)
                 {
@@ -134,9 +138,7 @@ namespace TimeTrackingClient.Services
 
         private static StreamingData GetActivityStaffToStreamingData()
         {
-            ApplicationStreamingData applicationStreamingData;
-
-            applicationStreamingData = new WinApiService().GetActiveWindow();
+            ApplicationStreamingData applicationStreamingData = new WinApiService().GetActiveWindow();
             return _streamingData = new StreamingData()
             {
                 ApplicationAlias = applicationStreamingData.ApplicationAlias,
@@ -147,7 +149,7 @@ namespace TimeTrackingClient.Services
             };
         }
 
-        public void LoopConnectServerAndSendMessage()
+        public void LoopConnectWithSendMessage()
         {
             LoopConnectServer();
 
@@ -169,7 +171,7 @@ namespace TimeTrackingClient.Services
                 Console.WriteLine(ex.Message);
                 _socket.Shutdown(SocketShutdown.Both);
                 _socket.Close();
-                LoopConnectServerAndSendMessage();
+                LoopConnectWithSendMessage();
             }
         }
     }

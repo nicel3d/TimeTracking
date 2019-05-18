@@ -2538,6 +2538,7 @@ export class Staff implements IStaff {
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
+  rangeLastActivityTime?: string | undefined;
   activityLast?: Date | undefined;
   caption?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
@@ -2558,6 +2559,7 @@ export class Staff implements IStaff {
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.status = data["Status"];
       this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
+      this.rangeLastActivityTime = data["RangeLastActivityTime"];
       this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
       this.caption = data["Caption"];
       if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
@@ -2586,6 +2588,7 @@ export class Staff implements IStaff {
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["Status"] = this.status;
     data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
+    data["RangeLastActivityTime"] = this.rangeLastActivityTime;
     data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
     data["Caption"] = this.caption;
     if (this.activityStaff && this.activityStaff.constructor === Array) {
@@ -2607,6 +2610,7 @@ export interface IStaff {
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
+  rangeLastActivityTime?: string | undefined;
   activityLast?: Date | undefined;
   caption?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;

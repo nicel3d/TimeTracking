@@ -46,6 +46,21 @@ namespace TimeTrackingServer.Services.Impl
                 .FirstOrDefaultAsync();
         }
 
+        public async Task SetTimeConnectingStaffByStaffAlias(string staffAlias)
+        {
+            var staff = await GetOrAddStaffByAlias(staffAlias);
+            staff.ActivityFirst = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task SetTimeDisconectingStaffByStaffAlias(string staffAlias)
+        {
+            var staff = await GetOrAddStaffByAlias(staffAlias);
+            var newDate = DateTime.Now;
+
+            staff.ActivityLast = newDate;
+            staff.RangeLastActivityTime = CreateRangeBeetwenFirstAndLastActivityTime(staff.ActivityFirst.GetValueOrDefault(), newDate);
+            await _dbContext.SaveChangesAsync();
+        }
         public async Task<StaffListResponse> Get(TableSortingByGroupIdRequest request, bool withSkipTake = true)
         {
             IQueryable<Staff> data = _dbContext.Set<Staff>();
@@ -74,6 +89,7 @@ namespace TimeTrackingServer.Services.Impl
                              ActivityFirst = x.ActivityFirst,
                              ActivityLast = x.ActivityLast,
                              StaffToGroup = null,
+                             RangeLastActivityTime = x.RangeLastActivityTime,
                              Caption = x.Caption,
                              UpdatedAt = x.UpdatedAt,
                              Status = x.Status
@@ -105,9 +121,8 @@ namespace TimeTrackingServer.Services.Impl
                 csvStrung.AppendLine(string.Join(",", new string[] {
                     line.UpdatedAt.GetValueOrDefault().ToString("g"),
                     line.Caption,
-                    line.ActivityFirst?.ToString(),
-                    line.ActivityFirst != null && line.ActivityLast != null ?
-                        (line.ActivityFirst - line.ActivityLast).ToString() : "0:00",
+                    line.ActivityFirst?.ToString("g"),
+                    line.RangeLastActivityTime,
                     line.ActivityLast?.ToString("g")
                 }));
             });
@@ -139,8 +154,7 @@ namespace TimeTrackingServer.Services.Impl
                     worksheet.Cells["A" + j].Value = staff.UpdatedAt.GetValueOrDefault().ToString("g");
                     worksheet.Cells["B" + j].Value = staff.Caption;
                     worksheet.Cells["C" + j].Value = staff.ActivityFirst?.ToString("g");
-                    worksheet.Cells["D" + j].Value = staff.ActivityFirst != null && staff.ActivityLast != null ?
-                        (staff.ActivityFirst - staff.ActivityLast).ToString() : "0:00";
+                    worksheet.Cells["D" + j].Value = staff.RangeLastActivityTime;
                     worksheet.Cells["F" + j].Value = staff.ActivityLast?.ToString("g");
                     j++;
                 }
@@ -178,6 +192,34 @@ namespace TimeTrackingServer.Services.Impl
             _dbContext.Staff.Add(staff);
             await _dbContext.SaveChangesAsync();
             return staff;
+        }
+
+
+
+        private string FormatTwoDigits(Int32 i)
+        {
+            string functionReturnValue = null;
+            if (10 > i)
+            {
+                functionReturnValue = "0" + i.ToString();
+            }
+            else
+            {
+                functionReturnValue = i.ToString();
+            }
+            return functionReturnValue;
+        }
+        private string CreateRangeBeetwenFirstAndLastActivityTime(DateTime dateTimeFirst, DateTime dateTimeLast)
+        {
+            TimeSpan diff = dateTimeLast.Subtract(dateTimeFirst);
+            Int32 diff32 = Convert.ToInt32(diff.TotalSeconds);
+
+            if (diff32 > 0)
+            {
+                return FormatTwoDigits(diff32 / 120) + ":" + FormatTwoDigits(diff32 / 60) + ":" + FormatTwoDigits(diff32 % 60);
+            }
+
+            return "00:00:00";
         }
     }
 }
