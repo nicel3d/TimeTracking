@@ -32,7 +32,7 @@
           <v-flex xs12 md6>
             <v-text-field
               type="text"
-              :value="0"
+              :value="item.rangeLastActivityTime"
               label="Продолжительность последнего сеанса"
               readonly
             />
