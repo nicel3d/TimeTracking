@@ -1646,16 +1646,16 @@ export class WSApi {
   }
 
   dashboard_GetStatisticByDate(request: Date): Promise<ActivityStatisticResponse | null> {
-    let url_ = this.baseUrl + "/api/Dashboard/GetStatisticByDate?";
-    if (request === undefined || request === null)
-      throw new Error("The parameter 'request' must be defined and cannot be null.");
-    else
-      url_ += "request=" + encodeURIComponent(request ? "" + request.toJSON() : "") + "&";
+    let url_ = this.baseUrl + "/api/Dashboard/GetStatisticByDate";
     url_ = url_.replace(/[?&]$/, "");
 
+    const content_ = JSON.stringify(request);
+
     let options_ = <RequestInit>{
+      body: content_,
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         "Accept": "application/json"
       }
     };
@@ -1681,6 +1681,48 @@ export class WSApi {
       });
     }
     return Promise.resolve<ActivityStatisticResponse | null>(<any>null);
+  }
+
+  dashboard_GetActivityStaffByDate(request: Date): Promise<ActivityStaffResponse[] | null> {
+    let url_ = this.baseUrl + "/api/Dashboard/GetActivityStaffByDate";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processDashboard_GetActivityStaffByDate(_response);
+    });
+  }
+
+  protected processDashboard_GetActivityStaffByDate(response: Response): Promise<ActivityStaffResponse[] | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [] as any;
+          for (let item of resultData200)
+            result200!.push(ActivityStaffResponse.fromJS(item));
+        }
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ActivityStaffResponse[] | null>(<any>null);
   }
 
   values_GetAll(): Promise<string[] | null> {
@@ -3341,6 +3383,58 @@ export interface IActivityStatisticResponse {
   timeAllowedApplication?: string | undefined;
   timeForbiddenApplication?: string | undefined;
   timeAllApplication?: string | undefined;
+}
+
+export class ActivityStaffResponse implements IActivityStaffResponse {
+  staffId!: number;
+  staffAlias?: string | undefined;
+  statusApplication!: StateEnum;
+  begDate!: Date;
+  endDate!: Date;
+
+  constructor(data?: IActivityStaffResponse) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.staffId = data["StaffId"];
+      this.staffAlias = data["StaffAlias"];
+      this.statusApplication = data["StatusApplication"];
+      this.begDate = data["BegDate"] ? new Date(data["BegDate"].toString()) : <any>undefined;
+      this.endDate = data["EndDate"] ? new Date(data["EndDate"].toString()) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): ActivityStaffResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new ActivityStaffResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["StaffId"] = this.staffId;
+    data["StaffAlias"] = this.staffAlias;
+    data["StatusApplication"] = this.statusApplication;
+    data["BegDate"] = this.begDate ? this.begDate.toISOString() : <any>undefined;
+    data["EndDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IActivityStaffResponse {
+  staffId: number;
+  staffAlias?: string | undefined;
+  statusApplication: StateEnum;
+  begDate: Date;
+  endDate: Date;
 }
 
 export interface FileResponse {

@@ -41,6 +41,6 @@ namespace TimeTrackingServer.Services
         Task Delete(int id);
         Task<ActivityStaffListResponse> Get(TableSortingWithFilterRequest request);
         Task<ActivityStatisticResponse> GetStatisticByDate(DateTime request);
-        //Task<List<ActivityStaffResponse>> GetActivityStaffByDate(DateTime request);
+        Task<List<ActivityStaffResponse>> GetActivityStaffByDate(DateTime request);
     }
 }

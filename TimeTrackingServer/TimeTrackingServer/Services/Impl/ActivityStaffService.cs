@@ -93,14 +93,21 @@ namespace TimeTrackingServer.Services.Impl
 
         public async Task<ActivityStatisticResponse> GetStatisticByDate(DateTime request)
         {
-            List<ActivityStaff> activityStaff = await _dbContext.Set<ActivityStaff>()
-                .Include(x => x.Staff).ThenInclude(x => x.StaffToGroup)
-                .Include(z => z.Application).ThenInclude(x => x.ApplicationToGroup)
+            List<ActivityStaff> activityStaff = await _dbContext.ActivityStaff
                 .Where(x => x.UpdatedAt.Date == request.Date)
                 .OrderBy(x => x.UpdatedAt)
-                .Select(x => new ActivityStaff {
-                    Application = x.Application,
-                    Staff = x.Staff,
+                .Include(x => x.Application).ThenInclude(x => x.ApplicationToGroup)
+                .Include(x => x.Staff).ThenInclude(x => x.StaffToGroup)
+                .Select(x => new ActivityStaff
+                {
+                    Application = new Applications {
+                        State = x.Application.State,
+                        ApplicationToGroup = x.Application.ApplicationToGroup
+                    },
+                    Staff = new Staff
+                    {
+                        StaffToGroup = x.Staff.StaffToGroup,
+                    }
                 })
                 .ToListAsync();
 
@@ -164,8 +171,91 @@ namespace TimeTrackingServer.Services.Impl
                 TimeForbiddenApplication = _staffService.GetHMS(timeForbiddenApplication)
             };
         }
-        //public Task<List<ActivityStaffResponse>> GetActivityStaffByDate(DateTime request)
-        //{
-        //}
+
+        public async Task<List<ActivityStaffResponse>> GetActivityStaffByDate(DateTime request)
+        {
+            List<ActivityStaff> activityStaff = await _dbContext.Set<ActivityStaff>()
+                .Include(x => x.Staff).ThenInclude(x => x.StaffToGroup)
+                .Include(z => z.Application).ThenInclude(x => x.ApplicationToGroup)
+                .Where(x => x.UpdatedAt.Date == request.Date)
+                .OrderBy(x => x.UpdatedAt)
+                .Select(x => new ActivityStaff
+                {
+                    UpdatedAt = x.UpdatedAt,
+                    Application = new Applications
+                    {
+                        State = x.Application.State,
+                        Caption = x.Application.Caption,
+                        ApplicationToGroup = x.Application.ApplicationToGroup
+                    },
+                    Staff = new Staff
+                    {
+                        Caption = x.Staff.Caption,
+                        StaffToGroup = x.Staff.StaffToGroup,
+                    }
+                })
+                .ToListAsync();
+
+            List<ActivityStaffResponse> activityStaffList = new List<ActivityStaffResponse>();
+
+            const int iterval = 5;
+            int timeAllApplicationOld = 0;
+            int index = 0;
+
+            foreach (ActivityStaff item in activityStaff)
+            {
+                int timeAllApplication = 0;
+                bool success = false;
+                if (item.Application != null)
+                {
+                    if (item.Application.ApplicationToGroup != null)
+                    {
+                        foreach (ApplicationToGroup group in item.Application.ApplicationToGroup)
+                        {
+                            if (item.Staff.StaffToGroup.Any(x => x.GroupId == group.GroupId))
+                            {
+                                success = true;
+
+                                if (activityStaffList.Count() == index + 1 && activityStaffList[index].StatusApplication != group.State)
+                                {
+                                    index++;
+                                }
+
+                                if (activityStaffList.Count() < index + 1)
+                                {
+                                    activityStaffList.Add(new ActivityStaffResponse
+                                    {
+                                        BegDate = item.UpdatedAt,
+                                        EndDate = item.UpdatedAt,
+                                        StaffAlias = item.Staff.Caption,
+                                        StatusApplication = group.State,
+                                        StaffId = item.Staff.Id
+                                    });
+                                }
+                                else
+                                {
+                                    activityStaffList[index].EndDate = item.UpdatedAt;
+                                }
+
+                                timeAllApplication += iterval;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!success && item.Application.State != Constants.StateEnum.Neutral && item.Application.State != Constants.StateEnum.Forbidden)
+                    {
+                        //timeAllApplication += iterval;
+                    }
+
+                    if (timeAllApplicationOld == timeAllApplication)
+                    {
+                        index++;
+                    }
+                }
+            }
+
+            return activityStaffList;
+        }
     }
 }
