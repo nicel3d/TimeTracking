@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import VChartTimeline from '%/components/CharJs/VChartTimeline.vue'
 import { ActivityStaffResponse } from '%/stores/api/SwaggerDocumentationTypescript'
 
@@ -19,12 +19,19 @@ import { ActivityStaffResponse } from '%/stores/api/SwaggerDocumentationTypescri
   components: { VChartTimeline }
 })
 export default class VChartDashboard extends Vue {
+  @Prop() filter!: Date
+
   dataset: ActivityStaffResponse[] = []
 
-  mounted () {
-    this.$store.state.api.dashboard_GetActivityStaffByDate(this.$moment().subtract(2, 'days').toDate())
+  @Watch('filter')
+  loadActivity () {
+    this.$store.state.api.dashboard_GetActivityStaffByDate(this.filter)
       .then(res => (this.dataset = res))
       .catch(res => this.$root.$emit('snackbar', res))
+  }
+
+  mounted () {
+    this.loadActivity()
   }
 }
 </script>

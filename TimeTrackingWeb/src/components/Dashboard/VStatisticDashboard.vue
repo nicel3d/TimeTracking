@@ -32,22 +32,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 @Component
 export default class VStatisticDashboard extends Vue {
+  @Prop() filter!: Date
+
   timeAllowedApplication: string = '00:00:00'
   timeForbiddenApplication: string = '00:00:00'
   timeAllApplication: string = '00:00:00'
 
-  mounted () {
-    this.$store.state.api.dashboard_GetStatisticByDate(this.$moment().subtract(2, 'days').toDate())
+  @Watch('filter')
+  loadStatistic () {
+    this.$store.state.api.dashboard_GetStatisticByDate(this.filter)
       .then(res => {
         this.timeAllApplication = res.timeAllApplication
         this.timeForbiddenApplication = res.timeForbiddenApplication
         this.timeAllowedApplication = res.timeAllowedApplication
       })
       .catch(res => this.$root.$emit('snackbar', res))
+  }
+
+  mounted () {
+    this.loadStatistic()
   }
 }
 </script>
