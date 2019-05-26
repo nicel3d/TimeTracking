@@ -88,9 +88,7 @@
 
       <v-breadcrumbs-router/>
 
-      <v-container
-        fluid
-        class="wrapper">
+      <v-container fluid grid-list-xl class="wrapper">
         <v-fade-transition mode="out-in">
           <router-view/>
         </v-fade-transition>

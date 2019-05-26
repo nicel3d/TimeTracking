@@ -1,5 +1,5 @@
 <template>
-  <v-breadcrumbs divider="/" :items="items"/>
+  <v-breadcrumbs class="pb-0 px-3" divider="/" :items="items"/>
 </template>
 
 <script lang="ts">

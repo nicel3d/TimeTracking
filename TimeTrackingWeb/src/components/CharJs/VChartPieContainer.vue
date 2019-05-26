@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container px-0 py-0">
     <v-chart-pie
       :data="chartData"
       :options="{legend: false}"

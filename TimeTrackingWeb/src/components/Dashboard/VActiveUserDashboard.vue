@@ -5,27 +5,31 @@
       <v-spacer></v-spacer>
     </v-card-title>
     <v-card-text>
-      <v-container class="mt-0 pt-0" grid-list-xl>
+      <v-container>
         <v-layout row wrap>
           <v-flex d-flex xs12 md6>
             <v-chart-pie-container/>
           </v-flex>
           <v-flex d-flex xs12 md6>
-            <v-layout align-end row fill-height>
-              <v-flex>
-                <v-layout justify-space-between>
+            <v-layout column>
+              <div class="mt-3">
+                <v-layout row wrap justify-space-between>
                   <v-flex>Пользователей онлайн</v-flex>
                   <v-flex class="text-xs-right">0</v-flex>
                 </v-layout>
+              </div>
+              <div class="mt-3">
                 <v-layout justify-space-between>
                   <v-flex>Пользователей офлайн</v-flex>
                   <v-flex class="text-xs-right">1</v-flex>
                 </v-layout>
+              </div>
+              <div class="mt-3">
                 <v-layout justify-space-between>
                   <v-flex>Общее кол-во пользователей</v-flex>
                   <v-flex class="text-xs-right">1</v-flex>
                 </v-layout>
-              </v-flex>
+              </div>
             </v-layout>
           </v-flex>
         </v-layout>

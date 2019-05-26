@@ -1,14 +1,17 @@
 <template>
   <div>
-    <v-filter-by-range-component
-      class="mb-5"
-      v-model="filter"
-    />
-    <v-table-applications-by-range
-      ref="table"
-      :filter="filter"
-      @on-edit="$refs.dialog.onView($event)"
-    />
+    <v-layout row wrap>
+      <v-flex xs12>
+        <v-filter-by-range-component v-model="filter"/>
+      </v-flex>
+      <v-flex xs12>
+        <v-table-applications-by-range
+          ref="table"
+          :filter="filter"
+          @on-edit="$refs.dialog.onView($event)"
+        />
+      </v-flex>
+    </v-layout>
     <v-window-edit-activity-staff ref="dialog" @on-success="$refs.table.onPagination()"/>
   </div>
 </template>
