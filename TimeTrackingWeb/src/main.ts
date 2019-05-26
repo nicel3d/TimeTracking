@@ -7,6 +7,7 @@ import App from './App.vue'
 import './registerServiceWorker'
 import VuePictureSwipe from 'vue-picture-swipe'
 import FieldsExtension from '%/mixins/FieldsExtension'
+require('chartjs-chart-timeline')
 
 const moment: any = require('moment-timezone')
 const VueMoment: any = require('vue-moment')
