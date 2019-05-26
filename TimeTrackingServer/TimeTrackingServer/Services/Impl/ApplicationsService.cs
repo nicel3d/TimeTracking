@@ -97,16 +97,9 @@ namespace TimeTrackingServer.Services.Impl
                         );
             }
 
-            data = data.Select(x => new Applications {
-                Id = x.Id,
-                Caption = x.Caption,
-                State = x.State,
-                UpdatedAt = x.UpdatedAt
-            });
-
             return new ApplicationsListResponse
             {
-                Data = await (withSkipTake == true ? data.AddSkipTake(request) : data).ToListAsync(),
+                Data = await (withSkipTake == true ? data.AddSkipTake(request) : data).Sort(request.Sorting).ToListAsync(),
                 Total = await data.CountAsync()
             };
         }

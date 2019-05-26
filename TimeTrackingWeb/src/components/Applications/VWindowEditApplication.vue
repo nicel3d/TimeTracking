@@ -38,7 +38,7 @@
         </v-btn>
         <v-btn
           color="primary"
-          @click.prevent="onEdit">Добавить
+          @click.prevent="onEdit">Сохранить
         </v-btn>
       </v-card-actions>
     </v-card>

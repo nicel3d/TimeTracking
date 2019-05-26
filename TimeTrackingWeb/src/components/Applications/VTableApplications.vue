@@ -29,7 +29,7 @@
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
         <td class="ml-4 layout px-0 align-center">
-          <v-icon small @click="onEdit(props.item.id)">
+          <v-icon small @click="onEdit(props.item)">
             edit
           </v-icon>
           <v-icon class="ml-4" small @click="onDelete(props.item.id)">

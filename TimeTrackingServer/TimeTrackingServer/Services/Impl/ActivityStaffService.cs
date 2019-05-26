@@ -243,9 +243,30 @@ namespace TimeTrackingServer.Services.Impl
                         }
                     }
 
-                    if (!success && item.Application.State != Constants.StateEnum.Neutral && item.Application.State != Constants.StateEnum.Forbidden)
+                    if (!success)
                     {
-                        //timeAllApplication += iterval;
+                        if (activityStaffList.Count() == index + 1 && activityStaffList[index].StatusApplication != item.Application.State)
+                        {
+                            index++;
+                        }
+
+                        if (activityStaffList.Count() < index + 1)
+                        {
+                            activityStaffList.Add(new ActivityStaffResponse
+                            {
+                                BegDate = item.UpdatedAt,
+                                EndDate = item.UpdatedAt,
+                                StaffAlias = item.Staff.Caption,
+                                StatusApplication = item.Application.State,
+                                StaffId = item.Staff.Id
+                            });
+                        }
+                        else
+                        {
+                            activityStaffList[index].EndDate = item.UpdatedAt;
+                        }
+
+                        timeAllApplication += iterval;
                     }
 
                     if (timeAllApplicationOld == timeAllApplication)
