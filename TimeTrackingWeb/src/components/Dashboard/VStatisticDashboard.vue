@@ -41,7 +41,7 @@ export default class VStatisticDashboard extends Vue {
   timeAllApplication: string = '00:00:00'
 
   mounted () {
-    this.$store.state.api.dashboard_GetStatisticByDate(this.$moment().subtract(8, 'days').toDate())
+    this.$store.state.api.dashboard_GetStatisticByDate(this.$moment().subtract(2, 'days').toDate())
       .then(res => {
         this.timeAllApplication = res.timeAllApplication
         this.timeForbiddenApplication = res.timeForbiddenApplication

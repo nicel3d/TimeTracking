@@ -117,7 +117,7 @@ namespace TimeTrackingServer.Services.Impl
                     {
                         foreach (ApplicationToGroup group in item.Application.ApplicationToGroup)
                         {
-                            if (item.Staff.StaffToGroup.Any(x => x.GroupId == group.Id))
+                            if (item.Staff.StaffToGroup.Any(x => x.GroupId == group.GroupId))
                             {
                                 success = true;
                                 switch (group.State)

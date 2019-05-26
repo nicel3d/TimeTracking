@@ -65,14 +65,6 @@ namespace TimeTrackingServer.Services.Impl
         {
             IQueryable<Staff> data = _dbContext.Set<Staff>();
 
-            if (!String.IsNullOrEmpty(request.Search))
-            {
-                data = data.Where(x =>
-                            x.Caption.Contains(request.Search) ||
-                            x.UpdatedAt.ToString().Contains(request.Search)
-                        );
-            }
-
             if (request.GroupId != null)
             {
                 data = data.Include(x => x.StaffToGroup)
@@ -82,17 +74,15 @@ namespace TimeTrackingServer.Services.Impl
                              r = x.StaffToGroup.Where(f => f.GroupId == request.GroupId)
                          })
                          .Where(x => x.r.Count() > 0)
-                         .Select(x => x.p)
-                         .Select(x => new Staff()
-                         {
-                             Id = x.Id,
-                             ActivityFirst = x.ActivityFirst,
-                             ActivityLast = x.ActivityLast,
-                             RangeLastActivityTime = x.RangeLastActivityTime,
-                             Caption = x.Caption,
-                             UpdatedAt = x.UpdatedAt,
-                             Status = x.Status
-                         });
+                         .Select(x => x.p);
+            }
+
+            if (!String.IsNullOrEmpty(request.Search))
+            {
+                data = data.Where(x =>
+                            x.Caption.Contains(request.Search) ||
+                            x.UpdatedAt.ToString().Contains(request.Search)
+                        );
             }
 
             return new StaffListResponse
