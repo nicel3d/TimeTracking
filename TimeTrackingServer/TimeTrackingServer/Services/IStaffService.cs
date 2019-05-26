@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TimeTrackingServer.Models;
 using TimeTrackingServer.Stores.Impl;
@@ -27,5 +28,6 @@ namespace TimeTrackingServer.Services
         Task<byte[]> ExportCSVGetListWithoutFilter(TableSortingByGroupIdRequest request);
         Task SetTimeConnectingStaffByStaffAlias(string staffAlias);
         Task SetTimeDisconectingStaffByStaffAlias(string staffAlias);
+        string GetHMS(Int32 int32);
     }
 }

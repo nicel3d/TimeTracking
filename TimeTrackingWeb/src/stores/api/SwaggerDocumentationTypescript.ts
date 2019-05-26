@@ -1645,6 +1645,44 @@ export class WSApi {
     return Promise.resolve<Settings[] | null>(<any>null);
   }
 
+  dashboard_GetStatisticByDate(request: Date): Promise<ActivityStatisticResponse | null> {
+    let url_ = this.baseUrl + "/api/Dashboard/GetStatisticByDate?";
+    if (request === undefined || request === null)
+      throw new Error("The parameter 'request' must be defined and cannot be null.");
+    else
+      url_ += "request=" + encodeURIComponent(request ? "" + request.toJSON() : "") + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "POST",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processDashboard_GetStatisticByDate(_response);
+    });
+  }
+
+  protected processDashboard_GetStatisticByDate(response: Response): Promise<ActivityStatisticResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ActivityStatisticResponse.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ActivityStatisticResponse | null>(<any>null);
+  }
+
   values_GetAll(): Promise<string[] | null> {
     let url_ = this.baseUrl + "/api/Values";
     url_ = url_.replace(/[?&]$/, "");
@@ -3259,6 +3297,50 @@ export interface ISettings {
   timeWorkingTo?: string | undefined;
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
+}
+
+export class ActivityStatisticResponse implements IActivityStatisticResponse {
+  timeAllowedApplication?: string | undefined;
+  timeForbiddenApplication?: string | undefined;
+  timeAllApplication?: string | undefined;
+
+  constructor(data?: IActivityStatisticResponse) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.timeAllowedApplication = data["TimeAllowedApplication"];
+      this.timeForbiddenApplication = data["TimeForbiddenApplication"];
+      this.timeAllApplication = data["TimeAllApplication"];
+    }
+  }
+
+  static fromJS(data: any): ActivityStatisticResponse {
+    data = typeof data === 'object' ? data : {};
+    let result = new ActivityStatisticResponse();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["TimeAllowedApplication"] = this.timeAllowedApplication;
+    data["TimeForbiddenApplication"] = this.timeForbiddenApplication;
+    data["TimeAllApplication"] = this.timeAllApplication;
+    return data;
+  }
+}
+
+export interface IActivityStatisticResponse {
+  timeAllowedApplication?: string | undefined;
+  timeForbiddenApplication?: string | undefined;
+  timeAllApplication?: string | undefined;
 }
 
 export interface FileResponse {

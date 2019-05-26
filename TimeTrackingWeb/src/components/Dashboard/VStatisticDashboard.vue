@@ -10,19 +10,19 @@
           <div class="mt-3">
             <v-layout justify-space-between>
               <v-flex>Использование разрешенных приложений</v-flex>
-              <v-flex class="text-xs-right">0</v-flex>
+              <v-flex class="text-xs-right">{{ timeAllowedApplication }}</v-flex>
             </v-layout>
           </div>
           <div class="mt-3">
             <v-layout justify-space-between>
               <v-flex>Использование запрещенных приложений</v-flex>
-              <v-flex class="text-xs-right">1</v-flex>
+              <v-flex class="text-xs-right">{{ timeForbiddenApplication }}</v-flex>
             </v-layout>
           </div>
           <div class="mt-3">
             <v-layout justify-space-between>
               <v-flex>Общее кол-во записанной информации</v-flex>
-              <v-flex class="text-xs-right">1</v-flex>
+              <v-flex class="text-xs-right">{{ timeAllApplication }}</v-flex>
             </v-layout>
           </div>
         </v-layout>
@@ -36,13 +36,19 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class VStatisticDashboard extends Vue {
-  state: number = 0
-  states = [
-    {
-      state: 0,
-      text: 'yes'
-    }
-  ]
+  timeAllowedApplication: string = '00:00:00'
+  timeForbiddenApplication: string = '00:00:00'
+  timeAllApplication: string = '00:00:00'
+
+  mounted () {
+    this.$store.state.api.dashboard_GetStatisticByDate(this.$moment().subtract(8, 'days').toDate())
+      .then(res => {
+        this.timeAllApplication = res.timeAllApplication
+        this.timeForbiddenApplication = res.timeForbiddenApplication
+        this.timeAllowedApplication = res.timeAllowedApplication
+      })
+      .catch(res => this.$root.$emit('snackbar', res))
+  }
 }
 </script>
 

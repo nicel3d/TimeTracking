@@ -88,7 +88,6 @@ namespace TimeTrackingServer.Services.Impl
                              Id = x.Id,
                              ActivityFirst = x.ActivityFirst,
                              ActivityLast = x.ActivityLast,
-                             StaffToGroup = null,
                              RangeLastActivityTime = x.RangeLastActivityTime,
                              Caption = x.Caption,
                              UpdatedAt = x.UpdatedAt,
@@ -194,8 +193,6 @@ namespace TimeTrackingServer.Services.Impl
             return staff;
         }
 
-
-
         private string FormatTwoDigits(Int32 i)
         {
             string functionReturnValue = null;
@@ -209,17 +206,24 @@ namespace TimeTrackingServer.Services.Impl
             }
             return functionReturnValue;
         }
+
+        public string GetHMS(Int32 i)
+        {
+            if (i > 0)
+            {
+                return FormatTwoDigits(i / 120) + ":" + FormatTwoDigits(i / 60) + ":" + FormatTwoDigits(i % 60);
+            }
+
+            return "00:00:00";
+        }
+
         private string CreateRangeBeetwenFirstAndLastActivityTime(DateTime dateTimeFirst, DateTime dateTimeLast)
         {
             TimeSpan diff = dateTimeLast.Subtract(dateTimeFirst);
             Int32 diff32 = Convert.ToInt32(diff.TotalSeconds);
 
-            if (diff32 > 0)
-            {
-                return FormatTwoDigits(diff32 / 120) + ":" + FormatTwoDigits(diff32 / 60) + ":" + FormatTwoDigits(diff32 % 60);
-            }
-
-            return "00:00:00";
+            return GetHMS(diff32);
+            
         }
     }
 }

@@ -8,16 +8,19 @@ using TimeTrackingServer.Stores.Impl;
 using System.Linq.Dynamic;
 using TimeTrackingServer.Exceptions;
 using System.Text;
+using System.Collections.Generic;
 
 namespace TimeTrackingServer.Services.Impl
 {
     public class ActivityStaffService : IActivityStaffService
     {
         ApplicationDbContext _dbContext;
+        private IStaffService _staffService;
 
-        public ActivityStaffService(ApplicationDbContext dbContext)
+        public ActivityStaffService(ApplicationDbContext dbContext, IStaffService staffService)
         {
             _dbContext = dbContext;
+            _staffService = staffService;
         }
 
         public async Task Delete(int id)
@@ -86,5 +89,83 @@ namespace TimeTrackingServer.Services.Impl
 
             await _dbContext.SaveChangesAsync();
         }
+
+
+        public async Task<ActivityStatisticResponse> GetStatisticByDate(DateTime request)
+        {
+            List<ActivityStaff> activityStaff = await _dbContext.Set<ActivityStaff>()
+                .Include(x => x.Staff).ThenInclude(x => x.StaffToGroup)
+                .Include(z => z.Application).ThenInclude(x => x.ApplicationToGroup)
+                .Where(x => x.UpdatedAt.Date == request.Date)
+                .OrderBy(x => x.UpdatedAt)
+                .Select(x => new ActivityStaff {
+                    Application = x.Application,
+                    Staff = x.Staff,
+                })
+                .ToListAsync();
+
+            int timeAllApplication = 0;
+            int timeAllowedApplication = 0;
+            int timeForbiddenApplication = 0;
+
+            foreach (ActivityStaff item in activityStaff)
+            {
+                bool success = false;
+                if (item.Application != null)
+                {
+                    if (item.Application.ApplicationToGroup != null)
+                    {
+                        foreach (ApplicationToGroup group in item.Application.ApplicationToGroup)
+                        {
+                            if (item.Staff.StaffToGroup.Any(x => x.GroupId == group.Id))
+                            {
+                                success = true;
+                                switch (group.State)
+                                {
+                                    case Constants.StateEnum.Allowed:
+                                        timeAllowedApplication += 5;
+                                        break;
+                                    case Constants.StateEnum.Forbidden:
+                                        timeForbiddenApplication += 5;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                timeAllApplication += 5;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!success)
+                    {
+                        switch (item.Application.State)
+                        {
+                            case Constants.StateEnum.Allowed:
+                                timeAllowedApplication += 5;
+                                break;
+                            case Constants.StateEnum.Forbidden:
+                                timeForbiddenApplication += 5;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        timeAllApplication += 5;
+                    }
+                }
+            }
+
+            return new ActivityStatisticResponse
+            {
+                TimeAllApplication = _staffService.GetHMS(timeAllApplication),
+                TimeAllowedApplication = _staffService.GetHMS(timeAllowedApplication),
+                TimeForbiddenApplication = _staffService.GetHMS(timeForbiddenApplication)
+            };
+        }
+        //public Task<List<ActivityStaffResponse>> GetActivityStaffByDate(DateTime request)
+        //{
+        //}
     }
 }
