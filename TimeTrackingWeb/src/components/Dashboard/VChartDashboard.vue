@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import VChartTimeline from '%/components/VChartTimeline.vue'
+import VChartTimeline from '%/components/CharJs/VChartTimeline.vue'
 
 @Component({
   components: { VChartTimeline }

@@ -152,7 +152,7 @@ export default class AuthorizedTemplate extends Vue {
   items = [
     {
       icon: 'fas fa-home',
-      title: 'Dashboard',
+      title: 'Главный экран',
       name: RouterNameEnum.Dashboard
     },
     {

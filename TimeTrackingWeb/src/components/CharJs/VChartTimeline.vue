@@ -14,9 +14,9 @@ export default {
       'options': {
         'colorFunction': function (text, data, dataset, index) {
           if (text === 'On') {
-            return Color('green')
+            return Color('#41B883')
           } else if (text === 'Off') {
-            return Color('red')
+            return Color('#E46651')
           } else {
             return Color('transparent')
           }
@@ -42,7 +42,7 @@ export default {
                 '2018-01-23T05:40:44.626Z',
                 'Unknown'
               ]
-            ],
+            ]
           },
           {
             'data': [
@@ -64,7 +64,7 @@ export default {
             ]
           }
         ]
-      },
+      }
     }
   }),
 

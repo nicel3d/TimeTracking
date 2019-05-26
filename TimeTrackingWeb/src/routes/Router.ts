@@ -30,7 +30,7 @@ const router = new Router({
           name: RouterNameEnum.Dashboard,
           component: () => import('../views/DashboardView.vue'),
           meta: {
-            breadcrumb: 'Dashboard'
+            breadcrumb: 'Главный экран'
           }
         },
         {
