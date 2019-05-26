@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas ref="chartCanvas" width="600" height="160"></canvas>
+    <canvas ref="chartCanvas" width="600" height="80"></canvas>
     <div style="opacity:0;" class="chartTooltip center"/>
   </div>
 </template>
@@ -22,24 +22,21 @@ export default {
           }
         },
         'elements': {
-          'colorFunction': function (text, data, dataset, index) {
-            return Color('Red')
-          },
+          // 'colorFunction': function (text, data, dataset, index) {
+          //   return Color('Red')
+          // }, // не работает
           'showText': false,
           'textPadding': 4
         }
       },
       'data': {
-        'labels': [
-          'Cool Graph',
-          'heater1'
-        ],
+        'labels': ['user 1', 'nikel'],
         'datasets': [
           {
             'data': [
               [
-                '2018-01-22T16:00:00.000Z',
-                '2018-01-23T05:40:44.626Z',
+                '2018-05-23T07:00:00',
+                '2018-05-23T10:40:44',
                 'Unknown'
               ]
             ]
@@ -47,18 +44,38 @@ export default {
           {
             'data': [
               [
-                '2018-01-22T16:00:00.000Z',
-                '2018-01-22T20:00:00.000Z',
+                '2018-05-23T00:00:00',
+                '2018-05-23T24:00:00',
+                'Unknown'
+              ],
+              [
+                '2018-05-23T07:00:00',
+                '2018-05-23T10:00:00',
                 'On'
               ],
               [
-                '2018-01-22T20:00:00.000Z',
-                '2018-01-23T04:57:55.437Z',
+                '2018-05-23T10:00:00',
+                '2018-05-23T10:40:44',
+                'Unknown'
+              ],
+              [
+                '2018-05-23T10:40:00',
+                '2018-05-23T13:00:00',
                 'Off'
               ],
               [
-                '2018-01-23T04:57:55.437Z',
-                '2018-01-23T05:40:44.626Z',
+                '2018-05-23T13:00:00',
+                '2018-05-23T14:00:00',
+                'On'
+              ],
+              [
+                '2018-05-23T14:00:00',
+                '2018-05-23T15:30:00',
+                'Off'
+              ],
+              [
+                '2018-05-23T15:31:00',
+                '2018-05-23T17:00:00',
                 'On'
               ]
             ]
