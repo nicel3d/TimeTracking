@@ -4,6 +4,12 @@
       <h3 class="mb-0">Активность пользователей</h3>
       <v-spacer></v-spacer>
     </v-card-title>
+    <div class="mx-2">
+      <template v-if="dataset.length">
+        <v-btn color="primary" dark class="mb-2" @click.prevent>Экспорт в xlsx</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click.prevent>Экспорт в csv</v-btn>
+      </template>
+    </div>
     <v-card-text>
       <v-chart-timeline :dataset="dataset"/>
     </v-card-text>
