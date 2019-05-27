@@ -30,7 +30,7 @@
       <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
       <template v-slot:items="props">
         <tr :class="['link', {'active': !!props.expanded}]">
-          <td class="ml-4 layout px-0 align-center">
+          <td class="ml-4 mt-0 layout px-0 align-center">
             <v-icon small @click="onEdit(props.item.id)">
               edit
             </v-icon>
