@@ -1725,7 +1725,7 @@ export class WSApi {
     return Promise.resolve<ActivityStaffResponse[] | null>(<any>null);
   }
 
-  applicationTitles_GetList(request: ApplicationGroupFilterRequest | null): Promise<ApplicationTitlesListVM | null> {
+  applicationTitles_GetList(request: ApplicationTitlesFilterRequest | null): Promise<ApplicationTitlesListVM | null> {
     let url_ = this.baseUrl + "/api/ApplicationTitles/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -3864,6 +3864,39 @@ export class ApplicationTitlesListVM extends ListCountResponse implements IAppli
 
 export interface IApplicationTitlesListVM extends IListCountResponse {
   data?: ApplicationTitles[] | undefined;
+}
+
+export class ApplicationTitlesFilterRequest extends TableSortingRequest implements IApplicationTitlesFilterRequest {
+  applicationId!: number;
+
+  constructor(data?: IApplicationTitlesFilterRequest) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.applicationId = data["ApplicationId"];
+    }
+  }
+
+  static fromJS(data: any): ApplicationTitlesFilterRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationTitlesFilterRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["ApplicationId"] = this.applicationId;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IApplicationTitlesFilterRequest extends ITableSortingRequest {
+  applicationId: number;
 }
 
 export class GroupApplicationTitleListVM extends ListCountResponse implements IGroupApplicationTitleListVM {

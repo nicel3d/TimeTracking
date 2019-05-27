@@ -33,9 +33,10 @@ namespace TimeTrackingServer.Services.Impl
             return await _dbContext.ApplicationTitles.FindAsync(id);
         }
 
-        public async Task<ApplicationTitlesListVM> Get(ApplicationGroupFilterRequest request, bool withSkipTake = true)
+        public async Task<ApplicationTitlesListVM> Get(ApplicationTitlesFilterRequest request, bool withSkipTake = true)
         {
             IQueryable<ApplicationTitles> data = _dbContext.Set<ApplicationTitles>()
+                                                .Where(x => x.ApplicationId == request.ApplicationId)
                                                 .Include(x => x.Application);
 
             if (!String.IsNullOrEmpty(request.Search))

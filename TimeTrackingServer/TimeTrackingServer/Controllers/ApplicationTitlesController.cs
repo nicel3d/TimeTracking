@@ -24,7 +24,7 @@ namespace TimeTrackingServer.Controllers
 
         [HttpPost(nameof(GetList))]
         [Produces("application/json")]
-        public async Task<ApplicationTitlesListVM> GetList([FromBody] ApplicationGroupFilterRequest request)
+        public async Task<ApplicationTitlesListVM> GetList([FromBody] ApplicationTitlesFilterRequest request)
         {
             return await _applicationTitlesService.Get(request);
         }

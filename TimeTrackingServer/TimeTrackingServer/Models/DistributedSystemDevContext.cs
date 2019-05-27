@@ -97,7 +97,7 @@ namespace TimeTrackingServer.Models
                     .HasColumnName("state")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.State)
+                entity.Property(e => e.Mode)
                     .HasColumnName("mode")
                     .HasMaxLength(100);
 
@@ -146,7 +146,7 @@ namespace TimeTrackingServer.Models
                     .HasColumnName("state")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.State)
+                entity.Property(e => e.Mode)
                     .HasColumnName("mode")
                     .HasMaxLength(100);
 
