@@ -8,6 +8,7 @@ declare module 'vue/types/vue' {
 
   interface Vue {
     $moment(): Moment
+    $moment(date: string): Moment
   }
 
   interface VueConstructor {

@@ -8,10 +8,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    timeLineHandle: null,
     token: null,
     api: new WSApi('http://localhost:5000')
   },
-  mutations: {},
+  mutations: {
+    setTimeLineHandle: (state, data) => (state.timeLineHandle = data)
+  },
   actions: {
     logout ({ state }) {
       state.token = null

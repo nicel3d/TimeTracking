@@ -29,5 +29,21 @@ import VFilterByRangeComponent from '%/components/VFilterByRangeComponent.vue'
 })
 export default class ActivityStaffView extends Vue {
   filter: FilterRequest = filterDefault
+
+  created () {
+    const timeLineHandle = this.$store.state.timeLineHandle
+    if (timeLineHandle) {
+      const beg = this.$moment(timeLineHandle.value[0])
+      const end = this.$moment(timeLineHandle.value[0])
+      this.filter.begDate = beg.toDate()
+      this.filter.endDate = end.toDate()
+      this.filter.begHour = parseInt(beg.format('h'))
+      this.filter.endHour = parseInt(end.format('h'))
+    }
+  }
+
+  beforeDestroy () {
+    this.$store.commit('setTimeLineHandle', null)
+  }
 }
 </script>

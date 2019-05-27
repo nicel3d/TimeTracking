@@ -8,6 +8,24 @@
 <script>
 import { StateEnum } from '../../stores/api/SwaggerDocumentationTypescript'
 import { ActivityStaffResponse } from '%/stores/api/SwaggerDocumentationTypescript'
+import { RouterNameEnum } from '../../constants/RouterConstant'
+
+/**
+ * @param chart
+ * @param {event} evt
+ * @returns {null|{label: *, value: *}}
+ */
+function clickHandler (chart, evt) {
+  const firstPoint = chart.getElementAtEvent(evt)[0]
+
+  if (firstPoint) {
+    const label = chart.data.labels[firstPoint._index]
+    const value = chart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index]
+    return { label, value }
+  }
+
+  return null
+}
 
 export default {
   name: 'VChartTimeline',
@@ -18,6 +36,8 @@ export default {
     }
   },
   data: () => ({
+    chart: null,
+    canvas: null,
     data: {
       type: 'timeline',
       options: {
@@ -66,13 +86,22 @@ export default {
           }
         )
       })
-      this.data.data = newDataset
-      const chart = new Chart(this.$refs.chartCanvas, this.data)
+      this.chart.data = newDataset
+      this.chart.update()
     }
   },
 
   mounted () {
-    // const chart = new Chart(this.$refs.chartCanvas, this.data)
+    this.canvas = this.$refs.chartCanvas
+    const chart = this.chart = new Chart(this.canvas, this.data)
+    const vm = this
+    this.canvas.onclick = function (evt) {
+      const handle = clickHandler(chart, evt)
+      if (handle) {
+        vm.$store.commit('setTimeLineHandle', handle)
+        vm.$router.push({ name: RouterNameEnum.ActivityStaff })
+      }
+    }
   }
 }
 </script>

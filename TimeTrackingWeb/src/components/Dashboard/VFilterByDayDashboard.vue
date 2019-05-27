@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title primary-title>
-      <h3 class="mb-0">Фильтр по дню</h3>
+      <h3 class="mb-0">Фильтр</h3>
     </v-card-title>
 
     <v-container>
