@@ -117,7 +117,7 @@ namespace TimeTrackingServer
             services.AddScoped<IApplicationsService, ApplicationsService>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<ITreatmentApplicationsService, TreatmentApplicationsService>();
+            services.AddScoped<IApplicationsModeService, ApplicationsModeService>();
             services.AddScoped<IStaffToGroupService, StaffToGroupService>();
             services.AddScoped<IStreamingDataService, StreamingDataService>();
             services.AddScoped<ISettingsService, SettingsService>();

@@ -116,26 +116,26 @@ export default class VTableApplicationGroups extends Mixins(SkipTake) {
     this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
 
   onDelete (id: number) {
-    this.$store.state.api.treatmentApplications_Delete(id)
+    this.$store.state.api.applicationsMode_Delete(id)
       .then(this.onPagination)
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
   ExportXLSXList () {
-    this.$store.state.api.treatmentApplications_ExportXLSXGetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.applicationsMode_ExportXLSXGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
   ExportCSVList () {
-    this.$store.state.api.treatmentApplications_ExportCSVGetListWithoutFilter(this.dataRequest)
+    this.$store.state.api.applicationsMode_ExportCSVGetListWithoutFilter(this.dataRequest)
       .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
   loadTreatmentApplications () {
     this.loading = true
-    this.$store.state.api.treatmentApplications_GetList(this.dataRequest)
+    this.$store.state.api.applicationsMode_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total

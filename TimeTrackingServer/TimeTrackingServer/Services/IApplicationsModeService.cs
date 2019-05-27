@@ -19,7 +19,7 @@ namespace TimeTrackingServer.Services
     {
         public int GroupId { get; set; }
     }
-    public interface ITreatmentApplicationsService
+    public interface IApplicationsModeService
     {
         Task<ApplicationToGroup> Get(int id);
         Task<ApplicationToGroup> Post(ApplicationToGroup group);

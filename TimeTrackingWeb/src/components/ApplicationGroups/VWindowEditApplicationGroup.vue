@@ -93,7 +93,7 @@ export default class VWindowEditApplicationGroup extends Vue {
             ...this.item,
             state: this.state
           })
-          this.$store.state.api.treatmentApplications_Put(this.id, data)
+          this.$store.state.api.applicationsMode_Put(this.id, data)
             .then(() => {
               this.$root.$emit(ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS)
               this.onReset()

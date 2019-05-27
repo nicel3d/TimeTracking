@@ -12,7 +12,7 @@ using OfficeOpenXml;
 
 namespace TimeTrackingServer.Services.Impl
 {
-    public class TreatmentApplicationsService : ITreatmentApplicationsService
+    public class ApplicationsModeService : IApplicationsModeService
     {
         ApplicationDbContext _dbContext;
         private string _worksheetTitle = "Ограничения по программам";
@@ -23,7 +23,7 @@ namespace TimeTrackingServer.Services.Impl
                 "Состояние"
         };
 
-        public TreatmentApplicationsService(ApplicationDbContext dbContext)
+        public ApplicationsModeService(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -1308,8 +1308,8 @@ export class WSApi {
     return Promise.resolve<void>(<any>null);
   }
 
-  treatmentApplications_GetList(request: ApplicationGroupFilterRequest | null): Promise<VMApplicationGroupListResponse | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/GetList";
+  applicationsMode_GetList(request: ApplicationGroupFilterRequest | null): Promise<VMApplicationGroupListResponse | null> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/GetList";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1324,11 +1324,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_GetList(_response);
+      return this.processApplicationsMode_GetList(_response);
     });
   }
 
-  protected processTreatmentApplications_GetList(response: Response): Promise<VMApplicationGroupListResponse | null> {
+  protected processApplicationsMode_GetList(response: Response): Promise<VMApplicationGroupListResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -1346,8 +1346,8 @@ export class WSApi {
     return Promise.resolve<VMApplicationGroupListResponse | null>(<any>null);
   }
 
-  treatmentApplications_ExportXLSXGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/ExportXLSXGetListWithoutFilter";
+  applicationsMode_ExportXLSXGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/ExportXLSXGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1362,11 +1362,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_ExportXLSXGetListWithoutFilter(_response);
+      return this.processApplicationsMode_ExportXLSXGetListWithoutFilter(_response);
     });
   }
 
-  protected processTreatmentApplications_ExportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processApplicationsMode_ExportXLSXGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1382,8 +1382,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  treatmentApplications_ExportCSVGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/ExportCSVGetListWithoutFilter";
+  applicationsMode_ExportCSVGetListWithoutFilter(request: ApplicationGroupFilterRequest | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/ExportCSVGetListWithoutFilter";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1398,11 +1398,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_ExportCSVGetListWithoutFilter(_response);
+      return this.processApplicationsMode_ExportCSVGetListWithoutFilter(_response);
     });
   }
 
-  protected processTreatmentApplications_ExportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
+  protected processApplicationsMode_ExportCSVGetListWithoutFilter(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1418,8 +1418,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  treatmentApplications_Get(id: number): Promise<ApplicationToGroup | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/{id}";
+  applicationsMode_Get(id: number): Promise<ApplicationToGroup | null> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1433,11 +1433,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_Get(_response);
+      return this.processApplicationsMode_Get(_response);
     });
   }
 
-  protected processTreatmentApplications_Get(response: Response): Promise<ApplicationToGroup | null> {
+  protected processApplicationsMode_Get(response: Response): Promise<ApplicationToGroup | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -1455,8 +1455,8 @@ export class WSApi {
     return Promise.resolve<ApplicationToGroup | null>(<any>null);
   }
 
-  treatmentApplications_Put(id: number, request: ApplicationToGroup | null): Promise<FileResponse | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/{id}";
+  applicationsMode_Put(id: number, request: ApplicationToGroup | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1474,11 +1474,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_Put(_response);
+      return this.processApplicationsMode_Put(_response);
     });
   }
 
-  protected processTreatmentApplications_Put(response: Response): Promise<FileResponse | null> {
+  protected processApplicationsMode_Put(response: Response): Promise<FileResponse | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200 || status === 206) {
@@ -1494,8 +1494,8 @@ export class WSApi {
     return Promise.resolve<FileResponse | null>(<any>null);
   }
 
-  treatmentApplications_Delete(id: number): Promise<void> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/{id}";
+  applicationsMode_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1508,11 +1508,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_Delete(_response);
+      return this.processApplicationsMode_Delete(_response);
     });
   }
 
-  protected processTreatmentApplications_Delete(response: Response): Promise<void> {
+  protected processApplicationsMode_Delete(response: Response): Promise<void> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 204) {
@@ -1527,8 +1527,8 @@ export class WSApi {
     return Promise.resolve<void>(<any>null);
   }
 
-  treatmentApplications_Post(request: ApplicationToGroup | null): Promise<ApplicationToGroup | null> {
-    let url_ = this.baseUrl + "/api/TreatmentApplications/Post";
+  applicationsMode_Post(request: ApplicationToGroup | null): Promise<ApplicationToGroup | null> {
+    let url_ = this.baseUrl + "/api/ApplicationsMode/Post";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(request);
@@ -1543,11 +1543,11 @@ export class WSApi {
     };
 
     return this.http.fetch(url_, options_).then((_response: Response) => {
-      return this.processTreatmentApplications_Post(_response);
+      return this.processApplicationsMode_Post(_response);
     });
   }
 
-  protected processTreatmentApplications_Post(response: Response): Promise<ApplicationToGroup | null> {
+  protected processApplicationsMode_Post(response: Response): Promise<ApplicationToGroup | null> {
     const status = response.status;
     let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
     if (status === 200) {
@@ -1723,6 +1723,376 @@ export class WSApi {
       });
     }
     return Promise.resolve<ActivityStaffResponse[] | null>(<any>null);
+  }
+
+  applicationTitles_GetList(request: ApplicationGroupFilterRequest | null): Promise<ApplicationTitlesListVM | null> {
+    let url_ = this.baseUrl + "/api/ApplicationTitles/GetList";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplicationTitles_GetList(_response);
+    });
+  }
+
+  protected processApplicationTitles_GetList(response: Response): Promise<ApplicationTitlesListVM | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationTitlesListVM.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationTitlesListVM | null>(<any>null);
+  }
+
+  applicationTitles_Get(id: number): Promise<ApplicationTitles | null> {
+    let url_ = this.baseUrl + "/api/ApplicationTitles/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplicationTitles_Get(_response);
+    });
+  }
+
+  protected processApplicationTitles_Get(response: Response): Promise<ApplicationTitles | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationTitles.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationTitles | null>(<any>null);
+  }
+
+  applicationTitles_Put(id: number, request: ApplicationTitles | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/ApplicationTitles/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplicationTitles_Put(_response);
+    });
+  }
+
+  protected processApplicationTitles_Put(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  applicationTitles_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/ApplicationTitles/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplicationTitles_Delete(_response);
+    });
+  }
+
+  protected processApplicationTitles_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  applicationTitles_Post(request: ApplicationTitles | null): Promise<ApplicationTitles | null> {
+    let url_ = this.baseUrl + "/api/ApplicationTitles/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processApplicationTitles_Post(_response);
+    });
+  }
+
+  protected processApplicationTitles_Post(response: Response): Promise<ApplicationTitles | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationTitles.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationTitles | null>(<any>null);
+  }
+
+  groupApplicationTitles_GetList(request: ApplicationGroupFilterRequest | null): Promise<GroupApplicationTitleListVM | null> {
+    let url_ = this.baseUrl + "/api/GroupApplicationTitles/GetList";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroupApplicationTitles_GetList(_response);
+    });
+  }
+
+  protected processGroupApplicationTitles_GetList(response: Response): Promise<GroupApplicationTitleListVM | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? GroupApplicationTitleListVM.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<GroupApplicationTitleListVM | null>(<any>null);
+  }
+
+  groupApplicationTitles_Get(id: number): Promise<ApplicationTitleToGroup | null> {
+    let url_ = this.baseUrl + "/api/GroupApplicationTitles/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroupApplicationTitles_Get(_response);
+    });
+  }
+
+  protected processGroupApplicationTitles_Get(response: Response): Promise<ApplicationTitleToGroup | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationTitleToGroup.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationTitleToGroup | null>(<any>null);
+  }
+
+  groupApplicationTitles_Put(id: number, request: ApplicationTitleToGroup | null): Promise<FileResponse | null> {
+    let url_ = this.baseUrl + "/api/GroupApplicationTitles/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroupApplicationTitles_Put(_response);
+    });
+  }
+
+  protected processGroupApplicationTitles_Put(response: Response): Promise<FileResponse | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200 || status === 206) {
+      const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+      const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+      const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+      return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<FileResponse | null>(<any>null);
+  }
+
+  groupApplicationTitles_Delete(id: number): Promise<void> {
+    let url_ = this.baseUrl + "/api/GroupApplicationTitles/{id}";
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ = <RequestInit>{
+      method: "DELETE",
+      headers: {
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroupApplicationTitles_Delete(_response);
+    });
+  }
+
+  protected processGroupApplicationTitles_Delete(response: Response): Promise<void> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 204) {
+      return response.text().then((_responseText) => {
+        return;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<void>(<any>null);
+  }
+
+  groupApplicationTitles_Post(request: ApplicationTitleToGroup | null): Promise<ApplicationTitleToGroup | null> {
+    let url_ = this.baseUrl + "/api/GroupApplicationTitles/Post";
+    url_ = url_.replace(/[?&]$/, "");
+
+    const content_ = JSON.stringify(request);
+
+    let options_ = <RequestInit>{
+      body: content_,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    };
+
+    return this.http.fetch(url_, options_).then((_response: Response) => {
+      return this.processGroupApplicationTitles_Post(_response);
+    });
+  }
+
+  protected processGroupApplicationTitles_Post(response: Response): Promise<ApplicationTitleToGroup | null> {
+    const status = response.status;
+    let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+    if (status === 200) {
+      return response.text().then((_responseText) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ApplicationTitleToGroup.fromJS(resultData200) : <any>null;
+        return result200;
+      });
+    } else if (status !== 200 && status !== 204) {
+      return response.text().then((_responseText) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      });
+    }
+    return Promise.resolve<ApplicationTitleToGroup | null>(<any>null);
   }
 
   values_GetAll(): Promise<string[] | null> {
@@ -2302,6 +2672,8 @@ export class ApplicationTitles implements IApplicationTitles {
   title!: string;
   updatedAt?: Date | undefined;
   applicationId!: number;
+  state!: StateEnum;
+  mode!: ModeEnum;
   application?: Applications | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
 
@@ -2320,6 +2692,8 @@ export class ApplicationTitles implements IApplicationTitles {
       this.title = data["Title"];
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.applicationId = data["ApplicationId"];
+      this.state = data["State"];
+      this.mode = data["Mode"];
       this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
       if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
         this.applicationTitleToGroup = [] as any;
@@ -2342,6 +2716,8 @@ export class ApplicationTitles implements IApplicationTitles {
     data["Title"] = this.title;
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["ApplicationId"] = this.applicationId;
+    data["State"] = this.state;
+    data["Mode"] = this.mode;
     data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
     if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
       data["ApplicationTitleToGroup"] = [];
@@ -2357,16 +2733,25 @@ export interface IApplicationTitles {
   title: string;
   updatedAt?: Date | undefined;
   applicationId: number;
+  state: StateEnum;
+  mode: ModeEnum;
   application?: Applications | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
 }
 
+export enum ModeEnum {
+  Contains = 0,
+  Exactly = 1,
+  DoesNotContain = 2,
+}
+
 export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
   id?: number | undefined;
-  applicationTitleId?: number | undefined;
-  groupId?: number | undefined;
+  applicationTitleId!: number;
+  groupId!: number;
   updatedAt?: Date | undefined;
   state!: StateEnum;
+  mode!: ModeEnum;
   applicationTitle?: ApplicationTitles | undefined;
   group?: Groups | undefined;
 
@@ -2386,6 +2771,7 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
       this.groupId = data["GroupId"];
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.state = data["State"];
+      this.mode = data["Mode"];
       this.applicationTitle = data["ApplicationTitle"] ? ApplicationTitles.fromJS(data["ApplicationTitle"]) : <any>undefined;
       this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
     }
@@ -2405,6 +2791,7 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
     data["GroupId"] = this.groupId;
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["State"] = this.state;
+    data["Mode"] = this.mode;
     data["ApplicationTitle"] = this.applicationTitle ? this.applicationTitle.toJSON() : <any>undefined;
     data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
     return data;
@@ -2413,10 +2800,11 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
 
 export interface IApplicationTitleToGroup {
   id?: number | undefined;
-  applicationTitleId?: number | undefined;
-  groupId?: number | undefined;
+  applicationTitleId: number;
+  groupId: number;
   updatedAt?: Date | undefined;
   state: StateEnum;
+  mode: ModeEnum;
   applicationTitle?: ApplicationTitles | undefined;
   group?: Groups | undefined;
 }
@@ -3435,6 +3823,125 @@ export interface IActivityStaffResponse {
   statusApplication: StateEnum;
   begDate: Date;
   endDate: Date;
+}
+
+export class ApplicationTitlesListVM extends ListCountResponse implements IApplicationTitlesListVM {
+  data?: ApplicationTitles[] | undefined;
+
+  constructor(data?: IApplicationTitlesListVM) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(ApplicationTitles.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ApplicationTitlesListVM {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationTitlesListVM();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IApplicationTitlesListVM extends IListCountResponse {
+  data?: ApplicationTitles[] | undefined;
+}
+
+export class GroupApplicationTitleListVM extends ListCountResponse implements IGroupApplicationTitleListVM {
+  data?: GroupApplicationTitlesVM[] | undefined;
+
+  constructor(data?: IGroupApplicationTitleListVM) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      if (data["Data"] && data["Data"].constructor === Array) {
+        this.data = [] as any;
+        for (let item of data["Data"])
+          this.data!.push(GroupApplicationTitlesVM.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): GroupApplicationTitleListVM {
+    data = typeof data === 'object' ? data : {};
+    let result = new GroupApplicationTitleListVM();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.data && this.data.constructor === Array) {
+      data["Data"] = [];
+      for (let item of this.data)
+        data["Data"].push(item.toJSON());
+    }
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IGroupApplicationTitleListVM extends IListCountResponse {
+  data?: GroupApplicationTitlesVM[] | undefined;
+}
+
+export class GroupApplicationTitlesVM extends ApplicationToGroup implements IGroupApplicationTitlesVM {
+  applicationTitle?: string | undefined;
+  applicationCaption?: string | undefined;
+
+  constructor(data?: IGroupApplicationTitlesVM) {
+    super(data);
+  }
+
+  init(data?: any) {
+    super.init(data);
+    if (data) {
+      this.applicationTitle = data["ApplicationTitle"];
+      this.applicationCaption = data["ApplicationCaption"];
+    }
+  }
+
+  static fromJS(data: any): GroupApplicationTitlesVM {
+    data = typeof data === 'object' ? data : {};
+    let result = new GroupApplicationTitlesVM();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["ApplicationTitle"] = this.applicationTitle;
+    data["ApplicationCaption"] = this.applicationCaption;
+    super.toJSON(data);
+    return data;
+  }
+}
+
+export interface IGroupApplicationTitlesVM extends IApplicationToGroup {
+  applicationTitle?: string | undefined;
+  applicationCaption?: string | undefined;
 }
 
 export interface FileResponse {

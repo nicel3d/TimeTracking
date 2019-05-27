@@ -97,6 +97,10 @@ namespace TimeTrackingServer.Models
                     .HasColumnName("state")
                     .HasMaxLength(100);
 
+                entity.Property(e => e.State)
+                    .HasColumnName("mode")
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
@@ -137,6 +141,14 @@ namespace TimeTrackingServer.Models
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
+
+                entity.Property(e => e.State)
+                    .HasColumnName("state")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.State)
+                    .HasColumnName("mode")
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Application)
                     .WithMany(p => p.ApplicationTitles)
