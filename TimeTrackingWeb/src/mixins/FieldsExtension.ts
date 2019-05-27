@@ -3,6 +3,10 @@ import { StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import { States } from '%/constants/States'
 
+export function ConvertCurrentStateToRussian (state?: StateEnum) {
+  return oc(States.find(item => item.state === state)).text(States[1].text)
+}
+
 @Component
 export default class FieldsExtension extends Vue {
   GetUpdatedAt (dateString?: Date) {
@@ -18,6 +22,6 @@ export default class FieldsExtension extends Vue {
   }
 
   GetCurrentState (state?: StateEnum) {
-    return oc(States.find(item => item.state === state)).text(States[1].text)
+    return ConvertCurrentStateToRussian(state)
   }
 }

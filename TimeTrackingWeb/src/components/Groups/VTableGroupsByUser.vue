@@ -61,13 +61,10 @@
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
   GroupsWithCountUsers,
-  SortingRequest, StaffToGroup, StateEnum,
+  SortingRequest, StaffToGroup,
   TableSortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
-import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
-import { States } from '%/constants/States'
-import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
 import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 
 const filename = 'groups'

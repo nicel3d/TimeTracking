@@ -9,6 +9,8 @@
 import { StateEnum } from '../../stores/api/SwaggerDocumentationTypescript'
 import { ActivityStaffResponse } from '%/stores/api/SwaggerDocumentationTypescript'
 import { RouterNameEnum } from '../../constants/RouterConstant'
+import { ConvertCurrentStateToRussian } from '../../mixins/FieldsExtension'
+import moment from 'moment'
 
 /**
  * @param chart
@@ -41,6 +43,18 @@ export default {
     data: {
       type: 'timeline',
       options: {
+        tooltips: {
+          callbacks: {
+            title: function (tooltipItems, data) {
+              const d = data.labels[tooltipItems[0].datasetIndex]
+              return d
+            },
+            label: function (tooltipItem, data) {
+              const d = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+              return [ConvertCurrentStateToRussian(d[2]), moment(d[0]).format('L LTS'), moment(d[1]).format('L LTS')]
+            }
+          }
+        },
         'colorFunction': function (text, data, dataset, index) {
           switch (text) {
             case StateEnum.Allowed:
