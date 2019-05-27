@@ -27,7 +27,6 @@
               :items="states"
               item-value="state"
               item-text="text"
-              single-line
               persistent-hint
               label="Статус"
             />
@@ -60,7 +59,7 @@ import {
   TableSortingByGroupIdRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { ApplicationGroupEmitEnum, ApplicationsIdsAndGroupId } from '%/constants/WindowsEmmit'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
 
 @Component
 export default class VWindowAddApplicationGroup extends Vue {

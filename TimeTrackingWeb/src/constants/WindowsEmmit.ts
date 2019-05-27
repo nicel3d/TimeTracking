@@ -9,6 +9,12 @@ export enum ApplicationEmitEnum {
   CHANGE_APPLICATION_SUCCESS = 'CHANGE_APPLICATION_SUCCESS',
 }
 
+export enum ApplicationTitleEmitEnum {
+  ADD_APPLICATION_TITLE = 'ADD_APPLICATION_TITLE',
+  EDIT_APPLICATION_TITLE = 'EDIT_APPLICATION_TITLE',
+  CHANGE_APPLICATION_TITLE = 'CHANGE_APPLICATION_TITLE',
+}
+
 export enum ApplicationGroupEmitEnum {
   ADD_APPLICATION_GROUP = 'ADD_APPLICATION_GROUP',
   EDIT_APPLICATION_GROUP = 'EDIT_APPLICATION_GROUP',
@@ -33,6 +39,21 @@ export class ApplicationsIdsAndGroupId implements IApplicationsIdsAndGroupId {
   constructor (data: IApplicationsIdsAndGroupId) {
     this.groupId = data.groupId
     this.applicationsIds = data.applicationsIds
+  }
+}
+
+export interface IApplicationTitlesIdsAndApplicationId {
+  applicationId: number;
+  applicationTitlesIds: number[];
+}
+
+export class ApplicationTitlesIdsAndApplicationId implements IApplicationTitlesIdsAndApplicationId {
+  applicationId: number;
+  applicationTitlesIds: number[];
+
+  constructor (data: IApplicationTitlesIdsAndApplicationId) {
+    this.applicationId = data.applicationId
+    this.applicationTitlesIds = data.applicationTitlesIds
   }
 }
 

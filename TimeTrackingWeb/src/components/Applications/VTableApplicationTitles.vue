@@ -13,6 +13,7 @@
       ></v-text-field>
     </v-card-title>
     <div class="mx-2">
+      <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить обработчик</v-btn>
       <template v-if="desserts.length">
         <v-btn color="primary" dark class="mb-2" @click.prevent>Экспорт в xlsx</v-btn>
         <v-btn color="primary" dark class="mb-2" @click.prevent>Экспорт в csv</v-btn>
@@ -37,7 +38,8 @@
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
-        <td>{{ props.item.caption }}</td>
+        <td>{{ GetCurrentMode(props.item.state) }}</td>
+        <td>{{ props.item.title }}</td>
         <td>{{ GetCurrentState(props.item.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
@@ -50,12 +52,13 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  ApplicationGroupFilterRequest,
-  Applications, ApplicationTitlesFilterRequest, SortingRequest
+  ApplicationTitles, ApplicationTitlesFilterRequest, SortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
-import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
-import { ApplicationEmitEnum } from '%/constants/WindowsEmmit'
+import {
+  ApplicationTitleEmitEnum,
+  ApplicationTitlesIdsAndApplicationId
+} from '%/constants/WindowsEmmit'
 
 const filename = 'application'
 
@@ -63,11 +66,12 @@ const filename = 'application'
 export default class VTableApplicationTitles extends Mixins(SkipTake) {
   @Prop({ default: null }) applicationId!: number
 
-  desserts: Applications[] = []
+  desserts: ApplicationTitles[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
+    { text: 'Мод', value: 'Mode' },
     { text: 'Название приложения', value: 'Caption' },
     { text: 'Состояние', value: 'State' }
   ]
@@ -93,12 +97,23 @@ export default class VTableApplicationTitles extends Mixins(SkipTake) {
   }
 
   mounted () {
-    this.$root.$on(ApplicationEmitEnum.CHANGE_APPLICATION_SUCCESS, this.loadApplicationList)
+    this.$root.$on(ApplicationTitleEmitEnum.CHANGE_APPLICATION_TITLE, this.loadApplicationList)
     this.loadApplicationList()
   }
 
-  onEdit (item: Applications) {
-    this.$root.$emit(ApplicationEmitEnum.EDIT_APPLICATION, item)
+  onAdd () {
+    this.$root.$emit(
+      ApplicationTitleEmitEnum.ADD_APPLICATION_TITLE,
+      new ApplicationTitlesIdsAndApplicationId({
+        applicationId: this.applicationId,
+        applicationTitlesIds: this.desserts.length
+          ? this.desserts.map(x => Number(x.id)) : []
+      })
+    )
+  }
+
+  onEdit (item: ApplicationTitles) {
+    this.$root.$emit(ApplicationTitleEmitEnum.EDIT_APPLICATION_TITLE, item)
   }
 
   onDelete (id: number) {
@@ -119,7 +134,7 @@ export default class VTableApplicationTitles extends Mixins(SkipTake) {
   }
 
   beforeDestroy () {
-    this.$root.$off(ApplicationEmitEnum.CHANGE_APPLICATION_SUCCESS, this.loadApplicationList)
+    this.$root.$off(ApplicationTitleEmitEnum.CHANGE_APPLICATION_TITLE, this.loadApplicationList)
   }
 }
 </script>

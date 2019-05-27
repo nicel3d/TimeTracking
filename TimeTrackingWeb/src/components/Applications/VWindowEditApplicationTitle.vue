@@ -22,26 +22,28 @@
           <v-tab-item>
             <v-form :data-vv-scope="formId">
               <v-container v-if="this.item" fluid grid-list-md>
-                <v-flex>
-                  <v-text-field
-                    type="text"
-                    :value="item.caption"
-                    label="Приложение"
-                    readonly
-                  />
-                </v-flex>
+                <v-layout>
+                  <v-flex>
+                    <v-text-field
+                      type="text"
+                      :value="item.title"
+                      label="Заголовок"
+                      readonly
+                    />
+                  </v-flex>
 
-                <v-flex>
-                  <v-select
-                    v-model="state"
-                    :items="states"
-                    item-value="state"
-                    item-text="text"
-                    ref="state"
-                    persistent-hint
-                    label="Статус"
-                  />
-                </v-flex>
+                  <v-flex>
+                    <v-select
+                      v-model="state"
+                      :items="states"
+                      item-value="state"
+                      item-text="text"
+                      ref="state"
+                      persistent-hint
+                      label="Статус"
+                    />
+                  </v-flex>
+                </v-layout>
               </v-container>
             </v-form>
           </v-tab-item>
@@ -58,8 +60,8 @@
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
-import { Applications, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
-import { ApplicationEmitEnum } from '%/constants/WindowsEmmit'
+import { Applications, ApplicationTitles, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
+import { ApplicationEmitEnum, ApplicationTitleEmitEnum } from '%/constants/WindowsEmmit'
 import { States } from '%/constants/ListEnumes'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 import VTableApplicationTitles from '%/components/Applications/VTableApplicationTitles.vue'
@@ -67,15 +69,15 @@ import VTableApplicationTitles from '%/components/Applications/VTableApplication
 @Component({
   components: { VTableApplicationTitles, VDialogFullWindow }
 })
-export default class VWindowEditApplication extends Vue {
+export default class VWindowEditApplicationTitle extends Vue {
   @Inject('$validator') public $validator!: Validator
 
   id!: number
-  item: Applications | null = null
+  item: ApplicationTitles | null = null
   dialog: boolean = false
   $refs: any
   $options: any
-  formId: string = 'form-application-group-edit'
+  formId: string = 'form-application-title-edit'
   programs: object[] = []
   loading: boolean = false
   state: StateEnum = StateEnum.Neutral
@@ -91,24 +93,23 @@ export default class VWindowEditApplication extends Vue {
   }
 
   mounted () {
-    this.$root.$on(ApplicationEmitEnum.EDIT_APPLICATION, this.onOpenWindow)
+    this.$root.$on(ApplicationTitleEmitEnum.EDIT_APPLICATION_TITLE, this.onOpenWindow)
   }
 
-  onOpenWindow (item: Applications) {
+  onOpenWindow (item: ApplicationTitles) {
     this.item = item
     this.id = item.id || 0
     this.state = item.state
     this.dialog = true
-    setTimeout(() => this.$refs.state.focus(), 200)
   }
 
   onSave () {
     this.$validator.validateAll(this.formId)
       .then((res) => {
         if (res && this.item) {
-          this.$store.state.api.applications_PutState(this.id, this.state)
+          this.$store.state.api.applicationTitles_Put(this.id, this.item)
             .then(() => {
-              this.$root.$emit(ApplicationEmitEnum.CHANGE_APPLICATION_SUCCESS)
+              this.$root.$emit(ApplicationTitleEmitEnum.CHANGE_APPLICATION_TITLE)
               this.onReset()
             })
             .catch(res => this.$root.$emit('snackbar', res))
@@ -117,7 +118,7 @@ export default class VWindowEditApplication extends Vue {
   }
 
   beforeDestroy () {
-    this.$root.$off(ApplicationEmitEnum.EDIT_APPLICATION, this.onOpenWindow)
+    this.$root.$off(ApplicationTitleEmitEnum.EDIT_APPLICATION_TITLE, this.onOpenWindow)
   }
 }
 

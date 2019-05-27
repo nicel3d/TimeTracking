@@ -20,7 +20,6 @@
               :items="states"
               item-value="state"
               item-text="text"
-              single-line
               ref="state"
               persistent-hint
               label="Статус"
@@ -52,7 +51,7 @@ import {
   ApplicationToGroup, StateEnum, VMApplicationGroup
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { ApplicationGroupEmitEnum } from '%/constants/WindowsEmmit'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
 
 @Component
 export default class VWindowEditApplicationGroup extends Vue {

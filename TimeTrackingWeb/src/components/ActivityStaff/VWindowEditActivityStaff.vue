@@ -59,7 +59,6 @@
               :items="states"
               item-value="state"
               item-text="text"
-              single-line
               persistent-hint
               label="Статус"
             />
@@ -76,7 +75,7 @@ import { Component } from 'vue-property-decorator'
 import SkipTake from '%/utils/SkipTake'
 import { ActivityStaff, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 
 @Component({
