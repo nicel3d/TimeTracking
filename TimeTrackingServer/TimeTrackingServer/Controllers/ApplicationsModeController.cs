@@ -13,46 +13,46 @@ namespace TimeTrackingServer.Controllers
     [ApiController]
     [EnableCors("cors")]
     [Route("api/[controller]")]
-    public class TreatmentApplicationsController : Controller
+    public class ApplicationsModeController : Controller
     {
-        private ITreatmentApplicationsService _treatmentApplicationsService;
+        private IApplicationsModeService _applicationsModeService;
 
-        public TreatmentApplicationsController(ITreatmentApplicationsService treatmentApplicationsService)
+        public ApplicationsModeController(IApplicationsModeService applicationsModeService)
         {
-            _treatmentApplicationsService = treatmentApplicationsService;
+            _applicationsModeService = applicationsModeService;
         }
 
         [HttpPost(nameof(GetList))]
         [Produces("application/json")]
         public async Task<VMApplicationGroupListResponse> GetList([FromBody] ApplicationGroupFilterRequest request)
         {
-            return await _treatmentApplicationsService.Get(request);
+            return await _applicationsModeService.Get(request);
         }
 
         [HttpPost(nameof(ExportXLSXGetListWithoutFilter))]
         public async Task<ActionResult> ExportXLSXGetListWithoutFilter([FromBody] ApplicationGroupFilterRequest request)
         {
-            return File(await _treatmentApplicationsService.ExportXLSXGetListWithoutFilter(request), "application/ms-excel");
+            return File(await _applicationsModeService.ExportXLSXGetListWithoutFilter(request), "application/ms-excel");
         }
 
         [HttpPost(nameof(ExportCSVGetListWithoutFilter))]
         public async Task<ActionResult> ExportCSVGetListWithoutFilter([FromBody] ApplicationGroupFilterRequest request)
         {
-            return File(await _treatmentApplicationsService.ExportCSVGetListWithoutFilter(request), "text/csv");
+            return File(await _applicationsModeService.ExportCSVGetListWithoutFilter(request), "text/csv");
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<ApplicationToGroup> Get(int id)
         {
-            return await _treatmentApplicationsService.Get(id);
+            return await _applicationsModeService.Get(id);
         }
 
         [HttpPost(nameof(Post))]
         [Produces("application/json")]
         public async Task<ApplicationToGroup> Post([FromBody] ApplicationToGroup request)
         {
-            return await _treatmentApplicationsService.Post(request);
+            return await _applicationsModeService.Post(request);
         }
 
         [HttpPut("{id}")]
@@ -62,14 +62,14 @@ namespace TimeTrackingServer.Controllers
             {
                 throw new ApiDontValidIdRequest();
             }
-            await _treatmentApplicationsService.Put(id, request);
+            await _applicationsModeService.Put(id, request);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            await _treatmentApplicationsService.Delete(id);
+            await _applicationsModeService.Delete(id);
         }
     }
 }

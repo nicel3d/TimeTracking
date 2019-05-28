@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using TimeTrackingServer.Constants;
 
 namespace TimeTrackingServer.Models
 {
@@ -26,8 +25,8 @@ namespace TimeTrackingServer.Models
         public virtual DbSet<ApplicationTitles> ApplicationTitles { get; set; }
         public virtual DbSet<ApplicationToGroup> ApplicationToGroup { get; set; }
         public virtual DbSet<Applications> Applications { get; set; }
-        public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<Groups> Groups { get; set; }
+        public virtual DbSet<Settings> Settings { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<StaffToGroup> StaffToGroup { get; set; }
 
@@ -83,29 +82,32 @@ namespace TimeTrackingServer.Models
                     .HasName("application_title_to_group_id_uindex")
                     .IsUnique();
 
-                entity.HasIndex(e => new { e.ApplicationTitleId, e.GroupId })
+                entity.HasIndex(e => new { e.ApplicationId, e.GroupId })
                     .HasName("application_title_to_group_title_id_group_id_uindex")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.ApplicationTitleId).HasColumnName("application_title_id");
+                entity.Property(e => e.ApplicationId).HasColumnName("application_id");
 
                 entity.Property(e => e.GroupId).HasColumnName("group_id");
 
-                entity.Property(e => e.State)
-                    .HasColumnName("state")
+                entity.Property(e => e.Mode).HasColumnName("mode");
+
+                entity.Property(e => e.State).HasColumnName("state");
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
                     .HasMaxLength(100);
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
 
-                entity.HasOne(d => d.ApplicationTitle)
+                entity.HasOne(d => d.Application)
                     .WithMany(p => p.ApplicationTitleToGroup)
-                    .HasForeignKey(d => d.ApplicationTitleId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("application_title_to_group_application_titles_id_fk");
+                    .HasForeignKey(d => d.ApplicationId)
+                    .HasConstraintName("application_title_to_group_applications_id_fk");
 
                 entity.HasOne(d => d.Group)
                     .WithMany(p => p.ApplicationTitleToGroup)
@@ -131,6 +133,10 @@ namespace TimeTrackingServer.Models
                     .HasDefaultValueSql("nextval('applications_title_id_seq'::regclass)");
 
                 entity.Property(e => e.ApplicationId).HasColumnName("application_id");
+
+                entity.Property(e => e.Mode).HasColumnName("mode");
+
+                entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.Title).HasColumnName("title");
 
@@ -161,9 +167,7 @@ namespace TimeTrackingServer.Models
 
                 entity.Property(e => e.GroupId).HasColumnName("group_id");
 
-                entity.Property(e => e.State)
-                    .HasColumnName("state")
-                    .HasMaxLength(100);
+                entity.Property(e => e.State).HasColumnName("state");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
@@ -201,45 +205,11 @@ namespace TimeTrackingServer.Models
                     //.HasConversion( // custom converter
                     //    v => v.ToString(),
                     //    v => (StateEnum)Enum.Parse(typeof(StateEnum), v))
-                    .HasColumnName("state")
-                    .HasMaxLength(100);
+                    .HasColumnName("state");
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")
                     .HasDefaultValueSql("now()");
-            });
-
-            modelBuilder.Entity<Settings>(entity =>
-            {
-                entity.ToTable("settings");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.TimeBreakFrom)
-                    .HasColumnName("time_break_from")
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.TimeBreakTo)
-                    .HasColumnName("time_break_to")
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.TimeTheadMiliseconds).HasColumnName("time_thead_miliseconds");
-
-                entity.Property(e => e.TimeWorkingFrom)
-                    .HasColumnName("time_working_from")
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.TimeWorkingTo)
-                    .HasColumnName("time_working_to")
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.UpdatedAt)
-                    .HasColumnName("updated_at")
-                    .HasDefaultValueSql("now()");
-
-                entity.Property(e => e.Status)
-                    .HasColumnName("status")
-                    .HasDefaultValueSql("false");
             });
 
             modelBuilder.Entity<Groups>(entity =>
@@ -264,6 +234,39 @@ namespace TimeTrackingServer.Models
                 entity.Property(e => e.Status)
                     .HasColumnName("status")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnName("updated_at")
+                    .HasDefaultValueSql("now()");
+            });
+
+            modelBuilder.Entity<Settings>(entity =>
+            {
+                entity.ToTable("settings");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.TimeBreakFrom)
+                    .HasColumnName("time_break_from")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.TimeBreakTo)
+                    .HasColumnName("time_break_to")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.TimeTheadMiliseconds).HasColumnName("time_thead_miliseconds");
+
+                entity.Property(e => e.TimeWorkingFrom)
+                    .HasColumnName("time_working_from")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.TimeWorkingTo)
+                    .HasColumnName("time_working_to")
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.UpdatedAt)
                     .HasColumnName("updated_at")

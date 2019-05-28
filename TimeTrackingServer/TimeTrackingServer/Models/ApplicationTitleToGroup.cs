@@ -8,12 +8,14 @@ namespace TimeTrackingServer.Models
     public partial class ApplicationTitleToGroup : IIdentifier
     {
         public int? Id { get; set; }
-        public int? ApplicationTitleId { get; set; }
-        public int? GroupId { get; set; }
+        public int ApplicationId { get; set; }
+        public int GroupId { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public StateEnum State { get; set; }
+        public ModeEnum Mode { get; set; }
+        public string Title { get; set; }
 
-        public virtual ApplicationTitles ApplicationTitle { get; set; }
+        public virtual Applications Application { get; set; }
         public virtual Groups Group { get; set; }
     }
 }

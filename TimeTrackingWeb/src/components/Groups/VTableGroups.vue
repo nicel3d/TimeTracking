@@ -88,7 +88,7 @@ export default class VTableGroups extends Mixins(SkipTake) {
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
     { text: 'Наименование группы', value: 'Name' },
-    { text: 'Кол-во участников', value: 'ActivityFirst' }
+    { text: 'Кол-во участников', value: 'CountUsers' }
   ]
   childrenHeaders = [
     { text: 'Обновлено', value: 'updatedAt' },

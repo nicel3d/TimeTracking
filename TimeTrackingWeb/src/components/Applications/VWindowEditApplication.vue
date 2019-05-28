@@ -1,48 +1,58 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
-    <v-card>
-      <v-card-title>Обновление ограничений по программе</v-card-title>
-      <v-divider></v-divider>
-      <v-card-text v-if="item">
-        <v-form :data-vv-scope="formId" @submit.prevent="onEdit">
-          <v-flex>
-            <v-text-field
-              type="text"
-              :value="item.caption"
-              label="Приложение"
-              readonly
-            />
-          </v-flex>
+  <v-dialog-full-window
+    @on-save="onSave"
+    :item="item"
+    :loading="loading"
+    v-model="dialog">
+    <span slot="title">Детали приложения: {{ item ? item.caption : 'не определено' }}</span>
+    <template slot="extension">
+      <v-tabs
+        v-model="tabs"
+        grow
+        color="transparent"
+        slider-color="white">
+        <v-tab v-for="n in tabsItems" :key="n">
+          {{ n }}
+        </v-tab>
+      </v-tabs>
+    </template>
+    <template>
+      <div>
+        <v-tabs-items v-model="tabs">
+          <v-tab-item>
+            <v-form :data-vv-scope="formId">
+              <v-container v-if="this.item" fluid grid-list-md>
+                <v-flex>
+                  <v-text-field
+                    type="text"
+                    :value="item.caption"
+                    label="Приложение"
+                    readonly
+                  />
+                </v-flex>
 
-          <v-flex>
-            <v-select
-              v-model="state"
-              :items="states"
-              item-value="state"
-              item-text="text"
-              single-line
-              ref="state"
-              persistent-hint
-              label="Статус"
-            />
-          </v-flex>
-        </v-form>
-      </v-card-text>
+                <v-flex>
+                  <v-select
+                    v-model="state"
+                    :items="states"
+                    item-value="state"
+                    item-text="text"
+                    ref="state"
+                    persistent-hint
+                    label="Статус"
+                  />
+                </v-flex>
+              </v-container>
+            </v-form>
+          </v-tab-item>
+          <v-tab-item>
+            <v-table-application-titles v-if="item" :application-id="item.id"/>
+          </v-tab-item>
+        </v-tabs-items>
+      </div>
       <v-divider></v-divider>
-      <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          color="blue darken-1"
-          flat
-          @click.prevent="onReset">Отменить
-        </v-btn>
-        <v-btn
-          color="primary"
-          @click.prevent="onEdit">Сохранить
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    </template>
+  </v-dialog-full-window>
 </template>
 
 <script lang="ts">
@@ -50,9 +60,13 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
 import { Applications, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
 import { ApplicationEmitEnum } from '%/constants/WindowsEmmit'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
+import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
+import VTableApplicationTitles from '%/components/ApplicationTitles/VTableApplicationTitles.vue'
 
-@Component
+@Component({
+  components: { VTableApplicationTitles, VDialogFullWindow }
+})
 export default class VWindowEditApplication extends Vue {
   @Inject('$validator') public $validator!: Validator
 
@@ -66,6 +80,11 @@ export default class VWindowEditApplication extends Vue {
   loading: boolean = false
   state: StateEnum = StateEnum.Neutral
   states = States
+  tabs: number = 0
+  tabsItems: string[] = [
+    'Детали',
+    'Заголовки приложений'
+  ]
 
   onReset () {
     Object.assign(this.$data, this.$options.data.call(this))
@@ -83,7 +102,7 @@ export default class VWindowEditApplication extends Vue {
     setTimeout(() => this.$refs.state.focus(), 200)
   }
 
-  onEdit () {
+  onSave () {
     this.$validator.validateAll(this.formId)
       .then((res) => {
         if (res && this.item) {

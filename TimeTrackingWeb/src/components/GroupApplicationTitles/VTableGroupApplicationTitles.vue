@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card>
     <v-card-title primary-title>
-      <h3 class="mb-0">Ограничения по программам</h3>
+      <h3 class="mb-0">Заголовки приложения</h3>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -15,8 +15,8 @@
     <div class="mx-2">
       <v-btn color="primary" dark class="mb-2" @click="onAdd">Добавить обработчик</v-btn>
       <template v-if="desserts.length">
-        <v-btn color="primary" dark class="mb-2" @click="ExportXLSXList">Экспорт в xlsx</v-btn>
-        <v-btn color="primary" dark class="mb-2" @click="ExportCSVList">Экспорт в csv</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click.prevent>Экспорт в xlsx</v-btn>
+        <v-btn color="primary" dark class="mb-2" @click.prevent>Экспорт в csv</v-btn>
       </template>
     </div>
     <v-data-table
@@ -38,6 +38,8 @@
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
+        <td>{{ props.item.applicationCaption }}</td>
+        <td>{{ GetCurrentMode(props.item.state) }}</td>
         <td>{{ props.item.applicationTitle }}</td>
         <td>{{ GetCurrentState(props.item.state) }}</td>
       </template>
@@ -52,24 +54,27 @@
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
   ApplicationGroupFilterRequest,
-  SortingRequest, VMApplicationGroup
+  ApplicationTitles, ApplicationTitlesFilterRequest, ApplicationTitleToGroup, SortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
-import { DownloadingFileForBrowsers, FileFormatEnum } from '%/constants/DownloadingFileForBrowsers'
-import { ApplicationGroupEmitEnum, ApplicationsIdsAndGroupId } from '%/constants/WindowsEmmit'
-
-const filename = 'program_restrictions'
+import {
+  ApplicationsIdsAndGroupId,
+  ApplicationTitleEmitEnum,
+  ApplicationTitlesIdsAndApplicationId, GroupApplicationTitleEmitEnum
+} from '%/constants/WindowsEmmit'
 
 @Component
-export default class VTableApplicationGroups extends Mixins(SkipTake) {
+export default class VTableGroupApplicationTitles extends Mixins(SkipTake) {
   @Prop({ default: null }) groupId!: number
 
-  desserts: VMApplicationGroup[] = []
+  desserts: ApplicationTitles[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
-    { text: 'Программа', value: 'ApplicationTitle' },
+    { text: 'Название приложения', value: 'ApplicationCaption' },
+    { text: 'Мод', value: 'Mode' },
+    { text: 'Текст', value: 'ApplicationTitle' },
     { text: 'Состояние', value: 'State' }
   ]
 
@@ -89,53 +94,35 @@ export default class VTableApplicationGroups extends Mixins(SkipTake) {
   @Watch('pagination')
   onPagination () {
     if (!this.loading) {
-      this.loadTreatmentApplications()
+      this.loadList()
     }
   }
 
   mounted () {
-    this.$root.$on(
-      ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS,
-      this.loadTreatmentApplications
-    )
-    this.loadTreatmentApplications()
+    this.$root.$on(GroupApplicationTitleEmitEnum.CHANGE_GROUP_APPLICATION_TITLE, this.loadList)
+    this.loadList()
   }
 
   onAdd () {
     this.$root.$emit(
-      ApplicationGroupEmitEnum.ADD_APPLICATION_GROUP,
-      new ApplicationsIdsAndGroupId({
-        groupId: this.groupId,
-        applicationsIds: this.desserts.length
-          ? this.desserts.map(x => Number(x.applicationId)) : []
-      })
+      GroupApplicationTitleEmitEnum.ADD_GROUP_APPLICATION_TITLE,
+      new ApplicationsIdsAndGroupId({ groupId: this.groupId })
     )
   }
 
-  onEdit = (item: VMApplicationGroup) =>
-    this.$root.$emit(ApplicationGroupEmitEnum.EDIT_APPLICATION_GROUP, item)
+  onEdit (item: ApplicationTitleToGroup) {
+    this.$root.$emit(GroupApplicationTitleEmitEnum.EDIT_GROUP_APPLICATION_TITLE, item)
+  }
 
   onDelete (id: number) {
-    this.$store.state.api.applicationsMode_Delete(id)
+    this.$store.state.api.applications_Delete(id)
       .then(this.onPagination)
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  ExportXLSXList () {
-    this.$store.state.api.applicationsMode_ExportXLSXGetListWithoutFilter(this.dataRequest)
-      .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.XLSX))
-      .catch(res => this.$root.$emit('snackbar', res))
-  }
-
-  ExportCSVList () {
-    this.$store.state.api.applicationsMode_ExportCSVGetListWithoutFilter(this.dataRequest)
-      .then(res => DownloadingFileForBrowsers(res, filename, FileFormatEnum.CSV))
-      .catch(res => this.$root.$emit('snackbar', res))
-  }
-
-  loadTreatmentApplications () {
+  loadList () {
     this.loading = true
-    this.$store.state.api.applicationsMode_GetList(this.dataRequest)
+    this.$store.state.api.groupApplicationTitles_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total
@@ -145,10 +132,7 @@ export default class VTableApplicationGroups extends Mixins(SkipTake) {
   }
 
   beforeDestroy () {
-    this.$root.$off(
-      ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS,
-      this.loadTreatmentApplications
-    )
+    this.$root.$off(GroupApplicationTitleEmitEnum.CHANGE_GROUP_APPLICATION_TITLE, this.loadList)
   }
 }
 </script>

@@ -27,7 +27,6 @@
               :items="states"
               item-value="state"
               item-text="text"
-              single-line
               persistent-hint
               label="Статус"
             />
@@ -60,7 +59,7 @@ import {
   TableSortingByGroupIdRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { ApplicationGroupEmitEnum, ApplicationsIdsAndGroupId } from '%/constants/WindowsEmmit'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
 
 @Component
 export default class VWindowAddApplicationGroup extends Vue {
@@ -90,7 +89,7 @@ export default class VWindowAddApplicationGroup extends Vue {
     const { groupId, applicationsIds } = request
     this.dialog = true
     this.groupId = groupId
-    this.applicationsIds = applicationsIds
+    this.applicationsIds = applicationsIds || []
     this.loadApplications()
   }
 
@@ -103,7 +102,7 @@ export default class VWindowAddApplicationGroup extends Vue {
             groupId: this.groupId,
             state: this.state
           })
-          this.$store.state.api.treatmentApplications_Post(data)
+          this.$store.state.api.applicationsMode_Post(data)
             .then(() => {
               this.$root.$emit(ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS)
               this.onReset()

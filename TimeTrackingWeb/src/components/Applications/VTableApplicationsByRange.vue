@@ -47,7 +47,7 @@ import {
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
 import SkipTake from '%/utils/SkipTake'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
 
 @Component
 export default class VTableApplicationsByRange extends Mixins(SkipTake) {

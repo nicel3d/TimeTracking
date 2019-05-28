@@ -51,10 +51,13 @@
             </v-form>
           </v-tab-item>
           <v-tab-item>
-            <v-staff-table-component :group-id="item.id" v-if="item && item.id"/>
+            <v-table-staff :group-id="item.id" v-if="item && item.id"/>
           </v-tab-item>
           <v-tab-item>
-            <v-application-group-table-component :group-id="item.id" v-if="item && item.id"/>
+            <v-table-application-groups :group-id="item.id" v-if="item && item.id"/>
+          </v-tab-item>
+          <v-tab-item>
+            <v-table-group-application-titles :group-id="item.id" v-if="item && item.id"/>
           </v-tab-item>
         </v-tabs-items>
       </div>
@@ -69,11 +72,12 @@ import { Validator } from 'vee-validate'
 import { Groups } from '%/stores/api/SwaggerDocumentationTypescript'
 import { GroupEmitEnum } from '%/constants/WindowsEmmit'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
-import VStaffTableComponent from '%/components/Staff/VTableStaff.vue'
-import VApplicationGroupTableComponent from '%/components/ApplicationGroups/VTableApplicationGroups.vue'
+import VTableStaff from '%/components/Staff/VTableStaff.vue'
+import VTableApplicationGroups from '%/components/ApplicationGroups/VTableApplicationGroups.vue'
+import VTableGroupApplicationTitles from '%/components/GroupApplicationTitles/VTableGroupApplicationTitles.vue'
 
 @Component({
-  components: { VApplicationGroupTableComponent, VStaffTableComponent, VDialogFullWindow }
+  components: { VTableGroupApplicationTitles, VTableApplicationGroups, VTableStaff, VDialogFullWindow }
 })
 export default class VWindowEditGroup extends Vue {
   @Inject('$validator') public $validator!: Validator
@@ -90,7 +94,8 @@ export default class VWindowEditGroup extends Vue {
   tabsItems: string[] = [
     'Детали',
     'Пользователи в группе',
-    'Обработка программ'
+    'Обработка программ',
+    'Обработка заголовков у программ'
   ]
 
   mounted () {

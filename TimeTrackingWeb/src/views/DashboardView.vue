@@ -32,6 +32,6 @@ import VFilterByDayDashboard from '%/components/Dashboard/VFilterByDayDashboard.
   components: { VFilterByDayDashboard, VStatisticDashboard, VActiveUserDashboard, VChartDashboard }
 })
 export default class DashboardView extends Vue {
-  filter: Date = this.$moment().subtract(3, 'days').toDate()
+  filter: Date = this.$moment().toDate()
 }
 </script>

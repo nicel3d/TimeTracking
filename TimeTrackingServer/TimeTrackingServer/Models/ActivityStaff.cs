@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using TimeTrackingServer.Exceptions;
 
 namespace TimeTrackingServer.Models
 {
-    public partial class ActivityStaff : ITWithUpdateAt
+    public partial class ActivityStaff : ITWithUpdateAt, IIdentifier
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string ApplicationTitle { get; set; }
         public int? StaffId { get; set; }

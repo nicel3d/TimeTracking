@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
-      <v-card-title>Обновление ограничения по программе</v-card-title>
+      <v-card-title>Добавить обработчик для заголовка программы</v-card-title>
       <v-divider></v-divider>
       <v-card-text v-if="item">
         <v-form :data-vv-scope="formId" @submit.prevent="onEdit">
@@ -20,7 +20,6 @@
               :items="states"
               item-value="state"
               item-text="text"
-              single-line
               ref="state"
               persistent-hint
               label="Статус"
@@ -52,7 +51,7 @@ import {
   ApplicationToGroup, StateEnum, VMApplicationGroup
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import { ApplicationGroupEmitEnum } from '%/constants/WindowsEmmit'
-import { States } from '%/constants/States'
+import { States } from '%/constants/ListEnumes'
 
 @Component
 export default class VWindowEditApplicationGroup extends Vue {
@@ -93,7 +92,7 @@ export default class VWindowEditApplicationGroup extends Vue {
             ...this.item,
             state: this.state
           })
-          this.$store.state.api.treatmentApplications_Put(this.id, data)
+          this.$store.state.api.applicationsMode_Put(this.id, data)
             .then(() => {
               this.$root.$emit(ApplicationGroupEmitEnum.CHANGE_APPLICATION_GROUP_SUCCESS)
               this.onReset()

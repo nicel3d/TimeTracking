@@ -1,7 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
-import { StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
+import { ModeEnum, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
 import { oc } from 'ts-optchain'
-import { States } from '%/constants/States'
+import { Modes, States } from '%/constants/ListEnumes'
 
 export function ConvertCurrentStateToRussian (state?: StateEnum) {
   return oc(States.find(item => item.state === state)).text(States[1].text)
@@ -23,5 +23,9 @@ export default class FieldsExtension extends Vue {
 
   GetCurrentState (state?: StateEnum) {
     return ConvertCurrentStateToRussian(state)
+  }
+
+  GetCurrentMode (state?: ModeEnum) {
+    return oc(Modes.find(item => item.state === state)).text(Modes[1].text)
   }
 }
