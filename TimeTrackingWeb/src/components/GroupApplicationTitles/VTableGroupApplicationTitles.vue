@@ -54,7 +54,7 @@
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
   ApplicationGroupFilterRequest,
-  ApplicationTitles, ApplicationTitlesFilterRequest, ApplicationTitleToGroup, SortingRequest
+  ApplicationTitles, ApplicationTitlesFilterRequest, ApplicationTitleToGroup, GroupApplicationTitlesVM, SortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
 import {
@@ -110,8 +110,14 @@ export default class VTableGroupApplicationTitles extends Mixins(SkipTake) {
     )
   }
 
-  onEdit (item: ApplicationTitleToGroup) {
-    this.$root.$emit(GroupApplicationTitleEmitEnum.EDIT_GROUP_APPLICATION_TITLE, item)
+  onEdit (item: GroupApplicationTitlesVM) {
+    this.$root.$emit(
+      GroupApplicationTitleEmitEnum.EDIT_GROUP_APPLICATION_TITLE,
+      new ApplicationTitleToGroup({
+        ...item,
+        title: item.applicationTitle
+      })
+    )
   }
 
   onDelete (id: number) {

@@ -34,7 +34,6 @@
                 type="text"
                 :value="item.title"
                 label="Текст"
-                required
                 readonly
               />
             </v-flex>
@@ -109,7 +108,8 @@ export default class VWindowEditGroupApplicationTitle extends Vue {
   }
 
   onReset () {
-    Object.assign(this.$data, this.$options.data.call(this))
+    // Object.assign(this.$data, this.$options.data.call(this))
+    this.dialog = false
   }
 
   mounted () {

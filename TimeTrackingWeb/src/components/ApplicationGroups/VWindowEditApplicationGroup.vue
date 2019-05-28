@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
-      <v-card-title>Добавить обработчик для заголовка программы</v-card-title>
+      <v-card-title>Обновить обработчик для заголовка программы</v-card-title>
       <v-divider></v-divider>
       <v-card-text v-if="item">
         <v-form :data-vv-scope="formId" @submit.prevent="onEdit">
@@ -37,7 +37,7 @@
         </v-btn>
         <v-btn
           color="primary"
-          @click.prevent="onEdit">Добавить
+          @click.prevent="onSave">Обновить
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -84,7 +84,7 @@ export default class VWindowEditApplicationGroup extends Vue {
     setTimeout(() => this.$refs.state.focus(), 200)
   }
 
-  onEdit () {
+  onSave () {
     this.$validator.validateAll(this.formId)
       .then((res) => {
         if (res && this.item) {

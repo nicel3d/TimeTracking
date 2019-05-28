@@ -126,7 +126,7 @@ namespace TimeTrackingServer.Services.Impl
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(_worksheetTitle);
-                using (var cells = worksheet.Cells[1, 1, 1, 3])
+                using (var cells = worksheet.Cells[1, 1, 1, 5])
                 {
                     cells.Style.Font.Bold = true;
                 }
@@ -144,7 +144,7 @@ namespace TimeTrackingServer.Services.Impl
                     worksheet.Cells["B" + j].Value = staff.Caption;
                     worksheet.Cells["C" + j].Value = staff.ActivityFirst?.ToString("g");
                     worksheet.Cells["D" + j].Value = staff.RangeLastActivityTime;
-                    worksheet.Cells["I" + j].Value = staff.ActivityLast?.ToString("g");
+                    worksheet.Cells["E" + j].Value = staff.ActivityLast?.ToString("g");
                     j++;
                 }
 
