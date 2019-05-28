@@ -38,8 +38,9 @@
           </v-icon>
         </td>
         <td>{{ GetUpdatedAt(props.item.updatedAt) }}</td>
+        <td>{{ props.item.applicationCaption }}</td>
         <td>{{ GetCurrentMode(props.item.state) }}</td>
-        <td>{{ props.item.title }}</td>
+        <td>{{ props.item.applicationTitle }}</td>
         <td>{{ GetCurrentState(props.item.state) }}</td>
       </template>
       <v-alert v-slot:no-results :value="true" color="error" icon="warning">
@@ -52,35 +53,38 @@
 <script lang="ts">
 import { Component, Mixins, Prop, Watch } from 'vue-property-decorator'
 import {
-  ApplicationTitlesFilterRequest, GroupApplicationTitleListVM, SortingRequest
+  ApplicationGroupFilterRequest,
+  ApplicationTitles, ApplicationTitlesFilterRequest, ApplicationTitleToGroup, SortingRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import SkipTake from '%/utils/SkipTake'
 import {
+  ApplicationsIdsAndGroupId,
   ApplicationTitleEmitEnum,
-  ApplicationTitlesIdsAndApplicationId
+  ApplicationTitlesIdsAndApplicationId, GroupApplicationTitleEmitEnum
 } from '%/constants/WindowsEmmit'
 
 @Component
-export default class VTableApplicationTitles extends Mixins(SkipTake) {
-  @Prop({ default: null }) applicationId!: number
+export default class VTableGroupApplicationTitles extends Mixins(SkipTake) {
+  @Prop({ default: null }) groupId!: number
 
-  desserts: GroupApplicationTitleListVM[] = []
+  desserts: ApplicationTitles[] = []
   rowsPerPageItems: number[] = [5, 10, 25, 50, 100]
   headers = [
     { sortable: false, text: 'Действия' },
     { text: 'Обновлено', value: 'UpdatedAt' },
+    { text: 'Название приложения', value: 'ApplicationCaption' },
     { text: 'Мод', value: 'Mode' },
-    { text: 'Текст', value: 'Title' },
+    { text: 'Текст', value: 'ApplicationTitle' },
     { text: 'Состояние', value: 'State' }
   ]
 
   get dataRequest () {
-    return new ApplicationTitlesFilterRequest({
+    return new ApplicationGroupFilterRequest({
       sorting: new SortingRequest({
         descending: this.pagination.descending,
         sortBy: this.pagination.sortBy
       }),
-      applicationId: this.applicationId,
+      groupId: this.groupId,
       search: this.search,
       skip: this.skip,
       take: this.take
@@ -90,28 +94,24 @@ export default class VTableApplicationTitles extends Mixins(SkipTake) {
   @Watch('pagination')
   onPagination () {
     if (!this.loading) {
-      this.loadApplicationList()
+      this.loadList()
     }
   }
 
   mounted () {
-    this.$root.$on(ApplicationTitleEmitEnum.CHANGE_APPLICATION_TITLE, this.loadApplicationList)
-    this.loadApplicationList()
+    this.$root.$on(GroupApplicationTitleEmitEnum.CHANGE_GROUP_APPLICATION_TITLE, this.loadList)
+    this.loadList()
   }
 
   onAdd () {
     this.$root.$emit(
-      ApplicationTitleEmitEnum.ADD_APPLICATION_TITLE,
-      new ApplicationTitlesIdsAndApplicationId({
-        applicationId: this.applicationId,
-        applicationTitlesIds: this.desserts.length
-          ? this.desserts.map(x => Number(x.id)) : []
-      })
+      GroupApplicationTitleEmitEnum.ADD_GROUP_APPLICATION_TITLE,
+      new ApplicationsIdsAndGroupId({ groupId: this.groupId })
     )
   }
 
-  onEdit (item: GroupApplicationTitleListVM) {
-    this.$root.$emit(ApplicationTitleEmitEnum.EDIT_APPLICATION_TITLE, item)
+  onEdit (item: ApplicationTitleToGroup) {
+    this.$root.$emit(GroupApplicationTitleEmitEnum.EDIT_GROUP_APPLICATION_TITLE, item)
   }
 
   onDelete (id: number) {
@@ -120,9 +120,9 @@ export default class VTableApplicationTitles extends Mixins(SkipTake) {
       .catch(res => this.$root.$emit('snackbar', res))
   }
 
-  loadApplicationList () {
+  loadList () {
     this.loading = true
-    this.$store.state.api.applicationTitles_GetList(this.dataRequest)
+    this.$store.state.api.groupApplicationTitles_GetList(this.dataRequest)
       .then(res => {
         this.desserts = res.data
         this.totalDesserts = res.total
@@ -132,7 +132,7 @@ export default class VTableApplicationTitles extends Mixins(SkipTake) {
   }
 
   beforeDestroy () {
-    this.$root.$off(ApplicationTitleEmitEnum.CHANGE_APPLICATION_TITLE, this.loadApplicationList)
+    this.$root.$off(GroupApplicationTitleEmitEnum.CHANGE_GROUP_APPLICATION_TITLE, this.loadList)
   }
 }
 </script>

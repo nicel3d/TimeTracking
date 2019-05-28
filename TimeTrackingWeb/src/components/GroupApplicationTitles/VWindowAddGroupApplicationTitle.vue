@@ -1,11 +1,27 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
     <v-card>
-      <v-card-title>Обновление ограничения по программе</v-card-title>
+      <v-card-title>Добавить обработчик для заголовка программы</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
         <v-form :data-vv-scope="formId">
           <v-container fluid grid-list-md>
+            <v-flex>
+              <v-autocomplete
+                v-model="applicationId"
+                :items="programs"
+                label="Программа"
+                data-vv-as="Название программы"
+                :data-vv-name="`${formId}.program`"
+                item-text="value"
+                item-value="name"
+                persistent-hint
+                :loading="loading"
+                v-validate="'required'"
+                :error-messages="errors.collect(`${formId}.program`)"
+              />
+            </v-flex>
+
             <v-flex>
               <v-select
                 v-model="mode"
@@ -63,8 +79,18 @@
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
-import { ApplicationTitles, ModeEnum, StateEnum } from '%/stores/api/SwaggerDocumentationTypescript'
-import { ApplicationTitleEmitEnum, ApplicationTitlesIdsAndApplicationId } from '%/constants/WindowsEmmit'
+import {
+  ApplicationTitles, ApplicationTitleToGroup,
+  ModeEnum,
+  StateEnum,
+  TableSortingByGroupIdRequest
+} from '%/stores/api/SwaggerDocumentationTypescript'
+import {
+  ApplicationsIdsAndGroupId,
+  ApplicationTitleEmitEnum,
+  ApplicationTitlesIdsAndApplicationId,
+  GroupApplicationTitleEmitEnum
+} from '%/constants/WindowsEmmit'
 import { Modes, States } from '%/constants/ListEnumes'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
 import VTableApplicationTitles from '%/components/ApplicationTitles/VTableApplicationTitles.vue'
@@ -79,40 +105,63 @@ export default class VWindowEditApplicationTitle extends Vue {
   dialog: boolean = false
   $refs: any
   $options: any
-  formId: string = 'form-application-title-add'
+  programs: object[] = []
+  applicationsIds: number[] = []
+  formId: string = 'form-group-application-title-add'
   loading: boolean = false
   title: string = ''
+  groupId: number | null = null
   state: StateEnum = StateEnum.Neutral
   states = States
   mode: ModeEnum = ModeEnum.Exactly
   modes = Modes
+
+  created () {
+    this.loadApplications()
+  }
 
   onReset () {
     Object.assign(this.$data, this.$options.data.call(this))
   }
 
   mounted () {
-    this.$root.$on(ApplicationTitleEmitEnum.ADD_APPLICATION_TITLE, this.onOpenWindow)
+    this.$root.$on(GroupApplicationTitleEmitEnum.ADD_GROUP_APPLICATION_TITLE, this.onOpenWindow)
   }
 
-  onOpenWindow (item: ApplicationTitlesIdsAndApplicationId) {
-    this.applicationId = item.applicationId
+  onOpenWindow (item: ApplicationsIdsAndGroupId) {
+    this.groupId = item.groupId
     this.dialog = true
+  }
+
+  loadApplications () {
+    this.loading = true
+    this.$store.state.api.applications_GetListFull(new TableSortingByGroupIdRequest())
+      .then(res => {
+        this.programs = res
+          .filter(x => !this.applicationsIds.includes(x.id))
+          .map(x => ({
+            name: x.id,
+            value: x.caption
+          }))
+      })
+      .catch(res => this.$root.$emit('snackbar', res))
+      .then(() => (this.loading = false))
   }
 
   onAdd () {
     this.$validator.validateAll(this.formId)
       .then((res) => {
-        if (res) {
-          const data = new ApplicationTitles({
+        if (res && this.groupId) {
+          const data = new ApplicationTitleToGroup({
             applicationId: this.applicationId,
+            groupId: this.groupId,
             title: this.title,
             state: this.state,
             mode: this.mode
           })
-          this.$store.state.api.applicationTitles_Post(data)
+          this.$store.state.api.groupApplicationTitles_Post(data)
             .then(() => {
-              this.$root.$emit(ApplicationTitleEmitEnum.CHANGE_APPLICATION_TITLE)
+              this.$root.$emit(GroupApplicationTitleEmitEnum.CHANGE_GROUP_APPLICATION_TITLE)
               this.onReset()
             })
             .catch(res => this.$root.$emit('snackbar', res))
@@ -121,7 +170,7 @@ export default class VWindowEditApplicationTitle extends Vue {
   }
 
   beforeDestroy () {
-    this.$root.$off(ApplicationTitleEmitEnum.ADD_APPLICATION_TITLE, this.onOpenWindow)
+    this.$root.$off(GroupApplicationTitleEmitEnum.ADD_GROUP_APPLICATION_TITLE, this.onOpenWindow)
   }
 }
 

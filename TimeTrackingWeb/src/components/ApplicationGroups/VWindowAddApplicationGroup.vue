@@ -89,7 +89,7 @@ export default class VWindowAddApplicationGroup extends Vue {
     const { groupId, applicationsIds } = request
     this.dialog = true
     this.groupId = groupId
-    this.applicationsIds = applicationsIds
+    this.applicationsIds = applicationsIds || []
     this.loadApplications()
   }
 

@@ -10,7 +10,6 @@ namespace TimeTrackingServer.Services
         public List<ApplicationTitles> Data { get; set; }
     }
 
-
     public class ApplicationTitlesFilterRequest : TableSortingRequest
     {
         public int ApplicationId { get; set; }

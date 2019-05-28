@@ -46,7 +46,7 @@ namespace TimeTrackingServer.Services.Impl
                                                     ApplicationTitle = x.Title,
                                                     ApplicationCaption = x.Application.Caption
                                                 });
-
+             
             if (!String.IsNullOrEmpty(request.Search))
             {
                 data = data.Where(x =>
