@@ -7,6 +7,7 @@
     <v-window-edit-application-group/>
     <v-window-add-group-to-staff/>
     <v-window-add-group-application-title/>
+    <v-window-edit-group-application-title/>
   </div>
 </template>
 
@@ -19,9 +20,11 @@ import VWindowAddApplicationGroup from '%/components/ApplicationGroups/VWindowAd
 import VWindowEditApplicationGroup from '%/components/ApplicationGroups/VWindowEditApplicationGroup.vue'
 import VWindowAddGroupToStaff from '%/components/Staff/VWindowAddGroupToStaff.vue'
 import VWindowAddGroupApplicationTitle from '%/components/GroupApplicationTitles/VWindowAddGroupApplicationTitle.vue'
+import VWindowEditGroupApplicationTitle from '%/components/GroupApplicationTitles/VWindowEditGroupApplicationTitle.vue'
 
 @Component({
   components: {
+    VWindowEditGroupApplicationTitle,
     VWindowAddGroupApplicationTitle,
     VWindowAddGroupToStaff,
     VWindowEditApplicationGroup,

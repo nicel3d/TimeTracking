@@ -80,15 +80,13 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { Validator } from 'vee-validate'
 import {
-  ApplicationTitles, ApplicationTitleToGroup,
+  ApplicationTitleToGroup,
   ModeEnum,
   StateEnum,
   TableSortingByGroupIdRequest
 } from '%/stores/api/SwaggerDocumentationTypescript'
 import {
   ApplicationsIdsAndGroupId,
-  ApplicationTitleEmitEnum,
-  ApplicationTitlesIdsAndApplicationId,
   GroupApplicationTitleEmitEnum
 } from '%/constants/WindowsEmmit'
 import { Modes, States } from '%/constants/ListEnumes'
