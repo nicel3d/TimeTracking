@@ -34,16 +34,17 @@ namespace TimeTrackingServer.Services.Impl
         {
             IQueryable<GroupApplicationTitlesVM> data = _dbContext.Set<ApplicationTitleToGroup>()
                                                 .Where(x => x.GroupId == request.GroupId)
-                                                .Include(x => x.ApplicationTitle).ThenInclude(x => x.Application)
+                                                .Include(x => x.Application)
                                                 .Select(x => new GroupApplicationTitlesVM
                                                 {
                                                     Id = x.Id,
-                                                    ApplicationId = x.ApplicationTitle.ApplicationId,
+                                                    ApplicationId = x.ApplicationId,
                                                     GroupId = x.GroupId,
                                                     State = x.State,
+                                                    Mode = x.Mode,
                                                     UpdatedAt = x.UpdatedAt,
-                                                    ApplicationTitle = x.ApplicationTitle.Title,
-                                                    ApplicationCaption = x.ApplicationTitle.Application.Caption
+                                                    ApplicationTitle = x.Title,
+                                                    ApplicationCaption = x.Application.Caption
                                                 });
 
             if (!String.IsNullOrEmpty(request.Search))

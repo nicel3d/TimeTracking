@@ -8,11 +8,6 @@ namespace TimeTrackingServer.Models
 {
     public partial class ApplicationTitles : IIdentifier
     {
-        public ApplicationTitles()
-        {
-            ApplicationTitleToGroup = new HashSet<ApplicationTitleToGroup>();
-        }
-
         public int? Id { get; set; }
         [Required]
         public string Title { get; set; }
@@ -22,6 +17,5 @@ namespace TimeTrackingServer.Models
         public ModeEnum Mode { get; set; }
 
         public virtual Applications Application { get; set; }
-        public virtual ICollection<ApplicationTitleToGroup> ApplicationTitleToGroup { get; set; }
     }
 }

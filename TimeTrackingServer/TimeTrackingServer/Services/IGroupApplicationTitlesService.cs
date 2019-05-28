@@ -5,7 +5,7 @@ using TimeTrackingServer.Stores.Impl;
 
 namespace TimeTrackingServer.Services
 {
-    public class GroupApplicationTitlesVM : ApplicationToGroup
+    public class GroupApplicationTitlesVM : ApplicationTitleToGroup
     {
         public string ApplicationTitle { get; set; }
         public string ApplicationCaption { get; set; }

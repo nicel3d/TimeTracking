@@ -2477,7 +2477,7 @@ export interface IActivityStaffListResponse extends IListCountResponse {
 }
 
 export class ActivityStaff implements IActivityStaff {
-  id!: number;
+  id?: number | undefined;
   updatedAt!: Date;
   applicationTitle?: string | undefined;
   staffId?: number | undefined;
@@ -2533,7 +2533,7 @@ export class ActivityStaff implements IActivityStaff {
 }
 
 export interface IActivityStaff {
-  id: number;
+  id?: number | undefined;
   updatedAt: Date;
   applicationTitle?: string | undefined;
   staffId?: number | undefined;
@@ -2583,6 +2583,7 @@ export class Applications implements IApplications {
   updatedAt!: Date;
   state!: StateEnum;
   activityStaff?: ActivityStaff[] | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
   applicationTitles?: ApplicationTitles[] | undefined;
   applicationToGroup?: ApplicationToGroup[] | undefined;
 
@@ -2605,6 +2606,11 @@ export class Applications implements IApplications {
         this.activityStaff = [] as any;
         for (let item of data["ActivityStaff"])
           this.activityStaff!.push(ActivityStaff.fromJS(item));
+      }
+      if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
+        this.applicationTitleToGroup = [] as any;
+        for (let item of data["ApplicationTitleToGroup"])
+          this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
       }
       if (data["ApplicationTitles"] && data["ApplicationTitles"].constructor === Array) {
         this.applicationTitles = [] as any;
@@ -2637,6 +2643,11 @@ export class Applications implements IApplications {
       for (let item of this.activityStaff)
         data["ActivityStaff"].push(item.toJSON());
     }
+    if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
+      data["ApplicationTitleToGroup"] = [];
+      for (let item of this.applicationTitleToGroup)
+        data["ApplicationTitleToGroup"].push(item.toJSON());
+    }
     if (this.applicationTitles && this.applicationTitles.constructor === Array) {
       data["ApplicationTitles"] = [];
       for (let item of this.applicationTitles)
@@ -2657,6 +2668,7 @@ export interface IApplications {
   updatedAt: Date;
   state: StateEnum;
   activityStaff?: ActivityStaff[] | undefined;
+  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
   applicationTitles?: ApplicationTitles[] | undefined;
   applicationToGroup?: ApplicationToGroup[] | undefined;
 }
@@ -2667,92 +2679,15 @@ export enum StateEnum {
   Neutral = 2,
 }
 
-export class ApplicationTitles implements IApplicationTitles {
-  id?: number | undefined;
-  title!: string;
-  updatedAt?: Date | undefined;
-  applicationId!: number;
-  state!: StateEnum;
-  mode!: ModeEnum;
-  application?: Applications | undefined;
-  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
-
-  constructor(data?: IApplicationTitles) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(data?: any) {
-    if (data) {
-      this.id = data["Id"];
-      this.title = data["Title"];
-      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
-      this.applicationId = data["ApplicationId"];
-      this.state = data["State"];
-      this.mode = data["Mode"];
-      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
-      if (data["ApplicationTitleToGroup"] && data["ApplicationTitleToGroup"].constructor === Array) {
-        this.applicationTitleToGroup = [] as any;
-        for (let item of data["ApplicationTitleToGroup"])
-          this.applicationTitleToGroup!.push(ApplicationTitleToGroup.fromJS(item));
-      }
-    }
-  }
-
-  static fromJS(data: any): ApplicationTitles {
-    data = typeof data === 'object' ? data : {};
-    let result = new ApplicationTitles();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data["Id"] = this.id;
-    data["Title"] = this.title;
-    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
-    data["ApplicationId"] = this.applicationId;
-    data["State"] = this.state;
-    data["Mode"] = this.mode;
-    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
-    if (this.applicationTitleToGroup && this.applicationTitleToGroup.constructor === Array) {
-      data["ApplicationTitleToGroup"] = [];
-      for (let item of this.applicationTitleToGroup)
-        data["ApplicationTitleToGroup"].push(item.toJSON());
-    }
-    return data;
-  }
-}
-
-export interface IApplicationTitles {
-  id?: number | undefined;
-  title: string;
-  updatedAt?: Date | undefined;
-  applicationId: number;
-  state: StateEnum;
-  mode: ModeEnum;
-  application?: Applications | undefined;
-  applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
-}
-
-export enum ModeEnum {
-  Contains = 0,
-  Exactly = 1,
-  DoesNotContain = 2,
-}
-
 export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
   id?: number | undefined;
-  applicationTitleId!: number;
+  applicationId!: number;
   groupId!: number;
   updatedAt?: Date | undefined;
   state!: StateEnum;
   mode!: ModeEnum;
-  applicationTitle?: ApplicationTitles | undefined;
+  title?: string | undefined;
+  application?: Applications | undefined;
   group?: Groups | undefined;
 
   constructor(data?: IApplicationTitleToGroup) {
@@ -2767,12 +2702,13 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
   init(data?: any) {
     if (data) {
       this.id = data["Id"];
-      this.applicationTitleId = data["ApplicationTitleId"];
+      this.applicationId = data["ApplicationId"];
       this.groupId = data["GroupId"];
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.state = data["State"];
       this.mode = data["Mode"];
-      this.applicationTitle = data["ApplicationTitle"] ? ApplicationTitles.fromJS(data["ApplicationTitle"]) : <any>undefined;
+      this.title = data["Title"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
       this.group = data["Group"] ? Groups.fromJS(data["Group"]) : <any>undefined;
     }
   }
@@ -2787,12 +2723,13 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data["Id"] = this.id;
-    data["ApplicationTitleId"] = this.applicationTitleId;
+    data["ApplicationId"] = this.applicationId;
     data["GroupId"] = this.groupId;
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["State"] = this.state;
     data["Mode"] = this.mode;
-    data["ApplicationTitle"] = this.applicationTitle ? this.applicationTitle.toJSON() : <any>undefined;
+    data["Title"] = this.title;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
     data["Group"] = this.group ? this.group.toJSON() : <any>undefined;
     return data;
   }
@@ -2800,18 +2737,25 @@ export class ApplicationTitleToGroup implements IApplicationTitleToGroup {
 
 export interface IApplicationTitleToGroup {
   id?: number | undefined;
-  applicationTitleId: number;
+  applicationId: number;
   groupId: number;
   updatedAt?: Date | undefined;
   state: StateEnum;
   mode: ModeEnum;
-  applicationTitle?: ApplicationTitles | undefined;
+  title?: string | undefined;
+  application?: Applications | undefined;
   group?: Groups | undefined;
+}
+
+export enum ModeEnum {
+  Contains = 0,
+  Exactly = 1,
+  DoesNotContain = 2,
 }
 
 export class Groups implements IGroups {
   id?: number | undefined;
-  name!: string;
+  name?: string | undefined;
   status?: boolean | undefined;
   updatedAt?: Date | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
@@ -2885,7 +2829,7 @@ export class Groups implements IGroups {
 
 export interface IGroups {
   id?: number | undefined;
-  name: string;
+  name?: string | undefined;
   status?: boolean | undefined;
   updatedAt?: Date | undefined;
   applicationTitleToGroup?: ApplicationTitleToGroup[] | undefined;
@@ -3006,9 +2950,9 @@ export class Staff implements IStaff {
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
-  rangeLastActivityTime?: string | undefined;
   activityLast?: Date | undefined;
   caption?: string | undefined;
+  rangeLastActivityTime?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
   staffToGroup?: StaffToGroup[] | undefined;
 
@@ -3027,9 +2971,9 @@ export class Staff implements IStaff {
       this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
       this.status = data["Status"];
       this.activityFirst = data["ActivityFirst"] ? new Date(data["ActivityFirst"].toString()) : <any>undefined;
-      this.rangeLastActivityTime = data["RangeLastActivityTime"];
       this.activityLast = data["ActivityLast"] ? new Date(data["ActivityLast"].toString()) : <any>undefined;
       this.caption = data["Caption"];
+      this.rangeLastActivityTime = data["RangeLastActivityTime"];
       if (data["ActivityStaff"] && data["ActivityStaff"].constructor === Array) {
         this.activityStaff = [] as any;
         for (let item of data["ActivityStaff"])
@@ -3056,9 +3000,9 @@ export class Staff implements IStaff {
     data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
     data["Status"] = this.status;
     data["ActivityFirst"] = this.activityFirst ? this.activityFirst.toISOString() : <any>undefined;
-    data["RangeLastActivityTime"] = this.rangeLastActivityTime;
     data["ActivityLast"] = this.activityLast ? this.activityLast.toISOString() : <any>undefined;
     data["Caption"] = this.caption;
+    data["RangeLastActivityTime"] = this.rangeLastActivityTime;
     if (this.activityStaff && this.activityStaff.constructor === Array) {
       data["ActivityStaff"] = [];
       for (let item of this.activityStaff)
@@ -3078,11 +3022,71 @@ export interface IStaff {
   updatedAt?: Date | undefined;
   status?: boolean | undefined;
   activityFirst?: Date | undefined;
-  rangeLastActivityTime?: string | undefined;
   activityLast?: Date | undefined;
   caption?: string | undefined;
+  rangeLastActivityTime?: string | undefined;
   activityStaff?: ActivityStaff[] | undefined;
   staffToGroup?: StaffToGroup[] | undefined;
+}
+
+export class ApplicationTitles implements IApplicationTitles {
+  id?: number | undefined;
+  title!: string;
+  updatedAt?: Date | undefined;
+  applicationId!: number;
+  state!: StateEnum;
+  mode!: ModeEnum;
+  application?: Applications | undefined;
+
+  constructor(data?: IApplicationTitles) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["Id"];
+      this.title = data["Title"];
+      this.updatedAt = data["UpdatedAt"] ? new Date(data["UpdatedAt"].toString()) : <any>undefined;
+      this.applicationId = data["ApplicationId"];
+      this.state = data["State"];
+      this.mode = data["Mode"];
+      this.application = data["Application"] ? Applications.fromJS(data["Application"]) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): ApplicationTitles {
+    data = typeof data === 'object' ? data : {};
+    let result = new ApplicationTitles();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["Id"] = this.id;
+    data["Title"] = this.title;
+    data["UpdatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+    data["ApplicationId"] = this.applicationId;
+    data["State"] = this.state;
+    data["Mode"] = this.mode;
+    data["Application"] = this.application ? this.application.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IApplicationTitles {
+  id?: number | undefined;
+  title: string;
+  updatedAt?: Date | undefined;
+  applicationId: number;
+  state: StateEnum;
+  mode: ModeEnum;
+  application?: Applications | undefined;
 }
 
 export class TableSortingRequest implements ITableSortingRequest {
@@ -3940,7 +3944,7 @@ export interface IGroupApplicationTitleListVM extends IListCountResponse {
   data?: GroupApplicationTitlesVM[] | undefined;
 }
 
-export class GroupApplicationTitlesVM extends ApplicationToGroup implements IGroupApplicationTitlesVM {
+export class GroupApplicationTitlesVM extends ApplicationTitleToGroup implements IGroupApplicationTitlesVM {
   applicationTitle?: string | undefined;
   applicationCaption?: string | undefined;
 
@@ -3972,7 +3976,7 @@ export class GroupApplicationTitlesVM extends ApplicationToGroup implements IGro
   }
 }
 
-export interface IGroupApplicationTitlesVM extends IApplicationToGroup {
+export interface IGroupApplicationTitlesVM extends IApplicationTitleToGroup {
   applicationTitle?: string | undefined;
   applicationCaption?: string | undefined;
 }

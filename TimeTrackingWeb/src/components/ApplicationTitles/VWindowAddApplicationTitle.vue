@@ -67,7 +67,7 @@ import { ApplicationTitles, ModeEnum, StateEnum } from '%/stores/api/SwaggerDocu
 import { ApplicationTitleEmitEnum, ApplicationTitlesIdsAndApplicationId } from '%/constants/WindowsEmmit'
 import { Modes, States } from '%/constants/ListEnumes'
 import VDialogFullWindow from '%/utils/VDialogFullWindow.vue'
-import VTableApplicationTitles from '%/components/Applications/VTableApplicationTitles.vue'
+import VTableApplicationTitles from '%/components/ApplicationTitles/VTableApplicationTitles.vue'
 
 @Component({
   components: { VTableApplicationTitles, VDialogFullWindow }

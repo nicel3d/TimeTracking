@@ -9,6 +9,7 @@ namespace TimeTrackingServer.Models
         public Applications()
         {
             ActivityStaff = new HashSet<ActivityStaff>();
+            ApplicationTitleToGroup = new HashSet<ApplicationTitleToGroup>();
             ApplicationTitles = new HashSet<ApplicationTitles>();
             ApplicationToGroup = new HashSet<ApplicationToGroup>();
         }
@@ -19,6 +20,7 @@ namespace TimeTrackingServer.Models
         public StateEnum State { get; set; }
 
         public virtual ICollection<ActivityStaff> ActivityStaff { get; set; }
+        public virtual ICollection<ApplicationTitleToGroup> ApplicationTitleToGroup { get; set; }
         public virtual ICollection<ApplicationTitles> ApplicationTitles { get; set; }
         public virtual ICollection<ApplicationToGroup> ApplicationToGroup { get; set; }
     }
